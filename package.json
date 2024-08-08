@@ -1,0 +1,13 @@
+{
+  "name": "js-libs",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {},
+  "license": "MIT",
+  "packageManager": "pnpm@9.7.0",
+  "engines": {
+    "node": ">=20.16.0",
+    "pnpm": ">=9.7.0"
+  }
+}

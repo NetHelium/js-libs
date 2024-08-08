@@ -1,0 +1,13 @@
+# System files
+.DS_Store
+
+# Logs
+logs
+*.log
+.pnpm-debug.log*
+
+# Dependencies
+node_modules
+
+# Builds
+dist
