@@ -18,5 +18,5 @@
     "moduleResolution": "bundler",
     "declaration": true,
     "emitDeclarationOnly": true
-  },
+  }
 }

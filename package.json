@@ -4,9 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow pnpm",
+    "format": "biome check --write --linter-enabled=false --no-errors-on-unmatched",
+    "lint": "biome lint --fix --no-errors-on-unmatched"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.8.3",
     "typescript": "catalog:"
   },
   "license": "MIT",
