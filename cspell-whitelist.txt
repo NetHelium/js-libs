@@ -1,3 +1,4 @@
 biomejs
+lefthook
 preinstall
 tsbuildinfo

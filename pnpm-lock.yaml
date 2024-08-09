@@ -29,6 +29,9 @@ importers:
       cspell:
         specifier: ^8.13.2
         version: 8.13.2
+      lefthook:
+        specifier: ^1.7.12
+        version: 1.7.12
       typescript:
         specifier: 'catalog:'
         version: 5.5.4
@@ -477,6 +480,50 @@ packages:
 
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
+
+  lefthook-darwin-arm64@1.7.12:
+    resolution: {integrity: sha512-CjbV968FMFJWBe/5UA4H3DiKH5TFCh0449pfr9NTt14r05FIg6YzLf5h97CYlDz3b0Bx8Iz8ZqoguE1dFrYpsg==}
+    cpu: [arm64]
+    os: [darwin]
+
+  lefthook-darwin-x64@1.7.12:
+    resolution: {integrity: sha512-EEwh5zU65MwfwkGOpBW7rd0Ldg7Ef17VoFUQ/pr408acLq7BvNOrrFga/RNUvB5Hsaa7eNjBbv0AG02qE3X/ZA==}
+    cpu: [x64]
+    os: [darwin]
+
+  lefthook-freebsd-arm64@1.7.12:
+    resolution: {integrity: sha512-BznKfuFw9lWhqJFrI+ci2EyS5vvfEWTcsISTq0o4a/kR058stK/6B+i+XnTHrHsiOjQbLJ42wcFgvUEFmio6yw==}
+    cpu: [arm64]
+    os: [freebsd]
+
+  lefthook-freebsd-x64@1.7.12:
+    resolution: {integrity: sha512-9+I0xakvqpAIxhPb5ON6a5v/Iyl+gahJi+ogoEDNqlg3zj4otZspOvdiAsLWBAaXI+yFQftOHBM8940Ki5RB0A==}
+    cpu: [x64]
+    os: [freebsd]
+
+  lefthook-linux-arm64@1.7.12:
+    resolution: {integrity: sha512-FC+4cyz2CUBVL4BnDwnAzQPdBHM80O2TM53qoT1R3sn9LbWwcpnwdXi86NhVD0I7+vKg6rGUKgOQMTZfSe+sDg==}
+    cpu: [arm64]
+    os: [linux]
+
+  lefthook-linux-x64@1.7.12:
+    resolution: {integrity: sha512-BH9peuKjx2ikOxjnohdAH4ocRfC2NZQTXrJXsAdPOFja1iNHzBwpZe+/x+g8fO8a3WVrmBWad3814Hb/oGCICA==}
+    cpu: [x64]
+    os: [linux]
+
+  lefthook-windows-arm64@1.7.12:
+    resolution: {integrity: sha512-GlCNSpXAiBcCQ8jtcFGxkxGzqnsPzGWbx9HTYO7Xz1QjW56de311rdntyVIRl48nQ+Q76fVyEKAtsyQczvRN6w==}
+    cpu: [arm64]
+    os: [win32]
+
+  lefthook-windows-x64@1.7.12:
+    resolution: {integrity: sha512-9GeeQVUX7R8irJ5mf0Zzxn74ZTpy1LHqIGPRAmn9ELtkVdne/DGpCcGyKGVoJFbMInEaeDHGOnVjeQ9kgWB8Fw==}
+    cpu: [x64]
+    os: [win32]
+
+  lefthook@1.7.12:
+    resolution: {integrity: sha512-kZQQAeL4JZbsADqzK5YMP7M0aadGVDha7oo+4exA5FeQbgpmnDq+ejbkdfLOdo9uy7FSY82akmbxAiXq+V4fbg==}
+    hasBin: true
 
   merge2@1.4.1:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
@@ -989,6 +1036,41 @@ snapshots:
   keyv@4.5.4:
     dependencies:
       json-buffer: 3.0.1
+
+  lefthook-darwin-arm64@1.7.12:
+    optional: true
+
+  lefthook-darwin-x64@1.7.12:
+    optional: true
+
+  lefthook-freebsd-arm64@1.7.12:
+    optional: true
+
+  lefthook-freebsd-x64@1.7.12:
+    optional: true
+
+  lefthook-linux-arm64@1.7.12:
+    optional: true
+
+  lefthook-linux-x64@1.7.12:
+    optional: true
+
+  lefthook-windows-arm64@1.7.12:
+    optional: true
+
+  lefthook-windows-x64@1.7.12:
+    optional: true
+
+  lefthook@1.7.12:
+    optionalDependencies:
+      lefthook-darwin-arm64: 1.7.12
+      lefthook-darwin-x64: 1.7.12
+      lefthook-freebsd-arm64: 1.7.12
+      lefthook-freebsd-x64: 1.7.12
+      lefthook-linux-arm64: 1.7.12
+      lefthook-linux-x64: 1.7.12
+      lefthook-windows-arm64: 1.7.12
+      lefthook-windows-x64: 1.7.12
 
   merge2@1.4.1: {}
 

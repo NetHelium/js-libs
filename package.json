@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
+    "prepare": "lefthook install",
     "format": "biome check --write --linter-enabled=false --no-errors-on-unmatched",
     "lint": "biome lint --fix --no-errors-on-unmatched",
     "spell": "cspell --unique **"
@@ -14,6 +15,7 @@
     "@cspell/dict-fr-fr": "^2.2.2",
     "@cspell/dict-fr-reforme": "^2.2.2",
     "cspell": "^8.13.2",
+    "lefthook": "^1.7.12",
     "typescript": "catalog:"
   },
   "license": "MIT",
