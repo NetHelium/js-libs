@@ -6,6 +6,9 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm"
   },
+  "devDependencies": {
+    "typescript": "catalog:"
+  },
   "license": "MIT",
   "packageManager": "pnpm@9.7.0",
   "engines": {

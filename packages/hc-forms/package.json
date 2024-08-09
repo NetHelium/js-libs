@@ -8,9 +8,14 @@
     "url": "https://net-helium.fr"
   },
   "scripts": {
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow pnpm",
+    "build:types": "tsc"
   },
-  "keywords": ["hélium connect", "net helium", "form", "formulaire", "intégration"],
+  "devDependencies": {
+    "tslib": "catalog:",
+    "typescript": "catalog:"
+  },
+  "keywords": ["hélium connect", "net hélium", "form", "formulaire", "intégration", "crm"],
   "license": "MIT",
   "packageManager": "pnpm@9.7.0",
   "engines": {
