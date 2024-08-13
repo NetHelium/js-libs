@@ -10,7 +10,8 @@
     "format": "biome check --write --linter-enabled=false --no-errors-on-unmatched",
     "lint": "biome lint --fix --no-errors-on-unmatched",
     "check:types": "turbo run check:types",
-    "check:spell": "cspell --unique **"
+    "check:spell": "cspell --unique **",
+    "release": "pnpm build && pnpm changeset publish"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
