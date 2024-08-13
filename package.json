@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
+    "@changesets/cli": "^2.27.7",
     "@cspell/dict-fr-fr": "^2.2.2",
     "@cspell/dict-fr-reforme": "^2.2.2",
     "cspell": "^8.13.2",
