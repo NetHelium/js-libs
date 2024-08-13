@@ -48,6 +48,6 @@ jobs:
       - name: Check for formatting and linting errors
         run: pnpm biome ci .
       - name: Check for spelling errors
-        run: pnpm spell
+        run: pnpm check:spell
       - name: Build packages
         run: pnpm build
