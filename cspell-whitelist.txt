@@ -1,4 +1,7 @@
 biomejs
+esbuild
 lefthook
+outbase
+outdir
 preinstall
 tsbuildinfo

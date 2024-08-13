@@ -2,5 +2,8 @@ packages:
   - 'packages/*'
 
 catalog:
+  "@commander-js/extra-typings": ^12.1.0
+  commander: ^12.1.0
+  esbuild: ^0.23.0
   tslib: ^2.6.3
   typescript: ^5.5.4
