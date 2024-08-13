@@ -12,5 +12,8 @@ node_modules
 # Builds
 dist
 
+# Turborepo
+.turbo
+
 # TypeScript
 *.tsbuildinfo
