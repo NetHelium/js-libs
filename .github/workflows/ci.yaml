@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  pre_job:
+    name: Check if run is needed
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        name: Search for duplicate successful run
+        uses: fkirc/skip-duplicate-actions@v5
+        with:
+          concurrent_skipping: same_content_newer
+          skip_after_successful_duplicate: 'true'
+  integration:
+    needs: pre_job
+    if: needs.pre_job.outputs.should_skip != 'true'
+    name: 'Continuous integration'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [20]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+      - name: Setup node ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install
+      - name: Disable telemetry of Turborepo
+        run: pnpm turbo telemetry disable
+      - name: Check for TypeScript errors
+        run: pnpm check:types
+      - name: Check for formatting and linting errors
+        run: pnpm biome ci .
+      - name: Check for spelling errors
+        run: pnpm spell
+      - name: Build packages
+        run: pnpm build

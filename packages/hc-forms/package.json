@@ -9,7 +9,8 @@
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "build:types": "tsc"
+    "build:types": "tsc",
+    "check:types": "tsc --emitDeclarationOnly false --noEmit"
   },
   "devDependencies": {
     "tslib": "catalog:",
