@@ -12,5 +12,5 @@
   ],
   "dictionaries": ["whitelist"],
   "useGitignore": true,
-  "ignorePaths": ["pnpm-lock.yaml", ".vscode", "cspell-whitelist.txt"]
+  "ignorePaths": ["pnpm-lock.yaml", ".vscode", "cspell-whitelist.txt", "app/public"]
 }

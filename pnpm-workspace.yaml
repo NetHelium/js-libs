@@ -1,9 +1,13 @@
 packages:
-  - 'packages/*'
+  - app
+  - packages/*
 
 catalog:
   "@commander-js/extra-typings": ^12.1.0
   commander: ^12.1.0
+  concurrently: ^8.2.2
   esbuild: ^0.23.0
+  lit: ^3.2.0
+  tsc-watch: ^6.2.0
   tslib: ^2.6.3
   typescript: ^5.5.4

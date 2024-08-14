@@ -1,0 +1,19 @@
+{
+  "name": "app",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite"
+  },
+  "dependencies": {
+    "@shoelace-style/shoelace": "^2.16.0",
+    "lit": "catalog:"
+  },
+  "devDependencies": {
+    "tslib": "catalog:",
+    "typescript": "catalog:",
+    "vite": "^5.4.0",
+    "vite-plugin-static-copy": "^1.0.6"
+  }
+}

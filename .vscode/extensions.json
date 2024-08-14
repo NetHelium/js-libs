@@ -2,6 +2,7 @@
   "recommendations": [
     "biomejs.biome",
     "mylesmurphy.prettify-ts",
+    "runem.lit-plugin",
     "streetsidesoftware.code-spell-checker",
     "streetsidesoftware.code-spell-checker-french",
     "streetsidesoftware.code-spell-checker-french-reforme",

@@ -17,6 +17,9 @@
     "preinstall": "npx only-allow pnpm",
     "check:types": "tsc --emitDeclarationOnly false --noEmit",
     "clean": "rm -rf dist",
+    "dev:types": "tsc-watch --noClear",
+    "dev:source": "./scripts/build.js --watch",
+    "dev": "pnpm clean && concurrently \"pnpm dev:source\" \"pnpm dev:types\"",
     "build:source": "./scripts/build.js",
     "build:types": "tsc && mv dist/index.d.ts dist/hc-forms.d.ts",
     "build": "pnpm clean && pnpm build:source && pnpm build:types"
@@ -30,8 +33,10 @@
   "devDependencies": {
     "@commander-js/extra-typings": "catalog:",
     "commander": "catalog:",
+    "concurrently": "catalog:",
     "esbuild": "catalog:",
     "tslib": "catalog:",
+    "tsc-watch": "catalog:",
     "typescript": "catalog:"
   },
   "keywords": ["hélium connect", "net hélium", "form", "formulaire", "intégration", "crm"],
