@@ -1,12 +1,12 @@
 import "@shoelace-style/shoelace";
 import type { Theme } from "./components/nh-header.js";
-import "./components/nh-header.js";
+import "./components/nh-layout.js";
 import "./assets/styles.css";
 
-const nhHeader = document.querySelector<HTMLElement>("nh-header");
+const nhLayout = document.querySelector<HTMLElement>("nh-layout");
 
-if (nhHeader) {
-  nhHeader.addEventListener("nh-theme-change", (e: CustomEvent<Theme>) => {
+if (nhLayout) {
+  nhLayout.addEventListener("nh-theme-change", (e: CustomEvent<Theme>) => {
     const htmlElementClasses = document.documentElement.classList;
 
     if (e.detail === "dark") {

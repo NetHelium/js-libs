@@ -1,4 +1,4 @@
-import type { SlIconButton, SlSelect } from "@shoelace-style/shoelace";
+import type { SlSelect } from "@shoelace-style/shoelace";
 import { LitElement, css, html } from "lit";
 import { customElement, query, state } from "lit/decorators.js";
 
@@ -18,12 +18,6 @@ export type Theme = "light" | "dark";
  */
 @customElement("nh-header")
 export default class NhHeader extends LitElement {
-  /**
-   * Element representing the menu button.
-   */
-  @query("sl-icon-button[name='list']")
-  menuButton!: SlIconButton;
-
   /**
    * Element representing the theme selector.
    */
@@ -90,6 +84,18 @@ export default class NhHeader extends LitElement {
   };
 
   /**
+   * Notify that the menu button has been clicked.
+   */
+  menuButtonHandler = () => {
+    this.dispatchEvent(
+      new Event("nh-menu-button-click", {
+        bubbles: true,
+        composed: true,
+      }),
+    );
+  };
+
+  /**
    * Lifecycle method that runs once after the first render of the component.
    * Used to apply the initial theme and setup the listener on the theme selector.
    */
@@ -107,7 +113,8 @@ export default class NhHeader extends LitElement {
       <header>
         <div class="content">
           <div class="left">
-            <sl-icon-button name="list" label="Open menu"></sl-icon-button>
+            <sl-icon-button name="list" label="Open menu" @click=${this.menuButtonHandler}>
+            </sl-icon-button>
             <p>JavaScript libraries</p>
           </div>
 
@@ -152,13 +159,13 @@ export default class NhHeader extends LitElement {
       align-items: center;
     }
     .left sl-icon-button {
-      font-size: var(--sl-font-size-2x-large)
+      font-size: var(--sl-font-size-2x-large);
     }
     .right {
-      padding-right: var(--sl-spacing-2x-small)
+      padding-right: var(--sl-spacing-2x-small);
     }
     .right sl-icon-button {
-      font-size: var(--sl-font-size-large)
+      font-size: var(--sl-font-size-large);
     }
     .right sl-select {
       width: 115px;
