@@ -8,22 +8,21 @@
     "name": "Net Hélium",
     "url": "https://net-helium.fr"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NetHelium/js-libs.git",
+    "directory": "packages/hc-forms"
+  },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "check:types": "tsc --emitDeclarationOnly false --noEmit",
     "clean": "rm -rf dist",
     "build:source": "./scripts/build.js",
-    "build:types": "tsc",
+    "build:types": "tsc && mv dist/index.d.ts dist/hc-forms.d.ts",
     "build": "pnpm clean && pnpm build:source && pnpm build:types"
   },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "default": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    }
-  },
+  "main": "./dist/hc-forms.min.js",
+  "types": "./dist/hc-forms.d.ts",
   "files": ["dist"],
   "publishConfig": {
     "access": "public"

@@ -13,10 +13,11 @@ const program = new Command()
 const { watch } = program.opts();
 
 const ctx = await context({
-  entryPoints: ["src/**/*.ts"],
-  outdir: "dist",
-  outbase: "src",
+  entryPoints: ["src/index.ts"],
+  outfile: "dist/hc-forms.min.js",
+  bundle: true,
   sourcemap: watch,
+  minify: !watch,
 });
 
 if (watch) {
