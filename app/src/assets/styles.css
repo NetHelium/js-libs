@@ -2,6 +2,11 @@
   --sl-font-sans: Roboto, sans-serif;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 body {
   font-family: Roboto, sans-serif;
   margin: 0;

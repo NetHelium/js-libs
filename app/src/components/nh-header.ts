@@ -1,5 +1,6 @@
+import NhBase from "$components/nh-base.js";
 import type { SlSelect } from "@shoelace-style/shoelace";
-import { LitElement, css, html } from "lit";
+import { css, html } from "lit";
 import { customElement, query, state } from "lit/decorators.js";
 
 /**
@@ -17,7 +18,7 @@ export type Theme = "light" | "dark";
  * Web component for the app's header defined as a `nh-header` HTML tag.
  */
 @customElement("nh-header")
-export default class NhHeader extends LitElement {
+export default class NhHeader extends NhBase {
   /**
    * Element representing the theme selector.
    */

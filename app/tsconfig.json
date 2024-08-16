@@ -3,7 +3,11 @@
   "compilerOptions": {
     "declaration": false,
     "emitDeclarationOnly": false,
-    "noEmit": true
+    "noEmit": true,
+    "baseUrl": "./src",
+    "paths": {
+      "$components/*": ["components/*"]
+    }
   },
   "include": ["src"]
 }

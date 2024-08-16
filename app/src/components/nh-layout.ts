@@ -1,14 +1,15 @@
-import { LitElement, css, html } from "lit";
+import NhBase from "$components/nh-base.js";
+import { css, html } from "lit";
 import { customElement, query } from "lit/decorators.js";
 import type NhSidebar from "./nh-sidebar.js";
-import "./nh-header.js";
-import "./nh-sidebar.js";
+import "$components/nh-header.js";
+import "$components/nh-sidebar.js";
 
 /**
  * Web component for the app's layout defined as a `nh-layout` HTML tag.
  */
 @customElement("nh-layout")
-export default class NhLayout extends LitElement {
+export default class NhLayout extends NhBase {
   /**
    * Element representing the sidebar.
    */
@@ -34,7 +35,9 @@ export default class NhLayout extends LitElement {
       <nh-header></nh-header>
       <nh-sidebar></nh-sidebar>
       <main>
-        <slot></slot>
+        <slot>
+          <sl-spinner></sl-spinner>
+        </slot>
       </main>
     `;
   }
@@ -44,6 +47,7 @@ export default class NhLayout extends LitElement {
    */
   static override styles = css`
     :host {
+      height: 100%;
       display: flex;
       flex-direction: column;
     }
@@ -52,6 +56,14 @@ export default class NhLayout extends LitElement {
       width: calc(100% - var(--sl-spacing-small) * 2);
       margin: 0 auto;
       padding: var(--sl-spacing-small);
+      flex: 1;
+      display: flex;
+
+    }
+    sl-spinner {
+      font-size: var(--sl-font-size-2x-large);
+      align-self: center;
+      margin: 0 auto;
     }
   `;
 }
