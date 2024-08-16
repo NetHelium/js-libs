@@ -4,10 +4,13 @@ packages:
 
 catalog:
   "@commander-js/extra-typings": ^12.1.0
+  "@types/node": ^22.3.0
   commander: ^12.1.0
   concurrently: ^8.2.2
   esbuild: ^0.23.0
   lit: ^3.2.0
+  plop: ^4.0.1
   tsc-watch: ^6.2.0
   tslib: ^2.6.3
+  tsx: ^4.17.0
   typescript: ^5.5.4

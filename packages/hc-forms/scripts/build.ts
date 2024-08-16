@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env -S pnpm tsx
 
 import { Command } from "@commander-js/extra-typings";
 import { context } from "esbuild";
