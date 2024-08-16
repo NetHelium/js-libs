@@ -4,16 +4,26 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite"
+    "dev": "vite",
+    "generate": "NODE_OPTIONS=\"--import tsx\" plop --plopfile ./scripts/generators.ts"
   },
   "dependencies": {
     "@shoelace-style/shoelace": "^2.16.0",
     "lit": "catalog:"
   },
   "devDependencies": {
+    "@types/node": "catalog:",
+    "plop": "catalog:",
     "tslib": "catalog:",
+    "tsx": "catalog:",
     "typescript": "catalog:",
     "vite": "^5.4.0",
     "vite-plugin-static-copy": "^1.0.6"
+  },
+  "license": "MIT",
+  "packageManager": "pnpm@9.7.0",
+  "engines": {
+    "node": ">=20.16.0",
+    "pnpm": ">=9.7.0"
   }
 }

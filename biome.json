@@ -20,7 +20,8 @@
         "noUnusedImports": "warn"
       },
       "style": {
-        "noParameterAssign": "off"
+        "noParameterAssign": "off",
+        "noNonNullAssertion": "off"
       }
     }
   }

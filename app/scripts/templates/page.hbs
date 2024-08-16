@@ -1,0 +1,33 @@
+import { html, css } from "lit";
+import { customElement } from "lit/decorators.js";
+import NhBase from "$components/nh-base.js";
+
+/**
+ * Web component representing this page as a `{{ pageTag path }}` HTML tag.
+ */
+@customElement("{{ pageTag path }}")
+export default class {{ properCase (pageTag path) }} extends NhBase {
+  /**
+   * Name of the page displayed in the menu.
+   */
+  static pageName = "{{ name }}";
+
+  /**
+   * Render the content.
+   * @returns the DOM of the page
+   */
+  protected override render() {
+    return html`
+      <h1>{{ name }}</h1>
+    `;
+  }
+
+  /**
+   * Styles of the page.
+   */
+  static override styles = css`
+    h1 {
+      text-align: center;
+    }
+  `;
+}

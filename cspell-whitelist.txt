@@ -4,5 +4,6 @@ lefthook
 outbase
 outdir
 outfile
+plopfile
 preinstall
 tsbuildinfo
