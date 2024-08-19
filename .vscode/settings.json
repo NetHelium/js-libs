@@ -1,4 +1,7 @@
 {
+  "prettify-ts.maxProperties": 30,
+  "prettify-ts.maxCharacters": 10000,
+  "prettify-ts.typeIndentation": 2,
   "editor.defaultFormatter": "biomejs.biome",
   "editor.formatOnSave": true,
   "editor.rulers": [
