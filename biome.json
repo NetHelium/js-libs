@@ -19,6 +19,9 @@
       "correctness": {
         "noUnusedImports": "warn"
       },
+      "complexity": {
+        "noStaticOnlyClass": "off"
+      },
       "style": {
         "noParameterAssign": "off",
         "noNonNullAssertion": "off"
