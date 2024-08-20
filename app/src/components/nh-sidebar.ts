@@ -85,7 +85,7 @@ export default class NhSidebar extends LitElement {
     }
 
     return html`
-      <sl-drawer placement="start" label="JavaScript libraries" open>
+      <sl-drawer placement="start" label="JavaScript libraries">
         <nav>${menuContent}</nav>
       </sl-drawer>
     `;
