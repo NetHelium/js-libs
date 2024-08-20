@@ -33,24 +33,23 @@ export default class HomePage extends LitElement {
     h1 {
       font-size: var(--sl-font-size-3x-large);
       font-weight: normal;
+      margin-top: 0;
+    }
+    p {
+      margin-bottom: var(--sl-spacing-large);
     }
     .code {
-      display: inline-block;
+      display: flex;
+      width: 330px;
       font-size: var(--sl-font-size-medium);
-      margin-top: var(--sl-spacing-small);
-      padding: var(--sl-spacing-x-small) var(--sl-spacing-small);
-      padding-right: var(--sl-spacing-2x-small);
+      margin: 0 auto;
+      padding: var(--sl-spacing-x-small) var(--sl-spacing-x-small);
+      padding-left: var(--sl-spacing-medium);
       background-color: var(--sl-color-neutral-100);
       border-radius: var(--sl-border-radius-large);
       box-shadow: var(--sl-shadow-small);
-    }
-    code,
-    sl-copy-button {
-      display: inline-block;
-      vertical-align: middle;
-    }
-    code {
-      margin-right: var(--sl-spacing-2x-small);
+      justify-content: space-between;
+      align-items: center;
     }
   `;
 }

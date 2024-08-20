@@ -6,6 +6,10 @@ import { customElement } from "lit/decorators.js";
  */
 @customElement("nh-footer")
 export default class NhFooter extends LitElement {
+  /**
+   * Footer content.
+   * @returns the DOM for the footer
+   */
   protected override render() {
     return html`
       <footer>
@@ -20,7 +24,7 @@ export default class NhFooter extends LitElement {
   }
 
   /**
-   * Styles for the component's DOM.
+   * Footer styles.
    */
   static override styles = css`
     footer > sl-divider {

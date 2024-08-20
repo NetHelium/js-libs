@@ -104,8 +104,8 @@ export default class NhHeader extends LitElement {
   }
 
   /**
-   * Render the header's content.
-   * @returns the DOM of the header component
+   * Header content.
+   * @returns the DOM for the header
    */
   protected override render() {
     return html`
@@ -141,7 +141,7 @@ export default class NhHeader extends LitElement {
   }
 
   /**
-   * Styles for the component's DOM.
+   * Header styles.
    */
   static override styles = css`
     p {
