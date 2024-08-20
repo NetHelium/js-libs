@@ -21,7 +21,7 @@
     "@cspell/dict-fr-reforme": "^2.2.2",
     "cspell": "^8.13.2",
     "lefthook": "^1.7.12",
-    "turbo": "^2.0.12",
+    "turbo": "^2.0.14",
     "typescript": "catalog:"
   },
   "license": "MIT",

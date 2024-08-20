@@ -23,3 +23,6 @@ dist
 !.vscode/extensions.json
 !.vscode/settings.json
 .idea
+
+# Generated menu config file in the dev app
+app/config/menu.json

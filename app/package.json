@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently -n \"server,watcher\" \"vite\" \"./scripts/watcher.ts\"",
     "generate": "NODE_OPTIONS=\"--import tsx\" plop --plopfile ./scripts/generators.ts"
   },
   "dependencies": {
@@ -13,6 +13,8 @@
   },
   "devDependencies": {
     "@types/node": "catalog:",
+    "chokidar": "^3.6.0",
+    "concurrently": "catalog:",
     "plop": "catalog:",
     "tslib": "catalog:",
     "tsx": "catalog:",
