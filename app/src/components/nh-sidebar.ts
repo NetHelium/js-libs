@@ -1,5 +1,6 @@
+import menuConfig from "$config/menu.json";
 import type { SlDrawer } from "@shoelace-style/shoelace";
-import { LitElement, type PropertyValues, type TemplateResult, css, html } from "lit";
+import { LitElement, css, html } from "lit";
 import { customElement, query, state } from "lit/decorators.js";
 
 type MenuEntry = {
@@ -26,23 +27,21 @@ export default class NhSidebar extends LitElement {
   menu!: HTMLElement;
 
   @state()
-  menuEntries?: MenuEntry[];
+  menuEntries: MenuEntry[];
 
-  loadMenuEntries = async () => {
-    const data = await import("../../config/menu.json");
+  constructor() {
+    super();
 
-    this.menuEntries = Object.entries(data.default).reduce((acc, [k, v]) => {
+    this.menuEntries = Object.entries(menuConfig).reduce((acc, [k, v]) => {
       if (Array.isArray(v)) {
         acc.push({ pkg: k, links: v });
       }
 
       return acc;
     }, [] as MenuEntry[]);
-  };
+  }
 
-  protected override firstUpdated(_changedProperties: PropertyValues) {
-    this.loadMenuEntries();
-
+  protected override firstUpdated() {
     this.menu.addEventListener("sl-show", (e) => {
       for (const details of this.menu.querySelectorAll("sl-details")) {
         details.open = e.target === details;
@@ -51,48 +50,40 @@ export default class NhSidebar extends LitElement {
   }
 
   /**
-   * Render the sidebar content.
-   * @returns the DOM of the sidebar component
+   * Sidebar content.
+   * @returns the DOM for the sidebar
    */
   protected override render() {
-    let menuContent: TemplateResult | TemplateResult[];
-
-    if (this.menuEntries) {
-      menuContent = this.menuEntries
-        .filter(({ links }) => links.length > 0)
-        .map(
-          ({ pkg, links }) => html`
-          <sl-details summary="${pkg}">
-            <ul>
-              ${links.map(
-                ({ title, path }) => html`
-                <li>
-                  <sl-icon name="chevron-right"></sl-icon>
-                  <a href="${path}">${title}</a>
-                </li>
-              `,
-              )}
-            </ul>
-          </sl-details>
-        `,
-        );
-    } else {
-      menuContent = html`
-        <div class="loader">
-          <sl-spinner></sl-spinner>
-        </div>
-      `;
-    }
-
     return html`
       <sl-drawer placement="start" label="JavaScript libraries">
-        <nav>${menuContent}</nav>
+        <nav>
+        ${this.menuEntries
+          .filter(({ links }) => links.length > 0)
+          .map(
+            ({ pkg, links }) => html`
+            <sl-details summary="${pkg}">
+              <ul>
+                ${links.map(
+                  ({ title, path }) => html`
+                  <li>
+                    <sl-icon name="chevron-right"></sl-icon>
+                    <a href="${path}">
+                      ${title}
+                    </a>
+                  </li>
+                `,
+                )}
+              </ul>
+            </sl-details>
+          `,
+          )}
+        </nav>
       </sl-drawer>
     `;
   }
 
   /**
-   * Styles for the component's DOM.
+   * Sidebar styles.
    */
   static override styles = css`
     sl-drawer::part(body) {
@@ -118,8 +109,7 @@ export default class NhSidebar extends LitElement {
     sl-details::part(base) {
       transition: border-color 0.2s ease-in-out;
     }
-    sl-details::part(base):hover,
-    sl-details[open]::part(base) {
+    sl-details:not([open])::part(base):hover {
       border-color: var(--sl-color-primary-500);
     }
     sl-details ul {
