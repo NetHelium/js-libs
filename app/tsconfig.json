@@ -12,5 +12,5 @@
       "$pages/*": ["pages/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "scripts"]
 }

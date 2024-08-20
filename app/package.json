@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently -n \"server,watcher\" \"vite\" \"./scripts/watcher.ts\"",
-    "generate": "NODE_OPTIONS=\"--import tsx\" plop --plopfile ./scripts/generators.ts"
+    "generate": "NODE_OPTIONS=\"--import tsx\" plop --plopfile ./scripts/generators.ts",
+    "check:types": "tsc"
   },
   "dependencies": {
     "@shoelace-style/shoelace": "^2.16.0",

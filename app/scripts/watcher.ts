@@ -85,7 +85,7 @@ const initMenuConfig = async () => {
     };
 
     if (!Array.isArray(menuConfig[pkg.name])) menuConfig[pkg.name] = [];
-    menuConfig[pkg.name][position - 1] = pageConfig;
+    menuConfig[pkg.name]![position - 1] = pageConfig;
   }
 
   await saveMenuConfig();
@@ -116,10 +116,10 @@ const updateMenuConfig = async (path: string, action: FileAction) => {
   if (action === "deleted") {
     if (Array.isArray(menuConfig[pkg.name])) {
       // Keep all pages of the package except the deleted one
-      menuConfig[pkg.name] = menuConfig[pkg.name].filter((link) => link?.path !== urlPath);
+      menuConfig[pkg.name] = menuConfig[pkg.name]!.filter((link) => link?.path !== urlPath);
 
       // Remove the package key if there's no page left
-      if (menuConfig[pkg.name].length === 0) {
+      if (menuConfig[pkg.name]!.length === 0) {
         delete menuConfig[pkg.name];
       }
     }
@@ -157,7 +157,7 @@ const updateMenuConfig = async (path: string, action: FileAction) => {
     // If the page has been created
     case "added":
       if (!Array.isArray(menuConfig[pkg.name])) menuConfig[pkg.name] = [];
-      menuConfig[pkg.name][position - 1] = pageConfig;
+      menuConfig[pkg.name]![position - 1] = pageConfig;
 
       break;
 
@@ -165,23 +165,23 @@ const updateMenuConfig = async (path: string, action: FileAction) => {
     case "changed":
       if (Array.isArray(menuConfig[pkg.name])) {
         // Current index
-        const idx = menuConfig[pkg.name].findIndex((link) => link?.path === pageConfig.path);
+        const idx = menuConfig[pkg.name]!.findIndex((link) => link?.path === pageConfig.path);
 
         if (position - 1 !== idx) {
           // Swap positions if another page is in the target position
-          const otherPageConfig = menuConfig[pkg.name][position - 1];
+          const otherPageConfig = menuConfig[pkg.name]![position - 1];
 
           if (otherPageConfig) {
             await updatePagePositionInCode(otherPageConfig.path, idx + 1);
-            menuConfig[pkg.name][idx] = otherPageConfig;
+            menuConfig[pkg.name]![idx] = otherPageConfig;
           } else {
-            menuConfig[pkg.name][idx] = null;
+            menuConfig[pkg.name]![idx] = null;
           }
 
-          menuConfig[pkg.name][position - 1] = pageConfig;
+          menuConfig[pkg.name]![position - 1] = pageConfig;
         } else {
           // Position has not changed
-          menuConfig[pkg.name][idx] = pageConfig;
+          menuConfig[pkg.name]![idx] = pageConfig;
         }
       }
 
