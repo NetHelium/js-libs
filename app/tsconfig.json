@@ -4,12 +4,13 @@
     "declaration": false,
     "emitDeclarationOnly": false,
     "noEmit": true,
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
       "$root/*": ["*"],
-      "$assets/*": ["assets/*"],
-      "$components/*": ["components/*"],
-      "$pages/*": ["pages/*"]
+      "$config/*": ["config/*"],
+      "$assets/*": ["src/assets/*"],
+      "$components/*": ["src/components/*"],
+      "$pages/*": ["src/pages/*"]
     }
   },
   "include": ["src", "scripts"]
