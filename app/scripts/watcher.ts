@@ -2,20 +2,9 @@
 
 import { readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import type { MenuConfig, PageConfig } from "$root/types";
 import { watch } from "chokidar";
 import { getPageData, getWorkspacePackages, updatePagePositionInCode } from "./helpers";
-
-type PageConfig = {
-  title: string;
-  path: string;
-  tag: string;
-} | null;
-
-type MenuConfig = {
-  [key: string]: PageConfig[];
-};
-
-type FileAction = "added" | "changed" | "deleted";
 
 /**
  * In-memory menu config
@@ -50,8 +39,8 @@ const initMenuConfig = async () => {
     // Skip directories
     if (!pagePath.endsWith(".ts")) continue;
 
-    // Skip home page
-    if (pagePath.endsWith("home-page.ts")) continue;
+    // Skip home and 404 pages
+    if (["home-page.ts", "not-found.ts"].includes(pagePath)) continue;
 
     const { tag, title, position, urlPath } = await getPageData(path.join(basePath, pagePath));
 
@@ -97,14 +86,14 @@ const initMenuConfig = async () => {
  * @param path the file path of the page
  * @param action The type of action performed on the page
  */
-const updateMenuConfig = async (path: string, action: FileAction) => {
-  // Ignore the home page
-  if (path.endsWith("home-page.ts")) {
+const updateMenuConfig = async (path: string, action: "added" | "changed" | "deleted") => {
+  // Ignore the home and 404 pages
+  if (path.endsWith("/home-page.ts") || path.endsWith("/not-found.ts")) {
     return;
   }
 
   // Determine the package of the page
-  const urlPath = path.replace(/^src\/pages/, "").replace(/\.ts$/, "");
+  const urlPath = path.replace(/^.*src\/pages/, "").replace(/\.ts$/, "");
   const pkg = getWorkspacePackages().find(({ name }) => name.includes(urlPath.split("/").at(1)!));
 
   if (!pkg) {
@@ -114,6 +103,8 @@ const updateMenuConfig = async (path: string, action: FileAction) => {
 
   // If the page has been deleted
   if (action === "deleted") {
+    console.log(`Page ${urlPath} deleted. Rebuilding menu...`);
+
     if (Array.isArray(menuConfig[pkg.name])) {
       // Keep all pages of the package except the deleted one
       menuConfig[pkg.name] = menuConfig[pkg.name]!.filter((link) => link?.path !== urlPath);
@@ -156,6 +147,8 @@ const updateMenuConfig = async (path: string, action: FileAction) => {
   switch (action) {
     // If the page has been created
     case "added":
+      console.log(`Page ${pageConfig.path} added. Rebuilding menu...`);
+
       if (!Array.isArray(menuConfig[pkg.name])) menuConfig[pkg.name] = [];
       menuConfig[pkg.name]![position - 1] = pageConfig;
 
@@ -163,6 +156,8 @@ const updateMenuConfig = async (path: string, action: FileAction) => {
 
     // If the page has been modified
     case "changed":
+      console.log(`Page ${pageConfig.path} modified. Rebuilding menu...`);
+
       if (Array.isArray(menuConfig[pkg.name])) {
         // Current index
         const idx = menuConfig[pkg.name]!.findIndex((link) => link?.path === pageConfig.path);
@@ -197,7 +192,7 @@ const updateMenuConfig = async (path: string, action: FileAction) => {
 await initMenuConfig();
 
 // Watch the file system to detect changes in the pages directory
-watch("./src/pages/**/*.ts", { ignoreInitial: true })
+watch(path.join(process.cwd(), "src/pages/**/*.ts"), { ignoreInitial: true })
   .on("add", async (path) => await updateMenuConfig(path, "added"))
   .on("change", async (path) => await updateMenuConfig(path, "changed"))
   .on("unlink", async (path) => await updateMenuConfig(path, "deleted"));
