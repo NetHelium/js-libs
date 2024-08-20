@@ -19,7 +19,7 @@
     "clean": "rm -rf dist",
     "dev:types": "tsc-watch --noClear",
     "dev:source": "./scripts/build.ts --watch",
-    "dev": "pnpm clean && concurrently \"pnpm dev:source\" \"pnpm dev:types\"",
+    "dev": "pnpm clean && concurrently -n \"source,types\" \"pnpm dev:source\" \"pnpm dev:types\"",
     "build:source": "./scripts/build.ts",
     "build:types": "tsc && mv dist/index.d.ts dist/hc-forms.d.ts",
     "build": "pnpm clean && pnpm build:source && pnpm build:types"
