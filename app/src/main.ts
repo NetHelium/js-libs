@@ -1,11 +1,12 @@
 import "@shoelace-style/shoelace";
-import type { Theme } from "./components/nh-header.js";
-import "./components/nh-layout.js";
-import "./assets/styles.css";
+import "$assets/styles.css";
+import "$components/nh-layout";
+import type { Theme } from "$components/nh-header";
 
 const nhLayout = document.querySelector<HTMLElement>("nh-layout");
 
 if (nhLayout) {
+  // Apply the requested theme.
   nhLayout.addEventListener("nh-theme-change", (e: CustomEvent<Theme>) => {
     const htmlElementClasses = document.documentElement.classList;
 

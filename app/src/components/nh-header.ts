@@ -1,13 +1,12 @@
-import NhBase from "$components/nh-base.js";
 import type { SlSelect } from "@shoelace-style/shoelace";
-import { css, html } from "lit";
-import { customElement, query, state } from "lit/decorators.js";
+import { LitElement, css, html } from "lit";
+import { customElement, query } from "lit/decorators.js";
 
 /**
  * Possible options for the theme selector.
  * The `system` option means the theme will follow the preferences set in the browser or the OS.
  */
-type ThemeSetting = "light" | "dark" | "system";
+type ThemeSetting = "system" | "light" | "dark";
 
 /**
  * Possible themes to apply.
@@ -18,7 +17,7 @@ export type Theme = "light" | "dark";
  * Web component for the app's header defined as a `nh-header` HTML tag.
  */
 @customElement("nh-header")
-export default class NhHeader extends NhBase {
+export default class NhHeader extends LitElement {
   /**
    * Element representing the theme selector.
    */
@@ -28,13 +27,12 @@ export default class NhHeader extends NhBase {
   /**
    * Current theme selected.
    */
-  @state()
   theme: ThemeSetting;
 
   /**
    * Constructor used to determine the initial theme to load.
-   * A listener is also set on `matchMedia` to update the theme if changed in the browser or OS
-   * settings without having to reload the page (only if the selected theme is `system`).
+   * A listener is also set on `matchMedia` to update the theme when the user changes its
+   * preferences in the browser or OS settings (only if the selected theme is `system`).
    */
   constructor() {
     super();
@@ -116,7 +114,7 @@ export default class NhHeader extends NhBase {
           <div class="left">
             <sl-icon-button name="list" label="Open menu" @click=${this.menuButtonHandler}>
             </sl-icon-button>
-            <p>JavaScript libraries</p>
+            <a href="/">JavaScript libraries</a>
           </div>
 
           <div class="right">
@@ -159,6 +157,14 @@ export default class NhHeader extends NhBase {
     .content > div {
       align-items: center;
     }
+    .left a {
+      text-decoration: none;
+      color: var(--sl-color-neutral-1000);
+      transition: color 0.2s ease-in-out;
+    }
+    .left a:hover {
+      color: var(--sl-color-primary-600);
+    }
     .left sl-icon-button {
       font-size: var(--sl-font-size-2x-large);
     }
@@ -167,6 +173,7 @@ export default class NhHeader extends NhBase {
     }
     .right sl-icon-button {
       font-size: var(--sl-font-size-large);
+      margin-left: var(--sl-spacing-2x-small);
     }
     .right sl-select {
       width: 115px;

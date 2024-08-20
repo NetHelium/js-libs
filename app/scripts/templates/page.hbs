@@ -1,29 +1,29 @@
+import NhPage from "$components/nh-page";
 import { html, css } from "lit";
 import { customElement } from "lit/decorators.js";
-import NhBase from "$components/nh-base.js";
 
-/**
- * Web component representing this page as a `{{ pageTag path }}` HTML tag.
- */
 @customElement("{{ pageTag path }}")
-export default class {{ properCase (pageTag path) }} extends NhBase {
+export default class {{ properCase (pageTag path) }} extends NhPage {
   /**
-   * Name of the page displayed in the menu.
+   * Page metadata.
    */
-  static pageName = "{{ name }}";
+  static override metadata = {
+    title: "{{ title }}",
+    position: {{ pagePosition package }},
+  };
 
   /**
-   * Render the content.
+   * Page content.
    * @returns the DOM of the page
    */
   protected override render() {
     return html`
-      <h1>{{ name }}</h1>
+      <h1>{{ title }}</h1>
     `;
   }
 
   /**
-   * Styles of the page.
+   * Page styles.
    */
   static override styles = css`
     h1 {

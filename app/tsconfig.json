@@ -6,7 +6,10 @@
     "noEmit": true,
     "baseUrl": "./src",
     "paths": {
-      "$components/*": ["components/*"]
+      "$root/*": ["*"],
+      "$assets/*": ["assets/*"],
+      "$components/*": ["components/*"],
+      "$pages/*": ["pages/*"]
     }
   },
   "include": ["src"]

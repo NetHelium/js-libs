@@ -5,7 +5,10 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 export default defineConfig({
   resolve: {
     alias: {
+      $root: resolve(__dirname, "./src"),
+      $assets: resolve(__dirname, "./src/assets"),
       $components: resolve(__dirname, "./src/components"),
+      $pages: resolve(__dirname, "./src/pages"),
     },
   },
   plugins: [
