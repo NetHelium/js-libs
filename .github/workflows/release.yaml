@@ -7,7 +7,7 @@ on:
 
 jobs:
   release:
-    # Prevent the job from running on forks
+    # Prevent the job from running on forks (publish wouldn't work anyway without the npm token)
     if: github.repository == 'NetHelium/js-libs'
     permissions:
       contents: write
