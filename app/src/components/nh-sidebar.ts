@@ -24,15 +24,15 @@ export default class NhSidebar extends LitElement {
   drawer!: SlDrawer;
 
   @query("nav")
-  menu!: HTMLElement;
+  private _menu!: HTMLElement;
 
   @state()
-  menuEntries: MenuEntry[];
+  private _menuEntries: MenuEntry[];
 
   constructor() {
     super();
 
-    this.menuEntries = Object.entries(menuConfig).reduce((acc, [k, v]) => {
+    this._menuEntries = Object.entries(menuConfig).reduce((acc, [k, v]) => {
       if (Array.isArray(v)) {
         acc.push({ pkg: k, links: v });
       }
@@ -42,8 +42,8 @@ export default class NhSidebar extends LitElement {
   }
 
   protected override firstUpdated() {
-    this.menu.addEventListener("sl-show", (e) => {
-      for (const details of this.menu.querySelectorAll("sl-details")) {
+    this._menu.addEventListener("sl-show", (e) => {
+      for (const details of this._menu.querySelectorAll("sl-details")) {
         details.open = e.target === details;
       }
     });
@@ -57,7 +57,7 @@ export default class NhSidebar extends LitElement {
     return html`
       <sl-drawer placement="start" label="JavaScript libraries">
         <nav>
-        ${this.menuEntries
+        ${this._menuEntries
           .filter(({ links }) => links.length > 0)
           .map(
             ({ pkg, links }) => html`

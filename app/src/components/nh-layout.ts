@@ -18,30 +18,30 @@ export default class NhLayout extends LitElement {
    * Sidebar element.
    */
   @query("nh-sidebar")
-  nhSidebar!: NhSidebar;
+  private _nhSidebar!: NhSidebar;
 
   /**
    * List of all pages.
    */
-  pages: PageConfig[];
+  private _pages: PageConfig[];
 
   /**
    * HTML tag of the current page.
    */
   @state()
-  pageTag?: string;
+  private _pageTag?: string;
 
   constructor() {
     super();
 
     // Get all package scoped pages
-    this.pages = Object.entries(configMenu).reduce((acc, [_k, v]) => {
+    this._pages = Object.entries(configMenu).reduce((acc, [_k, v]) => {
       if (Array.isArray(v)) acc.push(...v);
       return acc;
     }, [] as PageConfig[]);
 
     // Add the home page
-    this.pages.unshift({
+    this._pages.unshift({
       title: "Home page",
       tag: "home-page",
       path: "/",
@@ -62,7 +62,7 @@ export default class NhLayout extends LitElement {
 
     // Handler for the menu button
     this.addEventListener("nh-menu-button-click", () => {
-      this.nhSidebar.drawer.show();
+      this._nhSidebar.drawer.show();
     });
 
     // Handler for the clicks on page links
@@ -72,45 +72,46 @@ export default class NhLayout extends LitElement {
       for (const target of targets) {
         if (target.tagName === "A" && target.getAttribute("href")?.startsWith("/")) {
           e.preventDefault();
+          this._nhSidebar.drawer.hide();
           window.history.pushState({}, "", target.getAttribute("href"));
-          this.loadPage();
+          this._loadPage();
         }
       }
     });
 
     // Handler when navigating the history (browser back and forward buttons)
     window.addEventListener("popstate", () => {
-      this.loadPage();
+      this._loadPage();
     });
 
     // Load initial page
-    this.loadPage();
+    this._loadPage();
   }
 
   /**
    * Load the page corresponding to the current path.
    */
-  loadPage = async () => {
-    this.pageTag = undefined;
+  private _loadPage = async () => {
+    this._pageTag = undefined;
 
     const { pathname } = window.location;
-    const page = this.pages.find((p) => p?.path === pathname);
+    const page = this._pages.find((p) => p?.path === pathname);
 
     if (!page) {
       await import("$pages/not-found");
-      this.pageTag = "not-found";
+      this._pageTag = "not-found";
       return;
     }
 
     if (page.path === "/") {
       await import("$pages/home-page");
-      this.pageTag = "home-page";
+      this._pageTag = "home-page";
       return;
     }
 
     if (page) {
       await import(/* @vite-ignore */ `../pages${page.path}`);
-      this.pageTag = page.tag;
+      this._pageTag = page.tag;
     }
   };
 
@@ -124,10 +125,10 @@ export default class NhLayout extends LitElement {
       <nh-sidebar></nh-sidebar>
       <main>
         ${
-          this.pageTag
+          this._pageTag
             ? staticHtml`
                 <div class="page-container">
-                  <${unsafeStatic(this.pageTag)}></${unsafeStatic(this.pageTag)}>
+                  <${unsafeStatic(this._pageTag)}></${unsafeStatic(this._pageTag)}>
                 </div>
               `
             : html`<sl-spinner></sl-spinner>`

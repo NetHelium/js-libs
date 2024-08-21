@@ -22,12 +22,12 @@ export default class NhHeader extends LitElement {
    * Element representing the theme selector.
    */
   @query("sl-select[name='theme']")
-  themeSelect!: SlSelect;
+  private _themeSelect!: SlSelect;
 
   /**
    * Current theme selected.
    */
-  theme: ThemeSetting;
+  private _theme: ThemeSetting;
 
   /**
    * Constructor used to determine the initial theme to load.
@@ -37,15 +37,15 @@ export default class NhHeader extends LitElement {
   constructor() {
     super();
 
-    this.theme = this.getTheme();
-    matchMedia("(prefers-color-scheme: dark)").addEventListener("change", this.setTheme);
+    this._theme = this._getTheme();
+    matchMedia("(prefers-color-scheme: dark)").addEventListener("change", this._setTheme);
   }
 
   /**
    * Get the previously selected theme or `system` if no theme was selected.
    * @returns the theme to load
    */
-  getTheme = (): ThemeSetting => {
+  private _getTheme = (): ThemeSetting => {
     const savedTheme = localStorage.getItem("theme");
     return (savedTheme as ThemeSetting) || "system";
   };
@@ -53,24 +53,24 @@ export default class NhHeader extends LitElement {
   /**
    * Save the selected theme and notify that the theme has changed.
    */
-  setTheme = () => {
-    const value = this.themeSelect.value;
+  private _setTheme = () => {
+    const value = this._themeSelect.value;
 
     // Workaround needed because the value of `sl-select` is initially an array regardless of
     // the presence of the `multiple` attribute.
     if (Array.isArray(value)) {
-      this.theme = value.at(0) as ThemeSetting;
+      this._theme = value.at(0) as ThemeSetting;
     } else {
-      this.theme = value as ThemeSetting;
+      this._theme = value as ThemeSetting;
     }
 
-    localStorage.setItem("theme", this.theme);
+    localStorage.setItem("theme", this._theme);
     let theme: Theme;
 
-    if (this.theme === "system") {
+    if (this._theme === "system") {
       theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
     } else {
-      theme = this.theme;
+      theme = this._theme;
     }
 
     this.dispatchEvent(
@@ -85,7 +85,7 @@ export default class NhHeader extends LitElement {
   /**
    * Notify that the menu button has been clicked.
    */
-  menuButtonHandler = () => {
+  private _menuButtonHandler = () => {
     this.dispatchEvent(
       new Event("nh-menu-button-click", {
         bubbles: true,
@@ -99,8 +99,8 @@ export default class NhHeader extends LitElement {
    * Used to apply the initial theme and setup the listener on the theme selector.
    */
   protected override firstUpdated() {
-    this.setTheme();
-    this.themeSelect.addEventListener("sl-change", this.setTheme);
+    this._setTheme();
+    this._themeSelect.addEventListener("sl-change", this._setTheme);
   }
 
   /**
@@ -112,14 +112,14 @@ export default class NhHeader extends LitElement {
       <header>
         <div class="content">
           <div class="left">
-            <sl-icon-button name="list" label="Open menu" @click=${this.menuButtonHandler}>
+            <sl-icon-button name="list" label="Open menu" @click=${this._menuButtonHandler}>
             </sl-icon-button>
             <a href="/">JavaScript libraries</a>
           </div>
 
           <div class="right">
             <sl-tooltip content="Change theme" placement="left">
-              <sl-select name="theme" value="${this.theme}" size="small">
+              <sl-select name="theme" value="${this._theme}" size="small">
                 <sl-option value="system">System</sl-option>
                 <sl-divider></sl-divider>
                 <sl-option value="light">Light</sl-option>
