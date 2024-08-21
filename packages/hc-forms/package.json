@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Intégration de formulaires Hélium Connect sur vos pages web",
+  "description": "Intégration de formulaires Hélium Connect sur des pages web",
   "author": {
     "name": "Net Hélium",
     "url": "https://net-helium.fr"
@@ -20,6 +20,8 @@
     "dev:types": "tsc-watch --noClear",
     "dev:source": "./scripts/build.ts --watch",
     "dev": "pnpm clean && concurrently -n \"source,types\" \"pnpm dev:source\" \"pnpm dev:types\"",
+    "test": "vitest run",
+    "test:ui": "vitest --ui",
     "build:source": "./scripts/build.ts",
     "build:types": "tsc && mv dist/index.d.ts dist/hc-forms.d.ts",
     "build": "pnpm clean && pnpm build:source && pnpm build:types"
@@ -30,16 +32,24 @@
   "publishConfig": {
     "access": "public"
   },
+  "dependencies": {
+    "lit": "catalog:"
+  },
   "devDependencies": {
     "@commander-js/extra-typings": "catalog:",
+    "@net-helium/lib": "workspace:",
     "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "@vitest/ui": "catalog:",
     "commander": "catalog:",
     "concurrently": "catalog:",
     "esbuild": "catalog:",
-    "tslib": "catalog:",
+    "jsdom": "catalog:",
     "tsc-watch": "catalog:",
+    "tslib": "catalog:",
     "tsx": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "keywords": ["hélium connect", "net hélium", "form", "formulaire", "intégration", "crm"],
   "license": "MIT",
