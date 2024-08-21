@@ -41,7 +41,7 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install
-      - name: Disable telemetry of Turborepo
+      - name: Disable Turborepo telemetry
         run: pnpm turbo telemetry disable
       - name: Check for TypeScript errors
         run: pnpm check:types
@@ -49,5 +49,7 @@ jobs:
         run: pnpm biome ci .
       - name: Check for spelling errors
         run: pnpm check:spell
+      - name: Run tests
+        run: pnpm test
       - name: Build packages
         run: pnpm build
