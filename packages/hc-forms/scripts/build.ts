@@ -18,6 +18,7 @@ const ctx = await context({
   bundle: true,
   sourcemap: watch,
   minify: !watch,
+  legalComments: "none",
 });
 
 if (watch) {

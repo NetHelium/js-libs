@@ -1,6 +1,9 @@
 biomejs
+clazz
 esbuild
+iframe
 jsdom
+ldom
 lefthook
 outbase
 outdir
@@ -8,4 +11,5 @@ outfile
 plopfile
 preinstall
 tsbuildinfo
+verdana
 vitest

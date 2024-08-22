@@ -12,7 +12,11 @@
   "main": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./helium-connect": "./src/helium-connect/index.ts"
+    "./helium-connect": "./src/helium-connect/index.ts",
+    "./i18n": "./src/i18n/index.ts"
+  },
+  "dependencies": {
+    "lit": "catalog:"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "catalog:",

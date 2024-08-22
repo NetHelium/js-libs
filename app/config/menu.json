@@ -1,1 +1,9 @@
-{}
+{
+  "@net-helium/hc-forms": [
+    {
+      "title": "Form integration",
+      "path": "/hc-forms/forms-integration",
+      "tag": "hc-forms--forms-integration"
+    }
+  ]
+}

@@ -1,7 +1,6 @@
 {
   "name": "@net-helium/hc-forms",
   "version": "0.0.0",
-  "private": true,
   "type": "module",
   "description": "Intégration de formulaires Hélium Connect sur des pages web",
   "author": {
@@ -23,11 +22,11 @@
     "test": "vitest run",
     "test:ui": "vitest --ui",
     "build:source": "./scripts/build.ts",
-    "build:types": "tsc && mv dist/index.d.ts dist/hc-forms.d.ts",
+    "build:types": "tsc",
     "build": "pnpm clean && pnpm build:source && pnpm build:types"
   },
   "main": "./dist/hc-forms.min.js",
-  "types": "./dist/hc-forms.d.ts",
+  "types": "./dist/index.d.ts",
   "files": ["dist"],
   "publishConfig": {
     "access": "public"
