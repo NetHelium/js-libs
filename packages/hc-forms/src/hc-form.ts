@@ -60,7 +60,7 @@ export default class HcForm extends LitElement {
   url: string | null = null;
 
   /**
-   * Offset for the scroll to the top of the form after changing inside the form.
+   * Offset for the scroll to the top of the form after a page change inside the form.
    */
   @property({ type: Number, reflect: true, attribute: "scroll-offset" })
   scrollOffset = 0;
@@ -75,11 +75,6 @@ export default class HcForm extends LitElement {
    * Unique form identifier extracted from its URL.
    */
   private _formIdentifier?: string;
-
-  /**
-   * Will be true if the form URL is not considered valid and an error message will appear.
-   */
-  private _hasError = false;
 
   /**
    * Final URL of the form that will be loaded. The value is the same as the url property but
@@ -207,10 +202,7 @@ export default class HcForm extends LitElement {
         this._formIdentifier =
           hcFormIdFromUrl(this.url) || hcFormSlugFromUrl(this.url) || getHostPathFromUrl(this.url);
 
-        // No identifier means the form url is not valid
-        if (!this._formIdentifier) {
-          this._hasError = true;
-        } else {
+        if (this._formIdentifier) {
           this._src = this._buildFinalUrl(this.url);
         }
       }
@@ -222,7 +214,7 @@ export default class HcForm extends LitElement {
    * @returns the DOM of the component
    */
   protected override render() {
-    if (this._hasError) {
+    if (!this._formIdentifier) {
       return html`
         <p part="error-msg">
           ${translate("errorMsg")}
@@ -235,7 +227,7 @@ export default class HcForm extends LitElement {
         part="iframe"
         title=${translate("iframeTitle", { vars: { formId: this._formIdentifier! } })}
         src=${this._src}
-        style="height: ${this._height}px;"
+        style=${`height: ${this._height}px;`}
       ></iframe>
     `;
   }
@@ -263,7 +255,7 @@ export default class HcForm extends LitElement {
 declare global {
   interface Window {
     cookies?: {
-      [key: string]: string;
+      [key: string]: boolean;
     };
   }
 }
