@@ -37,6 +37,7 @@
   "devDependencies": {
     "@commander-js/extra-typings": "catalog:",
     "@net-helium/lib": "workspace:",
+    "@open-wc/testing": "catalog:",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "@vitest/ui": "catalog:",

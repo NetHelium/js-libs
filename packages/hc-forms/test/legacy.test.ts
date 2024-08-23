@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import handleLegacySyntax from "../src/legacy";
+import "../src";
 
 describe("[hc-forms] legacy", () => {
   it("should transform the deprecated syntax into the new web component syntax", () => {
@@ -19,7 +19,7 @@ describe("[hc-forms] legacy", () => {
     expect(legacyFormSearch).not.toBeNull();
     expect(newFormSearch).toBeNull();
 
-    handleLegacySyntax();
+    dispatchEvent(new Event("load-hc-forms"));
 
     legacyFormSearch = document.querySelector("[data-hc-url]");
     newFormSearch = document.querySelector("hc-form");

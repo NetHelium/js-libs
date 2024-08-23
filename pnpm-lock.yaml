@@ -161,6 +161,9 @@ importers:
       '@net-helium/lib':
         specifier: 'workspace:'
         version: link:../../lib
+      '@open-wc/testing':
+        specifier: 'catalog:'
+        version: 4.0.0
       '@types/node':
         specifier: 'catalog:'
         version: 22.3.0
