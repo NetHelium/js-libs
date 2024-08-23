@@ -35,10 +35,10 @@ Pour installer la librairie localement sur votre projet (installation de **Node 
 npm install @net-helium/hc-forms
 
 # pnpm
-pnpm add install @net-helium/hc-forms
+pnpm add @net-helium/hc-forms
 
 # yarn
-yarn add install @net-helium/hc-forms
+yarn add @net-helium/hc-forms
 ```
 
 Intégrez une balise `<script>` sur vos pages qui pointe sur le fichier **/dist/hc-forms.min.js** du package.\
