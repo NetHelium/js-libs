@@ -2,6 +2,7 @@
 
 import { Command } from "@commander-js/extra-typings";
 import { context } from "esbuild";
+import { minifyHTMLLiteralsPlugin } from "esbuild-plugin-minify-html-literals";
 import pkg from "../package.json" with { type: "json" };
 
 const program = new Command()
@@ -19,6 +20,7 @@ const ctx = await context({
   sourcemap: watch,
   minify: !watch,
   legalComments: "none",
+  plugins: [minifyHTMLLiteralsPlugin()],
 });
 
 if (watch) {

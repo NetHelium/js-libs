@@ -43,6 +43,7 @@
     "commander": "catalog:",
     "concurrently": "catalog:",
     "esbuild": "catalog:",
+    "esbuild-plugin-minify-html-literals": "catalog:",
     "jsdom": "catalog:",
     "tsc-watch": "catalog:",
     "tslib": "catalog:",
