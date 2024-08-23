@@ -1,9 +1,14 @@
 {
   "@net-helium/hc-forms": [
     {
-      "title": "Form integration",
-      "path": "/hc-forms/forms-integration",
-      "tag": "hc-forms--forms-integration"
+      "title": "One form",
+      "path": "/hc-forms/one-form",
+      "tag": "hc-forms--one-form"
+    },
+    {
+      "title": "Multiple forms",
+      "path": "/hc-forms/multiple-forms",
+      "tag": "hc-forms--multiple-forms"
     }
   ]
 }
