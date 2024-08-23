@@ -101,8 +101,14 @@ export const translate = (key: string, options?: TranslateOptions) => {
 
   let value: NestedStringObject | string | undefined;
 
-  for (const identifier of identifiers) {
-    value = localeDictionary[identifier];
+  for (const [idx, identifier] of identifiers.entries()) {
+    if (idx === 0) {
+      value = localeDictionary[identifier];
+    } else {
+      if (value !== undefined && typeof value !== "string") {
+        value = value[identifier];
+      }
+    }
 
     if (value === undefined) {
       break;
