@@ -15,7 +15,8 @@ const { watch } = program.opts();
 
 const ctx = await context({
   entryPoints: ["src/index.ts"],
-  outfile: "dist/hc-forms.min.js",
+  outfile: "dist/hc-forms.js",
+  target: "es2022",
   bundle: true,
   sourcemap: watch,
   minify: !watch,

@@ -10,12 +10,8 @@ type PageAnswers = {
   [key in "package" | "title" | "path"]: string;
 };
 
-type NextPositions = {
-  [key: string]: number;
-};
-
 // Next page positions based on the existing ones for each associated package.
-const nextPositions: NextPositions = {};
+const nextPositions: { [key: string]: number } = {};
 
 for (const pkg of getWorkspacePackages()) {
   const currentMax = Math.max(...(await getPagePositions(pkg.name)));

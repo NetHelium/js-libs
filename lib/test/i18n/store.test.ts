@@ -61,19 +61,4 @@ describe.concurrent("[lib] i18n/store", () => {
   it("should translate in the given locale", () => {
     expect(translate("first", { locale: "fr" })).toContain("Exemple de texte");
   });
-
-  // it("should follow the browser language for the default locale to use", () => {
-  //   // Mock for the readonly property `navigator.language`
-  //   const languageGetter = vi.spyOn(window.navigator, "language", "get");
-
-  //   // Simulate the browser language to be french
-  //   languageGetter.mockReturnValue("fr");
-  //   setLocale("en");
-  //   expect(translate("first")).toContain("Exemple de texte");
-
-  //   // Switch back to english
-  //   languageGetter.mockReturnValue("en");
-  //   setLocale("fr");
-  //   expect(translate("first")).toContain("Some text");
-  // });
 });

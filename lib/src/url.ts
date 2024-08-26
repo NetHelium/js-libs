@@ -1,6 +1,4 @@
-export type URLParams = {
-  [key: string]: string;
-};
+import type { StringObject } from "./types";
 
 /**
  * Extract the host and path from a url.
@@ -16,9 +14,9 @@ export const getHostPathFromUrl = (url: string) => {
  * Extract all the params matching the given `prefixes` from a url.
  * @param url the url
  * @param prefixes the prefixes to look for
- * @returns the params matching the `prefixes` as a `URLParams` object
+ * @returns the params matching the `prefixes` as a `StringObject` object
  */
-export const getPrefixedParamsFromUrl = (url: string, ...prefixes: string[]): URLParams => {
+export const getPrefixedParamsFromUrl = (url: string, ...prefixes: string[]): StringObject => {
   const urlParams = [...new URLSearchParams(new URL(url).search).entries()];
   let extractedParams: [string, string][] = [];
 
@@ -35,13 +33,13 @@ export const getPrefixedParamsFromUrl = (url: string, ...prefixes: string[]): UR
 /**
  * Merge the existing params of the given `url` with the given `params`.
  * @param url the original url
- * @param params the params to add as a `URLParams` object
+ * @param params the params to add as a `StringObject` object
  * @param override set to `false` to preserve the values of existing params or `true` to override
  * them (default is `true`)
  * @returns the altered url with the new params
  */
-export const addParamsToUrl = (url: string, params: URLParams, override = true) => {
-  const urlParams: URLParams = [...new URLSearchParams(new URL(url).search).entries()].reduce(
+export const addParamsToUrl = (url: string, params: StringObject, override = true) => {
+  const urlParams: StringObject = [...new URLSearchParams(new URL(url).search).entries()].reduce(
     (acc, [key, value]) => Object.assign(acc, { [key]: value }),
     {},
   );

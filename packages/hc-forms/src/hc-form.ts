@@ -5,8 +5,8 @@ import { LitElement, type PropertyValues, css, html } from "lit";
 import { customElement, property, query, state } from "lit/decorators.js";
 
 /**
- * Message data sent by Hélium Connect containing the needed information about the
- * form rendered in this component.
+ * Data sent by Hélium Connect containing the needed information about the form rendered in the
+ * component.
  */
 type HcFormEventMessage = {
   /**
@@ -42,7 +42,7 @@ type HcFormEventMessage = {
     | "resize"; // After a request was sent because of a window resize
 
   /**
-   * The current height of the form calculated.
+   * The calculated height of the form.
    */
   height: number;
 };
@@ -55,18 +55,21 @@ type HcFormEventMessage = {
 export default class HcForm extends LitElement {
   /**
    * URL of the form.
+   * @default null
    */
   @property({ type: String, reflect: true })
   url: string | null = null;
 
   /**
    * Offset for the scroll to the top of the form after a page change inside the form.
+   * @default 0
    */
   @property({ type: Number, reflect: true, attribute: "scroll-offset" })
   scrollOffset = 0;
 
   /**
    * Extra space in pixels that will be added to the calculated height of the form.
+   * @default 0
    */
   @property({ type: Number, reflect: true, attribute: "padding-bottom" })
   paddingBottom = 0;
@@ -192,8 +195,8 @@ export default class HcForm extends LitElement {
   }
 
   /**
-   * Update the form identifier and the final url to load into the iframe when the url property
-   * changes.
+   * Update the form identifier and the final url to load into the iframe when the `url` property
+   * changes. Also update the height if the `paddingBottom` property changes.
    * @param changedProperties a map of the properties that have changed since the last render
    */
   protected override willUpdate(changedProperties: PropertyValues<this>) {
@@ -207,11 +210,15 @@ export default class HcForm extends LitElement {
         }
       }
     }
+
+    if (changedProperties.has("paddingBottom")) {
+      this._height += this.paddingBottom - changedProperties.get("paddingBottom")!;
+    }
   }
 
   /**
-   * Content of the component.
-   * @returns the DOM of the component
+   * Component content.
+   * @returns the component's DOM
    */
   protected override render() {
     if (!this._formIdentifier) {
@@ -225,7 +232,7 @@ export default class HcForm extends LitElement {
     return html`
       <iframe
         part="iframe"
-        title=${translate("iframeTitle", { vars: { formId: this._formIdentifier! } })}
+        title=${translate("iframeTitle", { vars: { formId: this._formIdentifier } })}
         src=${this._src}
         style=${`height: ${this._height}px;`}
       ></iframe>
@@ -233,7 +240,7 @@ export default class HcForm extends LitElement {
   }
 
   /**
-   * Default styles for the component's DOM.
+   * Default styles of the component.
    */
   static override styles = css`
     :host {

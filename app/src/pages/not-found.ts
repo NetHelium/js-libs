@@ -2,7 +2,7 @@ import { LitElement, css, html } from "lit";
 import { customElement } from "lit/decorators.js";
 
 /**
- * Special page for the 404 page.
+ * Special page for the 404 error.
  */
 @customElement("not-found")
 export default class HomePage extends LitElement {

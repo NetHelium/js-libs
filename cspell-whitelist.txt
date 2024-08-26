@@ -1,5 +1,4 @@
 biomejs
-clazz
 esbuild
 iframe
 jsdom

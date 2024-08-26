@@ -3,6 +3,9 @@ import type { SlDrawer } from "@shoelace-style/shoelace";
 import { LitElement, css, html } from "lit";
 import { customElement, query, state } from "lit/decorators.js";
 
+/**
+ * Data inside a menu entry.
+ */
 type MenuEntry = {
   pkg: string;
   links: {
@@ -18,20 +21,27 @@ type MenuEntry = {
 @customElement("nh-sidebar")
 export default class NhSidebar extends LitElement {
   /**
-   * Element representing the drawer.
+   * HTML Element representing the drawer.
    */
   @query("sl-drawer")
   drawer!: SlDrawer;
 
+  /**
+   * HTML Element representing the menu.
+   */
   @query("nav")
   private _menu!: HTMLElement;
 
+  /**
+   * List of all menu entries for each package.
+   */
   @state()
   private _menuEntries: MenuEntry[];
 
   constructor() {
     super();
 
+    // Retrieve all menu entries from the generated config
     this._menuEntries = Object.entries(menuConfig).reduce((acc, [k, v]) => {
       if (Array.isArray(v)) {
         acc.push({ pkg: k, links: v });
@@ -41,6 +51,10 @@ export default class NhSidebar extends LitElement {
     }, [] as MenuEntry[]);
   }
 
+  /**
+   * Lifecycle method that runs once after the first render. It is used to setup an event listener
+   * to close other package menus when opening one.
+   */
   protected override firstUpdated() {
     this._menu.addEventListener("sl-show", (e) => {
       for (const details of this._menu.querySelectorAll("sl-details")) {

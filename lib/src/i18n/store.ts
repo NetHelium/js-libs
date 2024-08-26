@@ -1,16 +1,12 @@
+import type { NestedStringObject, StringObject } from "../types";
+
 // Supported locales
 const locales = ["en", "fr"] as const;
 
-// Locale has to be one of the supported locales
+/**
+ * A `Locale` has to be one of the supported locales.
+ */
 type Locale = (typeof locales)[number];
-
-type StringObject = {
-  [key: string]: string;
-};
-
-type NestedStringObject = {
-  [key: string]: NestedStringObject | string;
-};
 
 /**
  * Object containing all the translations for all the supported locales.

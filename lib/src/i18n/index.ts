@@ -1,3 +1,2 @@
-export * from "./decorators";
-export * from "./localized-controller";
+export * from "./controller";
 export { loadTranslations, translate } from "./store";

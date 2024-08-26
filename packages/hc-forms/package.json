@@ -25,7 +25,7 @@
     "build:types": "tsc",
     "build": "pnpm clean && pnpm build:source && pnpm build:types"
   },
-  "main": "./dist/hc-forms.min.js",
+  "main": "./dist/hc-forms.js",
   "types": "./dist/index.d.ts",
   "files": ["dist"],
   "publishConfig": {

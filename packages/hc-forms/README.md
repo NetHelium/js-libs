@@ -26,9 +26,9 @@ Cette librairie génère une iframe pour chacun de vos formulaires et gère auto
 
 ## Installation
 
-### Chargement local à votre projet
+### Chargement local à votre site
 
-Pour installer la librairie localement sur votre projet (installation de **Node JS** et présence d'un **package.json** requis dans votre projet), utilisez l'une des commandes suivantes en fonction du package manager utilisé par votre projet :
+Installez la librairie localement sur votre site en utilisant une des commandes suivantes en fonction du package manager que vous utilisez :
 
 ```bash
 # npm
@@ -41,12 +41,12 @@ pnpm add @net-helium/hc-forms
 yarn add @net-helium/hc-forms
 ```
 
-Intégrez une balise `<script>` sur vos pages qui pointe sur le fichier **/dist/hc-forms.min.js** du package.\
+Intégrez une balise `<script>` sur vos pages qui pointe sur le fichier **/dist/hc-forms.js** du package.\
 Le chemin dépend de la gestion des assets sur votre site.
 Suivant les technologies et framework utilisés pour le développement de votre site, cette gestion sera différente.
 
 ```html
-<script src="/chemin-vers/dist/hc-forms.min.js" defer></script>
+<script src="/chemin-vers/dist/hc-forms.js" defer></script>
 ```
 
 ### Chargement depuis un CDN
@@ -55,22 +55,24 @@ Si vous préférez charger la librairie depuis un CDN, intégrez l'une des balis
 
 ```html
 <!-- Lien vers la dernière version -->
-<script src="https://cdn.jsdelivr.net/npm/@net-helium/hc-forms/dist/hc-forms.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@net-helium/hc-forms/dist/hc-forms.js" defer></script>
 
 <!-- Lien vers une version spécifique (exemple avec la version 1.0.0) -->
-<script src="https://cdn.jsdelivr.net/npm/@net-helium/hc-forms@1.0.0/dist/hc-forms.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@net-helium/hc-forms@1.0.0/dist/hc-forms.js" defer></script>
 ```
 
 ## Usage
 
-Pour afficher un formulaire Hélium Connect, utilisez le code HTML suivant (remplacez **URL_FORMULAIRE**) :
+Pour intégrer un formulaire Hélium Connect, utilisez le code HTML suivant (remplacez **URL_FORMULAIRE**) :
 
 ```html
 <hc-form url="URL_FORMULAIRE"></hc-form>
 ```
 
-Ce code génère une iframe contenant le formulaire avec une largeur de 100% par rapport à son conteneur (l'élément parent de `<hc-form>`) et une hauteur calculée automatiquement en fonction du contenu du formulaire.\
+Ce code génère une iframe contenant le formulaire avec une largeur de 100% par rapport à son conteneur (l'élément parent de `<hc-form>`) et une hauteur calculée en fonction du contenu du formulaire.\
 La hauteur de l'iframe sera modifiée automatiquement si le contenu du formulaire change ou si la fenêtre du navigateur est redimensionnée.
+
+Si l'URL renseignée n'est pas une URL valide, un message d'erreur apparaitra à la place de l'iframe. Si l'URL est valide mais ne correspond pas à un formulaire Hélium Connect, une iframe sera générée avec le contenu de la page cible mais elle ne sera pas visible puisque la hauteur ne pourra pas être calculée par la librairie et restera donc à 0 pixels.
 
 ### Problème sur le calcul de la hauteur
 
@@ -81,7 +83,7 @@ Si la correction de ce problème ne peut pas être faite tout de suite, vous ave
 <hc-form url="URL_FORMULAIRE" padding-bottom="15"></hc-form>
 ```
 
-Dans cet exemple, la librairie ajoutera 15 pixels supplémentaires à chaque hauteur calculée. Cette option est une solution de secours en attendant une correction dans le formulaire plutôt qu'une solution définitive, il est fortement recommandé corriger le style du formulaire sur le long terme.\
+Dans cet exemple, la librairie ajoutera 15 pixels supplémentaires à chaque hauteur calculée. Cette option est une solution de secours en attendant une correction dans le formulaire plutôt qu'une solution définitive, il est préférable de corriger le style du formulaire sur le long terme.\
 Si le gabarit de votre formulaire a été réalisé par Net Hélium, remontez-nous le problème.
 
 Si non renseignée, la valeur par défaut de `padding-bottom` est 0.
