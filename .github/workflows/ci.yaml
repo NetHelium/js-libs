@@ -24,7 +24,7 @@ jobs:
   integration:
     needs: pre_job
     if: needs.pre_job.outputs.should_skip != 'true'
-    name: 'Continuous integration'
+    name: Continuous integration
     runs-on: ubuntu-latest
     strategy:
       matrix:
