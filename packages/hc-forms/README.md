@@ -1,6 +1,6 @@
 # Hélium Connect Forms
 
-![NPM Version](https://img.shields.io/npm/v/%40net-helium%2Fhc-forms)
+[![NPM Version](https://img.shields.io/npm/v/%40net-helium%2Fhc-forms)](https://www.npmjs.com/package/@net-helium/hc-forms)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/NetHelium/js-libs/blob/main/LICENSE)
 
 Cette librairie permet d'intégrer facilement des formulaires [Hélium Connect](https://helium-connect.fr) sur vos pages web.
