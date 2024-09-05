@@ -1,8 +1,9 @@
 {
+  "biome.enabled": true,
+  "cSpell.enabled": true,
   "prettify-ts.maxProperties": 30,
   "prettify-ts.maxCharacters": 10000,
   "prettify-ts.typeIndentation": 2,
-  "editor.defaultFormatter": "biomejs.biome",
   "editor.formatOnSave": true,
   "editor.rulers": [
     {
@@ -12,5 +13,14 @@
   ],
   "html.customData": [
     "./app/node_modules/@shoelace-style/shoelace/dist/vscode.html-custom-data.json"
-  ]
+  ],
+  "[json]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  }
 }
