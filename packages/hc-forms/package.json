@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "description": "Intégration de formulaires Hélium Connect sur des pages web",
+  "homepage": "https://github.com/NetHelium/js-libs/tree/main/packages/hc-forms",
   "author": {
     "name": "Net Hélium",
     "url": "https://net-helium.fr"

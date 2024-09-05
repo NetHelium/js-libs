@@ -200,14 +200,12 @@ export default class HcForm extends LitElement {
    * @param changedProperties a map of the properties that have changed since the last render
    */
   protected override willUpdate(changedProperties: PropertyValues<this>) {
-    if (changedProperties.has("url")) {
-      if (this.url) {
-        this._formIdentifier =
-          hcFormIdFromUrl(this.url) || hcFormSlugFromUrl(this.url) || getHostPathFromUrl(this.url);
+    if (changedProperties.has("url") && this.url) {
+      this._formIdentifier =
+        hcFormIdFromUrl(this.url) || hcFormSlugFromUrl(this.url) || getHostPathFromUrl(this.url);
 
-        if (this._formIdentifier) {
-          this._src = this._buildFinalUrl(this.url);
-        }
+      if (this._formIdentifier) {
+        this._src = this._buildFinalUrl(this.url);
       }
     }
 
