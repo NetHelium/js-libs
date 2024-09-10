@@ -8,6 +8,7 @@ outbase
 outdir
 outfile
 plopfile
+postpack
 preinstall
 tsbuildinfo
 verdana
