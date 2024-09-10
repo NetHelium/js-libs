@@ -2,9 +2,9 @@
 
 ## 1.0.1
 
-### Patch Changes
+### Corrections
 
-- [`50289c5`](https://github.com/NetHelium/js-libs/commit/50289c55ccdada7ed3f5a2c47946b3b89e527910) Thanks [@RonanHenry35](https://github.com/RonanHenry35)! - Nettoyage de données inutiles pour la publication du package
+- [`50289c5`](https://github.com/NetHelium/js-libs/commit/50289c55ccdada7ed3f5a2c47946b3b89e527910) ([@RonanHenry35](https://github.com/RonanHenry35)) - Suppression de données de développement lors la publication pour éviter de provoquer des erreurs ou des warnings inutiles lors de l'installation de la librairie.
 
 ## 1.0.0
 
