@@ -1,5 +1,11 @@
 # @net-helium/hc-forms
 
+## 1.0.1
+
+### Patch Changes
+
+- [`50289c5`](https://github.com/NetHelium/js-libs/commit/50289c55ccdada7ed3f5a2c47946b3b89e527910) Thanks [@RonanHenry35](https://github.com/RonanHenry35)! - Nettoyage de données inutiles pour la publication du package
+
 ## 1.0.0
 
 ### Fonctionnalités importantes
