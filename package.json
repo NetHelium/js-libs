@@ -27,9 +27,9 @@
     "typescript": "catalog:"
   },
   "license": "MIT",
-  "packageManager": "pnpm@9.7.0",
+  "packageManager": "pnpm@9.10.0",
   "engines": {
-    "node": ">=20.16.0",
-    "pnpm": ">=9.7.0"
+    "node": ">=20.0.0",
+    "pnpm": ">=9.5.0"
   }
 }
