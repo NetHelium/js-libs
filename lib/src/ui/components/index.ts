@@ -6,13 +6,13 @@ import type {
   EventsWithRequiredDetail,
   EventsWithoutRequiredDetail,
   NhEventInit,
-} from "./events";
+} from "../internals/events";
 import "../events";
 
 /**
  * Base class for UI related web components.
  */
-export default abstract class NhElement extends LitElement {
+export abstract class NhElement extends LitElement {
   /**
    * Emit a custom event with convenient defaults.
    *

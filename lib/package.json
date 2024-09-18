@@ -12,8 +12,12 @@
   "main": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
+    "./components": "./src/ui/components/index.ts",
+    "./components/*": "./src/ui/components/*/index.ts",
+    "./events": "./src/ui/events/index.ts",
     "./helium-connect": "./src/helium-connect/index.ts",
     "./i18n": "./src/i18n/index.ts",
+    "./icons": "./src/ui/icons/index.ts",
     "./utils": "./src/utils/index.ts"
   },
   "dependencies": {
@@ -24,6 +28,7 @@
     "@vitest/coverage-v8": "catalog:",
     "@vitest/ui": "catalog:",
     "jsdom": "catalog:",
+    "tslib": "catalog:",
     "vitest": "catalog:"
   },
   "license": "MIT",
