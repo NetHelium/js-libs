@@ -1,4 +1,5 @@
 {
+  "typescript.tsdk": "node_modules/typescript/lib",
   "biome.enabled": true,
   "cSpell.enabled": true,
   "prettify-ts.maxProperties": 30,
