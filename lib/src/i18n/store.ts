@@ -1,5 +1,3 @@
-import type { NestedStringObject, StringObject } from "../types";
-
 // Supported locales
 const locales = ["en", "fr"] as const;
 
@@ -9,11 +7,14 @@ const locales = ["en", "fr"] as const;
 type Locale = (typeof locales)[number];
 
 /**
+ * Translation keys have a variable depth.
+ */
+type TranslationKeys = { [key: string]: TranslationKeys | string };
+
+/**
  * Object containing all the translations for all the supported locales.
  */
-type TranslationObject = {
-  [key in Locale]: NestedStringObject;
-};
+type TranslationObject = Record<Locale, TranslationKeys>;
 
 /**
  * I18n data store.
@@ -37,7 +38,7 @@ type TranslateOptions = {
   /**
    * The values of the translation's placeholders (variables).
    */
-  vars?: StringObject;
+  vars?: Record<string, string>;
 
   /**
    * The maximum length of the translation (it will be truncated if necessary).
@@ -95,7 +96,7 @@ export const translate = (key: string, options?: TranslateOptions) => {
   const locale = options?.locale ?? store.locale;
   const localeDictionary = store.dictionary[locale];
 
-  let value: NestedStringObject | string | undefined;
+  let value: TranslationKeys | string | undefined;
 
   for (const [idx, identifier] of identifiers.entries()) {
     if (idx === 0) {

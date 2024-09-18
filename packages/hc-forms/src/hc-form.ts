@@ -1,6 +1,10 @@
-import { addParamsToUrl, getHostPathFromUrl, getPrefixedParamsFromUrl } from "@net-helium/lib";
 import { hcFormIdFromUrl, hcFormSlugFromUrl } from "@net-helium/lib/helium-connect";
 import { localized, translate } from "@net-helium/lib/i18n";
+import {
+  addParamsToUrl,
+  getHostPathFromUrl,
+  getPrefixedParamsFromUrl,
+} from "@net-helium/lib/utils";
 import { LitElement, type PropertyValues, css, html } from "lit";
 import { customElement, property, query, state } from "lit/decorators.js";
 
@@ -49,19 +53,22 @@ type HcFormEventMessage = {
 
 /**
  * Hélium Connect form component.
+ *
+ * @csspart iframe - The iframe HTML element displaying the form
+ * @csspart error-msg - The error message displayed if the form URL is invalid
  */
 @localized()
 @customElement("hc-form")
 export default class HcForm extends LitElement {
   /**
    * URL of the form.
-   * @default null
    */
   @property({ type: String, reflect: true })
-  url: string | null = null;
+  url?: string;
 
   /**
    * Offset for the scroll to the top of the form after a page change inside the form.
+   *
    * @default 0
    */
   @property({ type: Number, reflect: true, attribute: "scroll-offset" })
@@ -69,6 +76,7 @@ export default class HcForm extends LitElement {
 
   /**
    * Extra space in pixels that will be added to the calculated height of the form.
+   *
    * @default 0
    */
   @property({ type: Number, reflect: true, attribute: "padding-bottom" })
