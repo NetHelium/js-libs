@@ -11,6 +11,7 @@ outfile
 plopfile
 postpack
 preinstall
+slotchange
 tsbuildinfo
 verdana
 vitest
