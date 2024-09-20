@@ -8,10 +8,14 @@ import styles from "./icon.styles";
 /**
  * Display an icon that was previously loaded in the store.
  *
+ * @property {string | undefined} name - The name of the icon to display
+ * @property {string} variant - The icon's variant if applicable
+ * @property {string} color - The icon's color
+ *
  * @event nh-error - Emitted when the requested icon does not exist in the store
  *
  * @csspart svg - The SVG element
- * @csspart path-{index} - Each path of the drawn icon (`path-0`, `path-1`, ...)
+ * @csspart path-[index] - Each path of the drawn icon (`path-0`, `path-1`, ...)
  */
 @customElement("nh-icon")
 export default class NhIcon extends NhElement {
@@ -49,6 +53,11 @@ export default class NhIcon extends NhElement {
    */
   private _paths: string[] = [];
 
+  /**
+   * Find and display the icon that matches the name when it changes. An `nh-error` event is
+   * emitted if no matching icon was found in the store.
+   * @param changedProperties a map of the properties that have changed since the last render
+   */
   protected override willUpdate(changedProperties: PropertyValues<this>) {
     if (changedProperties.has("name") && this.name) {
       const paths = getIconPaths(this.name, this.variant);
@@ -65,6 +74,11 @@ export default class NhIcon extends NhElement {
     }
   }
 
+  /**
+   * Render the icon as a SVG element or nothing if the `name` property doesn't match any icon
+   * loaded in the store.
+   * @returns the icon's DOM
+   */
   protected override render() {
     if (!this.name || this._paths.length === 0) {
       return nothing;
