@@ -2,20 +2,19 @@ import { elementUpdated, fixture, fixtureCleanup } from "@open-wc/testing";
 import { LitElement, html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { beforeAll, describe, expect, it, vi } from "vitest";
-import { loadTranslations, localized, translate, updateWhenLocaleChanges } from "../../src/i18n";
+import { addLocalizedController, loadTranslations, localized, translate } from "../../src/i18n";
 import { translations } from "./store.test";
 
 /**
- * Web component localized by calling the `updateWhenLocaleChanges` function in the constructor.
- * This can be used in TypeScript or JavaScript.
+ * Function based controller attachment (JavaScript or TypeScript)
  */
 class FunctionLocalized extends LitElement {
   constructor() {
     super();
-    updateWhenLocaleChanges(this);
+    addLocalizedController(this);
   }
 
-  protected render() {
+  protected override render() {
     return html`
       <p>
         ${translate("first")}
@@ -27,13 +26,12 @@ class FunctionLocalized extends LitElement {
 customElements.define("function-localized", FunctionLocalized);
 
 /**
- * Web component localized using the `localize` decorator above the class definition.
- * Decorators can only be used in TypeScript.
+ * Decorator based controller attachment (TypeScript only)
  */
-@localized()
 @customElement("decorator-localized")
+@localized()
 class DecoratorLocalized extends LitElement {
-  protected render() {
+  protected override render() {
     return html`
       <p>
         ${translate("second")}
@@ -118,7 +116,7 @@ describe.concurrent("[lib] i18n/localized", () => {
     expect(getComponentText(functionLocalized)).toContain("Some text");
     expect(getComponentText(decoratorLocalized)).toContain("Another one");
 
-    // This line just allows for the `hostDisconnected` callback of the localized controller to
+    // This line just allows for the `hostDisconnected` callback of the `localized` controller to
     // be executed during the test which improves the coverage report. There's no logic to test
     // in this callback anyway.
     fixtureCleanup();
