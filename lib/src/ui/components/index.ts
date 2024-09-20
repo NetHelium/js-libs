@@ -7,8 +7,7 @@ import type {
   EventsWithRequiredDetail,
   EventsWithoutRequiredDetail,
   NhEventInit,
-} from "../events/types";
-import "../events";
+} from "../events";
 
 /**
  * Base class for UI related web components.
