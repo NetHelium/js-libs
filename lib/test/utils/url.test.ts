@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { addParamsToUrl, getHostPathFromUrl, getPrefixedParamsFromUrl } from "../src";
+import { addParamsToUrl, getHostPathFromUrl, getPrefixedParamsFromUrl } from "../../src/utils";
 
 describe.concurrent("[lib] url", () => {
   it("should extract the host and the path from the url", () => {
