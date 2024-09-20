@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@shoelace-style/shoelace": "^2.16.0",
+    "@net-helium/cookie-consent": "workspace:",
     "@net-helium/hc-forms": "workspace:",
     "lit": "catalog:"
   },

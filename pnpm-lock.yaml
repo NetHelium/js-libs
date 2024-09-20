@@ -95,6 +95,9 @@ importers:
 
   app:
     dependencies:
+      '@net-helium/cookie-consent':
+        specifier: 'workspace:'
+        version: link:../packages/cookie-consent
       '@net-helium/hc-forms':
         specifier: 'workspace:'
         version: link:../packages/hc-forms
@@ -151,6 +154,64 @@ importers:
       jsdom:
         specifier: 'catalog:'
         version: 24.1.1
+      tslib:
+        specifier: 'catalog:'
+        version: 2.6.3
+      vitest:
+        specifier: 'catalog:'
+        version: 2.0.5(@types/node@22.3.0)(@vitest/ui@2.0.5)(jsdom@24.1.1)
+
+  packages/cookie-consent:
+    dependencies:
+      lit:
+        specifier: 'catalog:'
+        version: 3.2.0
+    devDependencies:
+      '@commander-js/extra-typings':
+        specifier: 'catalog:'
+        version: 12.1.0(commander@12.1.0)
+      '@net-helium/lib':
+        specifier: 'workspace:'
+        version: link:../../lib
+      '@open-wc/testing':
+        specifier: 'catalog:'
+        version: 4.0.0
+      '@types/node':
+        specifier: 'catalog:'
+        version: 22.3.0
+      '@vitest/coverage-v8':
+        specifier: 'catalog:'
+        version: 2.0.5(vitest@2.0.5(@types/node@22.3.0)(@vitest/ui@2.0.5)(jsdom@24.1.1))
+      '@vitest/ui':
+        specifier: 'catalog:'
+        version: 2.0.5(vitest@2.0.5)
+      commander:
+        specifier: 'catalog:'
+        version: 12.1.0
+      concurrently:
+        specifier: 'catalog:'
+        version: 8.2.2
+      esbuild:
+        specifier: 'catalog:'
+        version: 0.23.0
+      esbuild-plugin-minify-html-literals:
+        specifier: 'catalog:'
+        version: 2.0.1(esbuild@0.23.0)
+      jsdom:
+        specifier: 'catalog:'
+        version: 24.1.1
+      tsc-watch:
+        specifier: 'catalog:'
+        version: 6.2.0(typescript@5.5.4)
+      tslib:
+        specifier: 'catalog:'
+        version: 2.6.3
+      tsx:
+        specifier: 'catalog:'
+        version: 4.17.0
+      typescript:
+        specifier: 'catalog:'
+        version: 5.5.4
       vitest:
         specifier: 'catalog:'
         version: 2.0.5(@types/node@22.3.0)(@vitest/ui@2.0.5)(jsdom@24.1.1)
