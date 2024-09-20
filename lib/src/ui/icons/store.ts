@@ -23,6 +23,11 @@ type IconStore = {
  * Options available when loading icons in the store.
  */
 type IconLoadOptions = {
+  /**
+   * When `true`, the existing icons in the store will be removed.
+   *
+   * @default false
+   */
   override: boolean;
 };
 
@@ -56,19 +61,19 @@ export const getIconPaths = (name: string, variant?: IconVariant) => {
  * Load an extra icon in the store.
  * @param name the name of the icon
  * @param paths the list of svg paths
+ * @param options the load options
  */
-export const loadIcon = (name: string, paths: Record<IconVariant, string[]> | string[]) => {
-  store.icons = { ...store.icons, [name]: paths };
+export const loadIcon = (name: string, paths: IconValue, options?: IconLoadOptions) => {
+  const override = options?.override ?? false;
+  store.icons = override ? { [name]: paths } : { ...store.icons, [name]: paths };
 };
 
 /**
  * Load a list of icons in the store.
  * @param icons the list of icons to load
- * @param opts the load options
+ * @param options the load options
  */
-export const loadIcons = (
-  icons: Record<string, IconValue>,
-  { override }: IconLoadOptions = { override: false },
-) => {
+export const loadIcons = (icons: Record<string, IconValue>, options?: IconLoadOptions) => {
+  const override = options?.override ?? false;
   store.icons = override ? icons : { ...store.icons, ...icons };
 };
