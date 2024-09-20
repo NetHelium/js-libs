@@ -1,0 +1,3 @@
+{
+  "remove": ["devDependencies", "engines", "packageManager", "scripts"]
+}

@@ -1,0 +1,65 @@
+{
+  "name": "@net-helium/cookie-consent",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Intégration d'un bandeau pour le consentement des cookies",
+  "homepage": "https://github.com/NetHelium/js-libs/tree/main/packages/cookie-consent",
+  "author": {
+    "name": "Net Hélium",
+    "url": "https://net-helium.fr"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NetHelium/js-libs.git",
+    "directory": "packages/cookie-consent"
+  },
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "prepack": "clean-package",
+    "postpack": "clean-package restore",
+    "check:types": "tsc --emitDeclarationOnly false --noEmit",
+    "clean": "rm -rf dist",
+    "dev:types": "tsc-watch --noClear",
+    "dev:source": "./scripts/build.ts --watch",
+    "dev": "pnpm clean && concurrently -n \"source,types\" \"pnpm dev:source\" \"pnpm dev:types\"",
+    "test": "vitest run",
+    "test:ui": "vitest --ui",
+    "build:source": "./scripts/build.ts",
+    "build:types": "tsc",
+    "build": "pnpm clean && pnpm build:source && pnpm build:types"
+  },
+  "main": "./dist/cookie-consent.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "lit": "catalog:"
+  },
+  "devDependencies": {
+    "@commander-js/extra-typings": "catalog:",
+    "@net-helium/lib": "workspace:",
+    "@open-wc/testing": "catalog:",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "@vitest/ui": "catalog:",
+    "commander": "catalog:",
+    "concurrently": "catalog:",
+    "esbuild": "catalog:",
+    "esbuild-plugin-minify-html-literals": "catalog:",
+    "jsdom": "catalog:",
+    "tsc-watch": "catalog:",
+    "tslib": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "keywords": ["net hélium", "intégration", "bandeau", "cookies", "consentement"],
+  "license": "MIT",
+  "packageManager": "pnpm@9.10.0",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.5.0"
+  }
+}
