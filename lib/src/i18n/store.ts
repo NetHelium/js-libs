@@ -17,6 +17,16 @@ type TranslationKeys = { [key: string]: TranslationKeys | string };
 type TranslationObject = Record<Locale, TranslationKeys>;
 
 /**
+ * Options passed to the `setLocale` function.
+ */
+type SetLocaleOptions = {
+  /**
+   * Fallback locale if the requested one is not supported.
+   */
+  fallback?: Locale;
+};
+
+/**
  * I18n data store.
  */
 type I18nStore = {
@@ -53,19 +63,20 @@ type TranslateOptions = {
 
 /**
  * Set the currently active locale by following the browser language if supported. If the browser
- * language is not supported, the `previousLocale` will be active if passed. The default locale (en)
- * will be active otherwise.
- * @param previousLocale the previously active locale
+ * language is not supported, the new active locale will be determined by the passed options. If
+ * no locale can be determined by the options, `en` will be used.
+ * @param options the options
  * @returns the new locale to use
  */
-export const setLocale = (previousLocale?: Locale): Locale => {
+export const setLocale = (options?: SetLocaleOptions): Locale => {
+  const fallback = options?.fallback ?? "en";
   const browserLanguage = navigator.language.split("-").at(0) as Locale;
 
   if (locales.includes(browserLanguage)) {
     return browserLanguage;
   }
 
-  return previousLocale ?? "en";
+  return fallback;
 };
 
 const store: I18nStore = {

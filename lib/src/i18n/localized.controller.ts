@@ -25,7 +25,7 @@ class LocalizedController implements ReactiveController {
    * Handler called when the browser language changes.
    */
   private _languageChangeHandler = () => {
-    store.locale = setLocale(store.locale);
+    store.locale = setLocale({ fallback: store.locale });
     this._host.requestUpdate();
   };
 
