@@ -1,20 +1,20 @@
 import type { ReactiveController, ReactiveControllerHost, ReactiveElement } from "lit";
 
-type WatchSlotsControllerHost = ReactiveControllerHost &
+type SlotsControllerHost = ReactiveControllerHost &
   Element & {
-    watchSlotsController?: WatchSlotsController;
+    slotsController?: SlotsController;
   };
 
 /**
  * Reactive controller that will automatically schedule a new render of the host component when
  * of the slots changes. Additionally, this controller adds the ability for the host component to
- * know if its slots are used.
+ * know if its slots are used and to get the current content (as HTML or text) of each slot.
  */
-export class WatchSlotsController implements ReactiveController {
+export class SlotsController implements ReactiveController {
   /**
    * Host component.
    */
-  private _host: WatchSlotsControllerHost;
+  private _host: SlotsControllerHost;
 
   /**
    * List of slot names to track in the host component.
@@ -26,7 +26,7 @@ export class WatchSlotsController implements ReactiveController {
    * @param host the host component
    * @param slotNames the slot names to track in the host component
    */
-  constructor(host: WatchSlotsControllerHost, ...slotNames: string[]) {
+  constructor(host: SlotsControllerHost, ...slotNames: string[]) {
     this._host = host;
     this._host.addController(this);
     this._slotNames = slotNames;
@@ -74,7 +74,7 @@ export class WatchSlotsController implements ReactiveController {
           node.textContent &&
           node.textContent.trim() !== ""
         ) {
-          texts.push(node.textContent);
+          texts.push(node.textContent.trim());
         }
 
         if (node.nodeType === node.ELEMENT_NODE) {
@@ -98,7 +98,7 @@ export class WatchSlotsController implements ReactiveController {
     }
 
     if (texts.length === 0) return;
-    return texts.join("");
+    return texts.join(" ");
   };
 
   /**
@@ -128,8 +128,12 @@ export class WatchSlotsController implements ReactiveController {
 
       if (slot) {
         for (const node of slot.assignedNodes({ flatten: true })) {
-          if (node.nodeType === Node.TEXT_NODE && node.textContent) {
-            html.push(node.textContent);
+          if (
+            node.nodeType === Node.TEXT_NODE &&
+            node.textContent &&
+            node.textContent.trim() !== ""
+          ) {
+            html.push(node.textContent.trim());
           }
 
           if (node.nodeType === Node.ELEMENT_NODE) {
@@ -144,8 +148,8 @@ export class WatchSlotsController implements ReactiveController {
   };
 
   /**
-   * Handler called when a slot changes to schedule a new render of the host component.
-   * @param e the event
+   * Handler called when a watched slot changes to schedule a new render of the host component.
+   * @param e the slot change event
    */
   private _slotChangeHandler = (e: Event) => {
     const slot = e.target as HTMLSlotElement;
@@ -159,14 +163,14 @@ export class WatchSlotsController implements ReactiveController {
   };
 
   /**
-   * Lifecycle handler called when the host component attaches to the controller.
+   * Lifecycle handler called when the host component attaches the controller.
    */
   hostConnected() {
     this._host.shadowRoot!.addEventListener("slotchange", this._slotChangeHandler);
   }
 
   /**
-   * Lifecycle handler called when the host component detaches from the controller.
+   * Lifecycle handler called when the host component detaches the controller.
    */
   hostDisconnected() {
     this._host.shadowRoot!.removeEventListener("slotchange", this._slotChangeHandler);
@@ -174,23 +178,23 @@ export class WatchSlotsController implements ReactiveController {
 }
 
 /**
- * Function to call in the constructor of a component in order to attach the `watchSlots` reactive
- * controller. If using TypeScript, the `watchSlots` decorator can also be used instead of this
- * function.
+ * Function to attach a component to the `Slots` reactive controller. If using TypeScript, the
+ * `slots` decorator can also be used instead of this function.
  * @param host the component that needs its slots watched
  * @param slotNames the names of the slots to watch (use `[default]` for the default slot)
  */
-export const updateWhenSlotsChange = (host: WatchSlotsControllerHost, ...slotNames: string[]) => {
-  host.watchSlotsController = new WatchSlotsController(host, ...slotNames);
+export const addSlotsController = (host: SlotsControllerHost, ...slotNames: string[]) => {
+  host.slotsController = new SlotsController(host, ...slotNames);
 };
 
 /**
- * Decorator to attach a component to the `WatchSlots` reactive controller. If using JavaScript,
- * the `updateWhenSlotsChange` function should be used instead (decorators are only supported in
+ * Decorator to attach a component to the `Slots` reactive controller. If using JavaScript, the
+ * `addSlotsController` function should be used instead (decorators are only supported in
  * TypeScript for now).
+ * @param slotNames the names of the slots to watch (use `[default]` for the default slot)
  */
-export const watchSlots =
+export const slots =
   (...slotNames: string[]) =>
   (target: typeof ReactiveElement) => {
-    target.addInitializer((instance) => updateWhenSlotsChange(instance, ...slotNames));
+    target.addInitializer((instance) => addSlotsController(instance, ...slotNames));
   };
