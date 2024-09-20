@@ -12,7 +12,7 @@ import styles from "./icon.styles";
  * @property {string} variant - The icon's variant if applicable
  * @property {string} color - The icon's color
  *
- * @event nh-error - Emitted when the requested icon does not exist in the store
+ * @event nh-error - Emitted when the requested icon is not loaded in the store
  *
  * @csspart svg - The SVG element
  * @csspart path-[index] - Each path of the drawn icon (`path-0`, `path-1`, ...)
@@ -62,15 +62,15 @@ export default class NhIcon extends NhElement {
     if (changedProperties.has("name") && this.name) {
       const paths = getIconPaths(this.name, this.variant);
 
-      if (paths) {
-        this._paths = paths;
-      } else {
+      if (!paths) {
         this.emit("nh-error", {
           detail: {
-            message: `Unable to find icon "${this.name}" in the store`,
+            message: `Unable to find icon "${this.name}"`,
           },
         });
       }
+
+      this._paths = paths ?? [];
     }
   }
 
@@ -90,7 +90,7 @@ export default class NhIcon extends NhElement {
         viewBox="0 0 16 16"
         fill="${this.color}"
         part="svg"
-        >
+      >
         ${this._paths.map(
           (path, idx) => svg`
           <path
