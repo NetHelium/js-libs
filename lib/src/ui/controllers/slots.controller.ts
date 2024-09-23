@@ -1,14 +1,28 @@
 import type { ReactiveController, ReactiveControllerHost, ReactiveElement } from "lit";
 
-type SlotsControllerHost = ReactiveControllerHost &
-  Element & {
-    slotsController?: SlotsController;
+/**
+ * Requirements to be a host component of this controller.
+ */
+export type SlotsControllerHost = ReactiveControllerHost &
+  ReactiveElement & {
+    /**
+     * Slots controller.
+     */
+    slotsController: SlotsController;
+
+    /**
+     * Handler that will be called by the slots controller when a watched slot changed. The slots
+     * controller already takes care of scheduling a new render of the host component.
+     * @param name the name of the changed slot (`[default]` for the default slot)
+     * @param slot the changed slot
+     */
+    slotChanged?: (name: string, slot: HTMLSlotElement) => void;
   };
 
 /**
- * Reactive controller that will automatically schedule a new render of the host component when
- * of the slots changes. Additionally, this controller adds the ability for the host component to
- * know if its slots are used and to get the current content (as HTML or text) of each slot.
+ * Reactive controller that will automatically schedule a new render and notify the host component
+ * when one of its watched slots changes. Additionally, this controller offers helper methods to
+ * to easily work with the host component's slots regardless if they are watched or not.
  */
 export class SlotsController implements ReactiveController {
   /**
@@ -17,28 +31,28 @@ export class SlotsController implements ReactiveController {
   private _host: SlotsControllerHost;
 
   /**
-   * List of slot names to track in the host component.
+   * List of slot names to watch in the host component.
    */
   private _slotNames: string[];
 
   /**
-   * Initialize the slot reactive controller.
+   * Initialize the slots reactive controller.
    * @param host the host component
-   * @param slotNames the slot names to track in the host component
+   * @param slotNames the slot names to watch in the host component
    */
   constructor(host: SlotsControllerHost, ...slotNames: string[]) {
     this._host = host;
-    this._host.addController(this);
     this._slotNames = slotNames;
+    this._host.addController(this);
   }
 
   /**
-   * Check if the slot with the given `name` is used in the host component.
-   * @param name the name of the slot to check (use `[default]` for the default slot)
+   * Check if a slot is used in the host component.
+   * @param slotName the name of the slot to check (use `[default]` for the default slot)
    * @returns `true` if the slot is used, `false` otherwise
    */
-  hasSlot = (name: string) => {
-    if (name === "[default]") {
+  hasSlot = (slotName: string) => {
+    if (slotName === "[default]") {
       return [...this._host.childNodes].some((node) => {
         if (node.nodeType === node.TEXT_NODE && node.textContent!.trim() !== "") {
           return true;
@@ -56,18 +70,18 @@ export class SlotsController implements ReactiveController {
       });
     }
 
-    return this._host.querySelector(`:scope [slot="${name}"]`) !== null;
+    return this._host.querySelector(`:scope [slot="${slotName}"]`) !== null;
   };
 
   /**
    * Get all of the text nodes assigned to the requested slot.
-   * @param name the name of the slot (use `[default]` for the default slot)
+   * @param slotName the name of the slot (use `[default]` for the default slot)
    * @returns the concatenated text as a string or `undefined` if no text content was found.
    */
-  getTextContent = (name: string) => {
+  getTextContent = (slotName: string) => {
     const texts: string[] = [];
 
-    if (name === "[default]") {
+    if (slotName === "[default]") {
       for (const node of this._host.childNodes) {
         if (
           node.nodeType === node.TEXT_NODE &&
@@ -86,7 +100,9 @@ export class SlotsController implements ReactiveController {
         }
       }
     } else {
-      const slot = this._host.shadowRoot!.querySelector<HTMLSlotElement>(`slot[name="${name}"]`);
+      const slot = this._host.shadowRoot!.querySelector<HTMLSlotElement>(
+        `slot[name="${slotName}"]`,
+      );
 
       if (slot) {
         for (const node of slot.assignedNodes({ flatten: true })) {
@@ -97,19 +113,19 @@ export class SlotsController implements ReactiveController {
       }
     }
 
-    if (texts.length === 0) return;
-    return texts.join(" ");
+    const result = texts.map((item) => item.replace(/(\r\n|\n|\r)/gm, "").trim()).join(" ");
+    return result === "" ? undefined : result;
   };
 
   /**
    * Get all of the HTML from the nodes assigned to the requested slot.
-   * @param name the name of the slot (use `[default]` for the default slot)
+   * @param slotName the name of the slot (use `[default]` for the default slot)
    * @returns the concatenated html as a string or `undefined` if no content was found.
    */
-  getInnerHTML = (name: string) => {
+  getInnerHTML = (slotName: string) => {
     const html: string[] = [];
 
-    if (name === "[default]") {
+    if (slotName === "[default]") {
       for (const node of this._host.childNodes) {
         if (node.nodeType === node.TEXT_NODE && node.textContent) {
           html.push(node.textContent);
@@ -124,31 +140,25 @@ export class SlotsController implements ReactiveController {
         }
       }
     } else {
-      const slot = this._host.shadowRoot!.querySelector<HTMLSlotElement>(`slot[name="${name}"]`);
+      const slot = this._host.shadowRoot!.querySelector<HTMLSlotElement>(
+        `slot[name="${slotName}"]`,
+      );
 
       if (slot) {
         for (const node of slot.assignedNodes({ flatten: true })) {
-          if (
-            node.nodeType === Node.TEXT_NODE &&
-            node.textContent &&
-            node.textContent.trim() !== ""
-          ) {
-            html.push(node.textContent.trim());
-          }
-
-          if (node.nodeType === Node.ELEMENT_NODE) {
-            html.push((node as HTMLElement).outerHTML);
-          }
+          html.push((node as Element).outerHTML);
         }
       }
     }
 
-    if (html.length === 0) return;
-    return html.join("");
+    const result = html.map((item) => item.replace(/(\r\n|\n|\r)/gm, "").trim()).join("");
+    return result === "" ? undefined : result;
   };
 
   /**
-   * Handler called when a watched slot changes to schedule a new render of the host component.
+   * Handler called when one of the host component's slots changes. If the slot is part of the
+   * watched slots, a new render of the host component is scheduled and its `slotChanged` handler
+   * is called if it is defined.
    * @param e the slot change event
    */
   private _slotChangeHandler = (e: Event) => {
@@ -159,18 +169,26 @@ export class SlotsController implements ReactiveController {
       (slot.name && this._slotNames.includes(slot.name))
     ) {
       this._host.requestUpdate();
+
+      if (this._host.slotChanged) {
+        this._host.slotChanged(slot.name || "[default]", slot);
+      }
     }
   };
 
   /**
-   * Lifecycle handler called when the host component attaches the controller.
+   * Handler called when the host component attaches the controller. If a list of slots to watch
+   * was passed, we set a listener on the `slotchange` event.
    */
   hostConnected() {
-    this._host.shadowRoot!.addEventListener("slotchange", this._slotChangeHandler);
+    if (this._slotNames.length > 0) {
+      this._host.shadowRoot!.addEventListener("slotchange", this._slotChangeHandler);
+    }
   }
 
   /**
-   * Lifecycle handler called when the host component detaches the controller.
+   * Handler called when the host component detaches the controller. We make sure to remove
+   * the `slotchange` event listener if it was set.
    */
   hostDisconnected() {
     this._host.shadowRoot!.removeEventListener("slotchange", this._slotChangeHandler);
@@ -178,23 +196,9 @@ export class SlotsController implements ReactiveController {
 }
 
 /**
- * Function to attach a component to the `Slots` reactive controller. If using TypeScript, the
- * `slots` decorator can also be used instead of this function.
- * @param host the component that needs its slots watched
+ * Attach the slots controller to a host component.
+ * @param host the host component
  * @param slotNames the names of the slots to watch (use `[default]` for the default slot)
  */
-export const addSlotsController = (host: SlotsControllerHost, ...slotNames: string[]) => {
-  host.slotsController = new SlotsController(host, ...slotNames);
-};
-
-/**
- * Decorator to attach a component to the `Slots` reactive controller. If using JavaScript, the
- * `addSlotsController` function should be used instead (decorators are only supported in
- * TypeScript for now).
- * @param slotNames the names of the slots to watch (use `[default]` for the default slot)
- */
-export const slots =
-  (...slotNames: string[]) =>
-  (target: typeof ReactiveElement) => {
-    target.addInitializer((instance) => addSlotsController(instance, ...slotNames));
-  };
+export const attachSlotsController = (host: SlotsControllerHost, ...slotNames: string[]) =>
+  new SlotsController(host, ...slotNames);

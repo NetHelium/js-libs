@@ -1,23 +1,21 @@
 import { elementUpdated, fixture, fixtureCleanup } from "@open-wc/testing";
-import { html } from "lit";
+import { LitElement, html } from "lit";
 import { customElement } from "lit/decorators.js";
-import { beforeAll, describe, expect, it } from "vitest";
-import { NhElement } from "../../../src/ui/components";
-import { addSlotsController, slots } from "../../../src/ui/controllers";
+import { classMap } from "lit/directives/class-map.js";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { type SlotsControllerHost, attachSlotsController } from "../../../src/ui/controllers";
 
-/**
- * Function based controller attachment (JavaScript or TypeScript)
- */
-class FunctionSlotsComponent extends NhElement {
-  constructor() {
-    super();
-    addSlotsController(this, "[default]", "prefix", "suffix");
-  }
+@customElement("slots-component")
+class SlotsComponent extends LitElement implements SlotsControllerHost {
+  slotsController = attachSlotsController(this, "[default]", "suffix");
 
   protected override render() {
     return html`
-      <div>
-        <p>Some text</p>
+      <div id="container" class="${classMap({
+        "has-prefix": this.slotsController.hasSlot("prefix"),
+        "has-default": this.slotsController.hasSlot("[default]"),
+        "has-suffix": this.slotsController.hasSlot("suffix"),
+      })}">
         <slot name="prefix"></slot>
         <slot></slot>
         <slot name="suffix"></slot>
@@ -26,132 +24,202 @@ class FunctionSlotsComponent extends NhElement {
   }
 }
 
-customElements.define("function-slots-component", FunctionSlotsComponent);
+let slotsComponent: SlotsComponent;
+let slotsController: typeof slotsComponent.slotsController;
 
-/**
- * Decorator based controller attachment (TypeScript only)
- */
-@customElement("decorator-slots-component")
-@slots("[default]", "prefix", "suffix")
-class DecoratorSlotsComponent extends NhElement {
-  protected override render() {
-    return html`
-      <div>
-        <p>Some text</p>
-        <slot name="prefix"></slot>
-        <slot></slot>
-        <slot name="suffix"></slot>
-      </div>
-    `;
-  }
-}
+const getContainerClasses = (component: HTMLElement) =>
+  component.shadowRoot!.querySelector("#container")!.classList;
 
-// Function component
-let functionSlotsComponent: NhElement;
-let functionSlotsController: typeof functionSlotsComponent.slotsController;
-
-// Decorator component
-let decoratorSlotsComponent: NhElement;
-let decoratorSlotsController: typeof decoratorSlotsComponent.slotsController;
-
-describe("[lib] ui/internals/controllers/watch-slots", () => {
-  beforeAll(async () => {
-    functionSlotsComponent = await fixture<NhElement>(html`
-      <function-slots-component>
-        <span slot="prefix">Function <strong>prefix</strong></span>
-        <p>Function <span>default</span> slot</p>
-        Text node in default
-      </function-slots-component>
+describe("[lib] ui/controllers/slots", () => {
+  beforeEach(async () => {
+    slotsComponent = await fixture(html`
+      <slots-component>
+        <span slot="suffix"><strong>Suffix</strong> content</span>
+      </slots-component>
     `);
 
-    decoratorSlotsComponent = await fixture<NhElement>(html`
-      <decorator-slots-component>
-        Text node in default
-        <p>Decorator <span>default</span> slot</p>
-        <span slot="suffix">Decorator <strong>suffix</strong></span>
-      </decorator-slots-component>
-    `);
-
-    functionSlotsController = functionSlotsComponent.slotsController;
-    decoratorSlotsController = decoratorSlotsComponent.slotsController;
+    slotsController = slotsComponent.slotsController;
   });
 
-  it("should be able to know if a slot is used or not", () => {
-    expect(functionSlotsController!.hasSlot("prefix")).toBe(true);
-    expect(functionSlotsController!.hasSlot("[default]")).toBe(true);
-    expect(functionSlotsController!.hasSlot("suffix")).toBe(false);
+  it("should be able to know if a slot is used or not", async () => {
+    expect(slotsController.hasSlot("prefix")).toBe(false);
+    expect(slotsController.hasSlot("[default]")).toBe(false);
+    expect(slotsController.hasSlot("suffix")).toBe(true);
 
-    expect(decoratorSlotsController!.hasSlot("prefix")).toBe(false);
-    expect(decoratorSlotsController!.hasSlot("[default]")).toBe(true);
-    expect(decoratorSlotsController!.hasSlot("suffix")).toBe(true);
+    // Add prefix slot
+    const prefixElement = document.createElement("span");
+    prefixElement.innerHTML = "<strong>Prefix</strong> content";
+    prefixElement.setAttribute("slot", "prefix");
+    slotsComponent.appendChild(prefixElement);
+
+    // Remove suffix slot
+    slotsComponent.querySelector("[slot='suffix']")?.remove();
+
+    // Wait for the component to update
+    await elementUpdated(slotsComponent);
+
+    expect(slotsController.hasSlot("prefix")).toBe(true);
+    expect(slotsController.hasSlot("[default]")).toBe(false);
+    expect(slotsController.hasSlot("suffix")).toBe(false);
+
+    // Add a text node for the default slot
+    const defaultTextNode = document.createTextNode("Default slot content");
+    slotsComponent.appendChild(defaultTextNode);
+
+    // Wait for the component to update
+    await elementUpdated(slotsComponent);
+
+    expect(slotsController.hasSlot("prefix")).toBe(true);
+    expect(slotsController.hasSlot("[default]")).toBe(true);
+    expect(slotsController.hasSlot("suffix")).toBe(false);
   });
 
-  it("should be able to get the text content of each slot", () => {
-    expect(functionSlotsController!.getTextContent("prefix")).toEqual("Function prefix");
-    expect(functionSlotsController!.getTextContent("[default]")).toEqual(
-      "Function default slot Text node in default",
-    );
-    expect(functionSlotsController!.getTextContent("suffix")).toBeUndefined();
+  it("should get the text content of each slot", async () => {
+    expect(slotsController.getTextContent("prefix")).toBeUndefined();
+    expect(slotsController.getTextContent("[default]")).toBeUndefined();
+    expect(slotsController.getTextContent("suffix")).toEqual("Suffix content");
 
-    expect(decoratorSlotsController!.getTextContent("prefix")).toBeUndefined();
-    expect(decoratorSlotsController!.getTextContent("[default]")).toEqual(
-      "Text node in default Decorator default slot",
-    );
-    expect(decoratorSlotsController!.getTextContent("suffix")).toEqual("Decorator suffix");
-  });
+    // Add prefix slot
+    const prefixElement = document.createElement("span");
+    prefixElement.innerHTML = "<strong>Prefix</strong> content";
+    prefixElement.setAttribute("slot", "prefix");
+    slotsComponent.appendChild(prefixElement);
 
-  it("should be able to get the html content of each slot", () => {
-    expect(functionSlotsController!.getInnerHTML("prefix")).toContain(
-      '<span slot="prefix">Function <strong>prefix</strong></span>',
-    );
-    expect(functionSlotsController!.getInnerHTML("[default]")).toContain(
-      "<p>Function <span>default</span> slot</p>",
-    );
-    expect(functionSlotsController!.getInnerHTML("suffix")).toBeUndefined();
-
-    expect(decoratorSlotsController!.getInnerHTML("prefix")).toBeUndefined();
-    expect(decoratorSlotsController!.getInnerHTML("[default]")).toContain(
-      "<p>Decorator <span>default</span> slot</p>",
-    );
-    expect(decoratorSlotsController!.getInnerHTML("suffix")).toContain(
-      '<span slot="suffix">Decorator <strong>suffix</strong></span>',
-    );
-  });
-
-  it("should trigger a new render when a slot changes", async () => {
-    expect(functionSlotsController!.hasSlot("suffix")).toBe(false);
-    expect(decoratorSlotsController!.hasSlot("prefix")).toBe(false);
-    expect(functionSlotsController!.getTextContent("suffix")).toBeUndefined();
-    expect(decoratorSlotsController!.getTextContent("prefix")).toBeUndefined();
-    expect(functionSlotsController!.getInnerHTML("suffix")).toBeUndefined();
-    expect(decoratorSlotsController!.getInnerHTML("prefix")).toBeUndefined();
-
-    // Add suffix slot in the function based component
-    const suffixHtml = "<p>Added suffix slot in the function component</p>";
-    const functionComponentSuffix = document.createElement("p");
-    functionComponentSuffix.innerHTML = suffixHtml;
-    functionComponentSuffix.setAttribute("slot", "suffix");
-    functionSlotsComponent.appendChild(functionComponentSuffix);
-    const suffixText = functionComponentSuffix.textContent!.trim();
-
-    // Add prefix slot in the decorator based component
-    const prefixHtml = "<p>Added prefix for the decorator component</p>";
-    const decoratorComponentPrefix = document.createElement("p");
-    decoratorComponentPrefix.innerHTML = prefixHtml;
-    decoratorComponentPrefix.setAttribute("slot", "prefix");
-    decoratorSlotsComponent.appendChild(decoratorComponentPrefix);
-    const prefixText = decoratorComponentPrefix.textContent!.trim();
+    // Remove suffix slot
+    slotsComponent.querySelector("[slot='suffix']")?.remove();
 
     // Wait for the components to update
-    await elementUpdated(functionSlotsComponent);
-    await elementUpdated(decoratorSlotsComponent);
+    await elementUpdated(slotsComponent);
 
-    expect(functionSlotsController!.hasSlot("suffix")).toBe(true);
-    expect(decoratorSlotsController!.hasSlot("prefix")).toBe(true);
-    expect(functionSlotsController!.getTextContent("suffix")).toContain(suffixText);
-    expect(decoratorSlotsController!.getTextContent("prefix")).toContain(prefixText);
-    expect(functionSlotsController!.getInnerHTML("suffix")).toContain(suffixHtml);
-    expect(decoratorSlotsController!.getInnerHTML("prefix")).toContain(prefixHtml);
+    expect(slotsController.getTextContent("prefix")).toEqual("Prefix content");
+    expect(slotsController.getTextContent("[default]")).toBeUndefined();
+    expect(slotsController.getTextContent("suffix")).toBeUndefined();
+
+    // Add default slot
+    const defaultElementNode = document.createElement("p");
+    defaultElementNode.innerHTML = "<strong>Default slot</strong> content";
+    slotsComponent.appendChild(defaultElementNode);
+
+    // Wait for the components to update
+    await elementUpdated(slotsComponent);
+
+    expect(slotsController.getTextContent("prefix")).toEqual("Prefix content");
+    expect(slotsController.getTextContent("[default]")).toEqual("Default slot content");
+    expect(slotsController.getTextContent("suffix")).toBeUndefined();
+
+    // Change default slot content to a text node
+    defaultElementNode.remove();
+    slotsComponent.appendChild(document.createTextNode("Text node for the default slot"));
+
+    // Wait for the components to update
+    await elementUpdated(slotsComponent);
+
+    expect(slotsController.getTextContent("prefix")).toEqual("Prefix content");
+    expect(slotsController.getTextContent("[default]")).toEqual("Text node for the default slot");
+    expect(slotsController.getTextContent("suffix")).toBeUndefined();
+  });
+
+  it("should get the html content of each slot", async () => {
+    expect(slotsController.getInnerHTML("prefix")).toBeUndefined();
+    expect(slotsController.getInnerHTML("[default]")).toBeUndefined();
+    expect(slotsController.getInnerHTML("suffix")).toEqual(
+      '<span slot="suffix"><strong>Suffix</strong> content</span>',
+    );
+
+    // Add prefix slot
+    const prefixElement = document.createElement("span");
+    prefixElement.innerHTML = "<strong>Prefix</strong> content";
+    prefixElement.setAttribute("slot", "prefix");
+    slotsComponent.appendChild(prefixElement);
+
+    // Remove suffix slot
+    slotsComponent.querySelector("[slot='suffix']")?.remove();
+
+    // Wait for the components to update
+    await elementUpdated(slotsComponent);
+
+    expect(slotsController.getInnerHTML("prefix")).toEqual(
+      '<span slot="prefix"><strong>Prefix</strong> content</span>',
+    );
+    expect(slotsController.getInnerHTML("[default]")).toBeUndefined();
+    expect(slotsController.getInnerHTML("suffix")).toBeUndefined();
+
+    // Add default slot
+    const defaultElementNode = document.createElement("p");
+    defaultElementNode.innerHTML = "<strong>Default slot</strong> content";
+    slotsComponent.appendChild(defaultElementNode);
+
+    // Wait for the components to update
+    await elementUpdated(slotsComponent);
+
+    expect(slotsController.getInnerHTML("prefix")).toEqual(
+      '<span slot="prefix"><strong>Prefix</strong> content</span>',
+    );
+    expect(slotsController.getInnerHTML("[default]")).toEqual(
+      "<p><strong>Default slot</strong> content</p>",
+    );
+    expect(slotsController.getInnerHTML("suffix")).toBeUndefined();
+  });
+
+  it("should schedule a new render of the host component when a slot changes", async () => {
+    expect(getContainerClasses(slotsComponent)).not.toContain("has-prefix");
+    expect(getContainerClasses(slotsComponent)).not.toContain("has-default");
+    expect(getContainerClasses(slotsComponent)).toContain("has-suffix");
+
+    // Add prefix slot
+    const prefixElement = document.createElement("span");
+    prefixElement.innerHTML = "<strong>Prefix</strong> content";
+    prefixElement.setAttribute("slot", "prefix");
+    slotsComponent.appendChild(prefixElement);
+
+    // Remove suffix slot
+    slotsComponent.querySelector("[slot='suffix']")?.remove();
+
+    // Wait for the components to update
+    await elementUpdated(slotsComponent);
+
+    expect(getContainerClasses(slotsComponent)).toContain("has-prefix");
+    expect(getContainerClasses(slotsComponent)).not.toContain("has-default");
+    expect(getContainerClasses(slotsComponent)).not.toContain("has-suffix");
+
+    // Add default slot
+    const defaultElementNode = document.createElement("p");
+    defaultElementNode.innerHTML = "<strong>Default slot</strong> content";
+    slotsComponent.appendChild(defaultElementNode);
+
+    // Wait for the components to update
+    await elementUpdated(slotsComponent);
+
+    expect(getContainerClasses(slotsComponent)).toContain("has-prefix");
+    expect(getContainerClasses(slotsComponent)).toContain("has-default");
+    expect(getContainerClasses(slotsComponent)).not.toContain("has-suffix");
+  });
+
+  it("should call the `slotChanged` handler of the host component if defined", async () => {
+    // Remove suffix slot
+    slotsComponent.querySelector("[slot='suffix']")?.remove();
+
+    // Add the `slotChanged` handler to the host component
+    (slotsComponent as SlotsControllerHost).slotChanged = vi.fn();
+
+    // Add prefix slot
+    const prefixElement = document.createElement("span");
+    prefixElement.innerHTML = "<strong>Prefix</strong> content";
+    prefixElement.setAttribute("slot", "prefix");
+    slotsComponent.appendChild(prefixElement);
+
+    // Wait for the components to update
+    await elementUpdated(slotsComponent);
+
+    expect((slotsComponent as SlotsControllerHost).slotChanged).toHaveBeenCalledOnce();
+
+    // Add default slot content
+    slotsComponent.appendChild(document.createTextNode("Default slot content"));
+
+    // Wait for the components to update
+    await elementUpdated(slotsComponent);
+
+    expect((slotsComponent as SlotsControllerHost).slotChanged).toHaveBeenCalledTimes(2);
 
     // This line just allows for the `hostDisconnected` callback of the `slots` controller to
     // be executed during the tests which improves the coverage report. There's no logic to test

@@ -1,5 +1,4 @@
 import { LitElement } from "lit";
-import type { SlotsController } from "../controllers";
 import type {
   CustomEventType,
   EventWithRequiredDetail,
@@ -13,11 +12,6 @@ import type {
  * Base class for UI related web components.
  */
 export abstract class NhElement extends LitElement {
-  /**
-   * Reactive controller to work with the component's slots.
-   */
-  slotsController?: SlotsController;
-
   /**
    * Emit a custom event with convenient defaults.
    *
