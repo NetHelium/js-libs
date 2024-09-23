@@ -18,7 +18,6 @@ class LocalizedController implements ReactiveController {
    */
   constructor(host: ReactiveControllerHost) {
     this._host = host;
-    this._host.addController(this);
   }
 
   /**
@@ -49,15 +48,15 @@ class LocalizedController implements ReactiveController {
  * the `localized` decorator can also be used instead of this function.
  * @param host the component to localize
  */
-export const addLocalizedController = (host: ReactiveControllerHost) => {
+export const attachLocalizedController = (host: ReactiveControllerHost) => {
   host.addController(new LocalizedController(host));
 };
 
 /**
  * Decorator to attach a component to the `Localized` reactive controller. If using JavaScript, the
- * `addLocalizedController` function should be used instead (decorators are only supported in
+ * `attachLocalizedController` function should be used instead (decorators are only supported in
  * TypeScript for now).
  */
 export const localized = () => (target: typeof ReactiveElement) => {
-  target.addInitializer(addLocalizedController);
+  target.addInitializer(attachLocalizedController);
 };

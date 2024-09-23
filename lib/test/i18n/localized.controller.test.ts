@@ -2,7 +2,7 @@ import { elementUpdated, fixture, fixtureCleanup } from "@open-wc/testing";
 import { LitElement, html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { beforeAll, describe, expect, it, vi } from "vitest";
-import { addLocalizedController, loadTranslations, localized, translate } from "../../src/i18n";
+import { attachLocalizedController, loadTranslations, localized, translate } from "../../src/i18n";
 import { translations } from "./store.test";
 
 /**
@@ -11,7 +11,7 @@ import { translations } from "./store.test";
 class FunctionLocalized extends LitElement {
   constructor() {
     super();
-    addLocalizedController(this);
+    attachLocalizedController(this);
   }
 
   protected override render() {
