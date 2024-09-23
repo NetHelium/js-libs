@@ -6,13 +6,13 @@ import componentStyles from "../../styles/component.styles";
 import styles from "./icon.styles";
 
 /**
- * Display an icon that was previously loaded in the store.
+ * Display an icon previously loaded in the store.
  *
  * @property {string | undefined} name - The name of the icon to display
  * @property {string} variant - The icon's variant if applicable
  * @property {string} color - The icon's color
  *
- * @event nh-error - Emitted when the requested icon is not loaded in the store
+ * @event nh-error - Emitted when the requested icon can't be found
  *
  * @csspart svg - The SVG element
  * @csspart path-[index] - Each path of the drawn icon (`path-0`, `path-1`, ...)
@@ -54,8 +54,8 @@ export default class NhIcon extends NhElement {
   private _paths: string[] = [];
 
   /**
-   * Find and display the icon that matches the name when it changes. An `nh-error` event is
-   * emitted if no matching icon was found in the store.
+   * Find the icon that matches the name when it changes. An `nh-error` event is emitted if no
+   * matching icon was found in the store.
    * @param changedProperties a map of the properties that have changed since the last render
    */
   protected override willUpdate(changedProperties: PropertyValues<this>) {
