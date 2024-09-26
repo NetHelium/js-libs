@@ -1,5 +1,6 @@
 biomejs
 csspart
+cssprop
 esbuild
 iframe
 jsdom

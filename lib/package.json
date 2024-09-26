@@ -12,13 +12,7 @@
   "main": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./components": "./src/ui/components/index.ts",
-    "./components/*": "./src/ui/components/*/index.ts",
-    "./events": "./src/ui/events/index.ts",
-    "./helium-connect": "./src/helium-connect/index.ts",
-    "./i18n": "./src/i18n/index.ts",
-    "./icons": "./src/ui/icons/index.ts",
-    "./utils": "./src/utils/index.ts"
+    "./*": "./src/*/index.ts"
   },
   "dependencies": {
     "lit": "catalog:"

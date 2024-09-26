@@ -3,7 +3,7 @@ import { LitElement, html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { type SlotsControllerHost, attachSlotsController } from "../../../src/ui/controllers";
+import { type SlotsControllerHost, attachSlotsController } from "../../src/controllers";
 
 @customElement("slots-component")
 class SlotsComponent extends LitElement implements SlotsControllerHost {

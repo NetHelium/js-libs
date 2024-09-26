@@ -7,7 +7,7 @@ export type IconVariant = "outlined" | "filled";
  * An icon value is an object with either a list of svg paths for each variant or a single list of
  * paths if the icon doesn't have any variant.
  */
-type IconValue = Record<IconVariant, string[]> | string[];
+export type IconValue = Record<IconVariant, string[]> | string[];
 
 /**
  * Icon data store.

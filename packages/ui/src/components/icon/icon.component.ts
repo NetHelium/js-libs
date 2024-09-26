@@ -1,18 +1,22 @@
 import { type PropertyValues, html, nothing, svg } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { NhElement } from "../";
-import { type IconVariant, getIconPaths } from "../../icons/store";
-import componentStyles from "../../styles/component.styles";
-import styles from "./icon.styles";
+import { type IconVariant, getIconPaths } from "../../icons/store.js";
+import componentStyles from "../../styles/component.styles.js";
+import { NhElement } from "../index.js";
+import styles from "./icon.styles.js";
 
 /**
  * Display an icon previously loaded in the store.
  *
+ * @tag nh-icon
+ *
  * @property {string | undefined} name - The name of the icon to display
  * @property {string} variant - The icon's variant if applicable
- * @property {string} color - The icon's color
  *
  * @event nh-error - Emitted when the requested icon can't be found
+ *
+ * @cssprop color - The icon's color. It inherits the color of its parent by default
+ * @cssprop size - The icon's size. It inherits the size (width and height) of its parent by default
  *
  * @csspart svg - The SVG element
  * @csspart path-[index] - Each path of the drawn icon (`path-0`, `path-1`, ...)
@@ -38,15 +42,6 @@ export default class NhIcon extends NhElement {
    */
   @property({ type: String, reflect: true })
   variant: IconVariant = "outlined";
-
-  /**
-   * Color of the icon. The special `currentColor` value means the icon will use the same color as
-   * its parent.
-   *
-   * @default "currentColor"
-   */
-  @property({ type: String, reflect: true })
-  color = "currentColor";
 
   /**
    * Paths to render inside the svg tag.
@@ -88,7 +83,7 @@ export default class NhIcon extends NhElement {
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 16 16"
-        fill="${this.color}"
+        fill="currentColor"
         part="svg"
       >
         ${this._paths.map(

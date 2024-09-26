@@ -5,10 +5,13 @@ import { css } from "lit";
  */
 export default css`
   :host {
+    --color: inherit;
+    --size: inherit;
+
     display: inline-block;
-    width: 1rem;
-    height: 1rem;
-    box-sizing: content-box !important;
+    width: var(--size);
+    height: var(--size);
+    color: var(--color);
   }
   svg {
     display: block;

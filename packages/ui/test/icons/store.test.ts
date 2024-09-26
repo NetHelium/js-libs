@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import * as icons from "../../../src/ui/icons";
-import { getIconPaths } from "../../../src/ui/icons/store";
+import * as icons from "../../src/icons";
+import { getIconPaths } from "../../src/icons/store";
 
 const { loadIcon, loadIcons } = icons;
 

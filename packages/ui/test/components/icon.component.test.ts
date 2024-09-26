@@ -1,9 +1,9 @@
 import { elementUpdated, fixture } from "@open-wc/testing";
 import { html } from "lit";
 import { beforeAll, describe, expect, it, vi } from "vitest";
-import type NhIcon from "../../../src/ui/components/icon";
-import * as icons from "../../../src/ui/icons";
-import "../../../src/ui/components/icon";
+import type NhIcon from "../../src/components/icon";
+import * as icons from "../../src/icons";
+import "../../src/components/icon";
 
 const { loadIcons } = icons;
 let component: NhIcon;
