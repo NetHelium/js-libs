@@ -4,26 +4,30 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "concurrently -n \"server,watcher\" \"vite\" \"./scripts/watcher.ts\"",
-    "generate": "NODE_OPTIONS=\"--import tsx\" plop --plopfile ./scripts/generators.ts",
-    "check:types": "tsc"
+    "clean": "rm -rf dist && rm -rf public/js",
+    "dev:types": "tsc-watch --noClear",
+    "dev:source": "./scripts/build.ts --watch",
+    "dev:server": "eleventy --serve --incremental",
+    "dev": "pnpm clean && concurrently -n \"source,types,server\" \"pnpm dev:source\" \"pnpm dev:types\" \"pnpm dev:server\"",
+    "build:source": "./scripts/build.ts",
+    "build:types": "tsc",
+    "build:site": "eleventy",
+    "build": "pnpm clean && pnpm build:source && pnpm build:types && pnpm build:site"
   },
   "dependencies": {
-    "@shoelace-style/shoelace": "^2.16.0",
-    "@net-helium/cookie-consent": "workspace:",
     "@net-helium/hc-forms": "workspace:",
-    "lit": "catalog:"
+    "@net-helium/ui": "workspace:"
   },
   "devDependencies": {
+    "@commander-js/extra-typings": "catalog:",
     "@types/node": "catalog:",
-    "chokidar": "^3.6.0",
+    "@11ty/eleventy": "3.0.0-beta.1",
+    "commander": "catalog:",
     "concurrently": "catalog:",
-    "plop": "catalog:",
-    "tslib": "catalog:",
+    "esbuild": "catalog:",
+    "tsc-watch": "catalog:",
     "tsx": "catalog:",
-    "typescript": "catalog:",
-    "vite": "^5.4.0",
-    "vite-plugin-static-copy": "^1.0.6"
+    "typescript": "catalog:"
   },
   "license": "MIT",
   "packageManager": "pnpm@9.10.0",

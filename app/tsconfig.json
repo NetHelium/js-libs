@@ -1,17 +1,8 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "declaration": false,
-    "emitDeclarationOnly": false,
-    "noEmit": true,
-    "baseUrl": ".",
-    "paths": {
-      "$root/*": ["*"],
-      "$config/*": ["config/*"],
-      "$assets/*": ["src/assets/*"],
-      "$components/*": ["src/components/*"],
-      "$pages/*": ["src/pages/*"]
-    }
+    "rootDir": ".",
+    "outDir": "./dist"
   },
-  "include": ["src", "scripts"]
+  "include": ["src", "public/ts"]
 }

@@ -1,0 +1,16 @@
+h1, p {
+  text-align: center;
+}
+p {
+  margin: var(--nh-spacing-lg) 0;
+}
+.code {
+  display: flex;
+  width: fit-content;
+  margin: 0 auto;
+  font-size: var(--nh-font-size-md);
+  padding: var(--nh-spacing-xs) var(--nh-spacing-md);
+  background-color: var(--nh-color-neutral-100);
+  border-radius: var(--nh-border-radius-lg, 10px);
+  box-shadow: var(--nh-shadow-sm);
+}
