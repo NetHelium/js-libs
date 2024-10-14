@@ -1,36 +1,23 @@
 {
   "name": "app",
   "version": "0.0.0",
-  "private": true,
   "type": "module",
+  "private": true,
   "scripts": {
-    "clean": "rm -rf dist && rm -rf public/js",
-    "dev:types": "tsc-watch --noClear",
-    "dev:source": "./scripts/build.ts --watch",
-    "dev:server": "eleventy --serve --incremental",
-    "dev": "pnpm clean && concurrently -n \"source,types,server\" \"pnpm dev:source\" \"pnpm dev:types\" \"pnpm dev:server\"",
-    "build:source": "./scripts/build.ts",
-    "build:types": "tsc",
-    "build:site": "eleventy",
-    "build": "pnpm clean && pnpm build:source && pnpm build:types && pnpm build:site"
+    "preinstall": "npx only-allow pnpm",
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/check": "^0.9.4",
     "@net-helium/hc-forms": "workspace:",
-    "@net-helium/ui": "workspace:"
-  },
-  "devDependencies": {
-    "@commander-js/extra-typings": "catalog:",
-    "@types/node": "catalog:",
-    "@11ty/eleventy": "3.0.0-beta.1",
-    "commander": "catalog:",
-    "concurrently": "catalog:",
-    "esbuild": "catalog:",
-    "tsc-watch": "catalog:",
-    "tsx": "catalog:",
+    "astro": "^4.16.2",
     "typescript": "catalog:"
   },
   "license": "MIT",
-  "packageManager": "pnpm@9.10.0",
+  "packageManager": "pnpm@9.12.1",
   "engines": {
     "node": ">=20.0.0",
     "pnpm": ">=9.5.0"

@@ -2,30 +2,31 @@
 .DS_Store
 
 # Logs
-logs
+logs/
 *.log
 .pnpm-debug.log*
 
 # Dependencies
-node_modules
+node_modules/
 
 # Builds
-dist
+dist/
 
 # Turborepo
 .turbo
-
-# TypeScript
-*.tsbuildinfo
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
-.idea
+.idea/
 
 # Tests coverage
-.coverage
+.coverage/
 
-# Generated JavaScript files
-app/public/js
+# Astro generated files
+.astro/
+
+# Environment variables
+.env
+.env.production
