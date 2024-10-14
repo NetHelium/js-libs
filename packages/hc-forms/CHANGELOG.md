@@ -2,9 +2,9 @@
 
 ## 1.1.1
 
-### Patch Changes
+### Corrections
 
-- [`4a9ea46`](https://github.com/NetHelium/js-libs/commit/4a9ea46d08037706c23cf93b66f41bffd3fc5f3d) Thanks [@RonanHenry35](https://github.com/RonanHenry35)! - fix dependencies
+- [`4a9ea46`](https://github.com/NetHelium/js-libs/commit/4a9ea46d08037706c23cf93b66f41bffd3fc5f3d) ([@RonanHenry35](https://github.com/RonanHenry35)) - Suppression des packages internes de la liste des dépendances.
 
 ## 1.1.0
 
