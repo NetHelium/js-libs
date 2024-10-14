@@ -20,5 +20,6 @@ preinstall
 slotchange
 stylesheet
 tsbuildinfo
+tsconfigs
 verdana
 vitest
