@@ -1,5 +1,11 @@
 # @net-helium/hc-forms
 
+## 1.1.0
+
+### Minor Changes
+
+- [`8b6dab7`](https://github.com/NetHelium/js-libs/commit/8b6dab7012a1b79529751e6ac08747464551a95a) Thanks [@RonanHenry35](https://github.com/RonanHenry35)! - add support for contact tracing
+
 ## 1.0.1
 
 ### Corrections
