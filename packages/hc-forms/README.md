@@ -74,6 +74,13 @@ La hauteur de l'iframe sera modifiée automatiquement si le contenu du formulair
 
 Si l'URL renseignée n'est pas une URL valide, un message d'erreur apparaitra à la place de l'iframe. Si l'URL est valide mais ne correspond pas à un formulaire Hélium Connect, une iframe sera générée avec le contenu de la page cible mais elle ne sera pas visible puisque la hauteur ne pourra pas être calculée par la librairie et restera donc à 0 pixels.
 
+### Suivi automatique des contacts
+
+Chaque formulaire Hélium Connect vous donne la possibilité d'utiliser une URL avec suivi automatique des contacts. Cette URL contient un code contact (**\$CODE_CONTACT\$**) qui est remplacé par l'identifiant de la fiche contact afin de préremplir les champs déjà connus. Ce remplacement se fait automatiquement à l'inclusion de ce type de lien dans le contenu d'une campagne email Hélium Connect (chaque destinataire de la campagne obtient son lien personnalisé).
+
+Cette librairie vous permet également d'utiliser ce type d'URL pour vos formulaires. Pour cela, il faut un paramètre spécial dans l'URL de la page hôte de votre formulaire : **hc_contact_code**.\
+Cela vous permet de faire une campagne Hélium Connect avec un lien personnalisé pour chaque destinataire vers une page de votre choix en ajoutant **hc_contact_code=\$CODE_CONTACT\$** dans les paramètres de l'URL. Lors de l'envoi de la campagne, Hélium Connect remplacera **\$CODE_CONTACT\$** par l'identifiant de la fiche contact pour chaque destinataire et en arrivant sur votre page web, cette librairie remplacera toutes les occurrences de **\$CODE_CONTACT\$** dans les formulaires générés par la valeur du paramètre **hc_contact_code**.
+
 ### Problème sur le calcul de la hauteur
 
 Si la hauteur n'est pas calculée correctement (une barre de scroll est visible), il est très probable qu'il s'agisse d'un problème de style dans le formulaire qui empêche de calculer la bonne hauteur correctement.\

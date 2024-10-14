@@ -1,4 +1,8 @@
-import { getHcFormIdFromUrl, getHcFormSlugFromUrl } from "@net-helium/lib/helium-connect";
+import {
+  getHcFormIdFromUrl,
+  getHcFormSlugFromUrl,
+  hcProcessPlaceholders,
+} from "@net-helium/lib/helium-connect";
 import { translate } from "@net-helium/lib/i18n";
 import {
   getHostPathFromUrl,
@@ -185,7 +189,7 @@ export default class HcForm extends LitElement {
       };
     }
 
-    return getUrlWithParams(originalUrl, params);
+    return getUrlWithParams(hcProcessPlaceholders(originalUrl, params), params);
   };
 
   /**
