@@ -25,6 +25,7 @@ const ctx = await context({
 });
 
 if (watch) {
+  console.log(`${pkg.name} - Watching for changes...`);
   await ctx.watch();
 } else {
   await ctx.rebuild();

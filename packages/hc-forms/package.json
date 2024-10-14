@@ -19,13 +19,13 @@
     "postpack": "clean-package restore",
     "check:types": "tsc --emitDeclarationOnly false --noEmit",
     "clean": "rm -rf dist",
-    "dev:types": "tsc-watch --noClear",
-    "dev:source": "./scripts/build.ts --watch",
+    "dev:types": "tsc-watch -p ./tsconfig.build.json",
+    "dev:source": "./script/build.ts --watch",
     "dev": "pnpm clean && concurrently -n \"source,types\" \"pnpm dev:source\" \"pnpm dev:types\"",
     "test": "vitest run",
     "test:ui": "vitest --ui",
-    "build:source": "./scripts/build.ts",
-    "build:types": "tsc",
+    "build:source": "./script/build.ts",
+    "build:types": "tsc -p ./tsconfig.build.json",
     "build": "pnpm clean && pnpm build:source && pnpm build:types"
   },
   "main": "./dist/hc-forms.js",
@@ -35,11 +35,12 @@
     "access": "public"
   },
   "dependencies": {
+    "@net-helium/lib": "workspace:",
+    "@net-helium/ui": "workspace:",
     "lit": "catalog:"
   },
   "devDependencies": {
     "@commander-js/extra-typings": "catalog:",
-    "@net-helium/lib": "workspace:",
     "@open-wc/testing": "catalog:",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
@@ -58,7 +59,7 @@
   },
   "keywords": ["hélium connect", "net hélium", "form", "formulaire", "intégration", "crm"],
   "license": "MIT",
-  "packageManager": "pnpm@9.10.0",
+  "packageManager": "pnpm@9.12.1",
   "engines": {
     "node": ">=20.0.0",
     "pnpm": ">=9.5.0"

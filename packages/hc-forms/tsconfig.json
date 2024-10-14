@@ -1,8 +1,8 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": "./src",
-    "outDir": "./dist"
+    "module": "Preserve",
+    "moduleResolution": "Bundler"
   },
-  "include": ["src"]
+  "include": ["src/**/*", "test/**/*", "script/**/*"]
 }

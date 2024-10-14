@@ -1,10 +1,11 @@
-import { hcFormIdFromUrl, hcFormSlugFromUrl } from "@net-helium/lib/helium-connect";
-import { localized, translate } from "@net-helium/lib/i18n";
+import { getHcFormIdFromUrl, getHcFormSlugFromUrl } from "@net-helium/lib/helium-connect";
+import { translate } from "@net-helium/lib/i18n";
 import {
-  addParamsToUrl,
   getHostPathFromUrl,
   getPrefixedParamsFromUrl,
+  getUrlWithParams,
 } from "@net-helium/lib/utils";
+import { localized } from "@net-helium/ui/controllers";
 import { LitElement, type PropertyValues, css, html } from "lit";
 import { customElement, property, query, state } from "lit/decorators.js";
 
@@ -54,11 +55,17 @@ type HcFormEventMessage = {
 /**
  * Hélium Connect form component.
  *
+ * @tag hc-form
+ *
+ * @property url - The form's URL
+ * @property scrollOffset - Offset for the automatic scroll to the top of the form
+ * @property paddingBottom - Extra space added to the calculated height of the form
+ *
  * @csspart iframe - The iframe HTML element displaying the form
  * @csspart error-msg - The error message displayed if the form URL is invalid
  */
-@localized()
 @customElement("hc-form")
+@localized()
 export default class HcForm extends LitElement {
   /**
    * URL of the form.
@@ -85,13 +92,13 @@ export default class HcForm extends LitElement {
   /**
    * Unique form identifier extracted from its URL.
    */
-  private _formIdentifier?: string;
+  #formIdentifier?: string;
 
   /**
    * Final URL of the form that will be loaded. The value is the same as the url property but
    * enriched with tracking parameters from the host page.
    */
-  private _src = "about:blank";
+  #src = "about:blank";
 
   /**
    * Current height of the form received from Hélium Connect.
@@ -109,27 +116,27 @@ export default class HcForm extends LitElement {
    * Timeout reference used to debounce the request to Hélium Connect when asking for the new
    * height of the form after a window resize.
    */
-  private _resizeTimeout?: ReturnType<typeof setTimeout>;
+  #resizeTimeout?: ReturnType<typeof setTimeout>;
 
   /**
    * Handler to update the height of the form and manage the scrolling at the top of it when
    * receiving a form event from Hélium Connect.
    * @param e the message event sent by Hélium Connect
    */
-  private _hcMessageHandler = (e: MessageEvent<HcFormEventMessage>) => {
+  #hcMessageHandler = (e: MessageEvent<HcFormEventMessage>) => {
     if (!this._iframe) return;
     const { url, formId, formSlug, formUrl, height, type } = e.data;
     if (!type) return;
 
     if (
-      this._formIdentifier &&
+      this.#formIdentifier &&
       ((url &&
-        (hcFormIdFromUrl(url) === this._formIdentifier ||
-          hcFormSlugFromUrl(url) === this._formIdentifier ||
-          getHostPathFromUrl(url) === this._formIdentifier)) ||
-        (formId && formId === this._formIdentifier) ||
-        (formSlug && formSlug === this._formIdentifier) ||
-        (formUrl && formUrl === this._formIdentifier))
+        (getHcFormIdFromUrl(url) === this.#formIdentifier ||
+          getHcFormSlugFromUrl(url) === this.#formIdentifier ||
+          getHostPathFromUrl(url) === this.#formIdentifier)) ||
+        (formId && formId === this.#formIdentifier) ||
+        (formSlug && formSlug === this.#formIdentifier) ||
+        (formUrl && formUrl === this.#formIdentifier))
     ) {
       this._height = height + this.paddingBottom;
 
@@ -146,11 +153,11 @@ export default class HcForm extends LitElement {
    * each resize of the window.
    * @param e the resize event
    */
-  private _resizeHandler = (e: Event) => {
+  #resizeHandler = (e: Event) => {
     if (!this._iframe) return;
-    if (this._resizeTimeout) clearTimeout(this._resizeTimeout);
+    if (this.#resizeTimeout) clearTimeout(this.#resizeTimeout);
 
-    this._resizeTimeout = setTimeout(() => {
+    this.#resizeTimeout = setTimeout(() => {
       this._iframe.contentWindow?.postMessage({ type: e.type }, "*");
     }, 250);
   };
@@ -160,25 +167,25 @@ export default class HcForm extends LitElement {
    * @param originalUrl the original form url
    * @returns the enriched form url
    */
-  private _buildFinalUrl = (originalUrl: string) => {
+  #buildFinalUrl = (originalUrl: string) => {
     // Extract tracking params from the hosting page url
-    let extraParams = getPrefixedParamsFromUrl(location.href, "utm_", "hc_");
+    let params = getPrefixedParamsFromUrl(location.href, "utm_", "hc_");
 
     // Add the host page domain
-    extraParams = { ...extraParams, ldom: location.host };
+    params = { ...params, ldom: location.host };
 
     // Add the host page cookie preferences if they exist. The cookie preferences set by the
     // cookies banner that could be used on our landing pages for example.
     if (window.cookies) {
-      extraParams = {
-        ...extraParams,
+      params = {
+        ...params,
         ...Object.fromEntries(
           Object.entries(window.cookies).map(([k, v]) => [`ck-${k}`, v ? "1" : "0"]),
         ),
       };
     }
 
-    return addParamsToUrl(originalUrl, extraParams, false);
+    return getUrlWithParams(originalUrl, params);
   };
 
   /**
@@ -187,8 +194,8 @@ export default class HcForm extends LitElement {
   override connectedCallback() {
     super.connectedCallback();
 
-    window.addEventListener("message", this._hcMessageHandler);
-    window.addEventListener("resize", this._resizeHandler);
+    addEventListener("message", this.#hcMessageHandler);
+    addEventListener("resize", this.#resizeHandler);
   }
 
   /**
@@ -198,8 +205,8 @@ export default class HcForm extends LitElement {
   override disconnectedCallback() {
     super.disconnectedCallback();
 
-    window.removeEventListener("message", this._hcMessageHandler);
-    window.removeEventListener("resize", this._resizeHandler);
+    removeEventListener("message", this.#hcMessageHandler);
+    removeEventListener("resize", this.#resizeHandler);
   }
 
   /**
@@ -209,11 +216,13 @@ export default class HcForm extends LitElement {
    */
   protected override willUpdate(changedProperties: PropertyValues<this>) {
     if (changedProperties.has("url") && this.url) {
-      this._formIdentifier =
-        hcFormIdFromUrl(this.url) || hcFormSlugFromUrl(this.url) || getHostPathFromUrl(this.url);
+      this.#formIdentifier =
+        getHcFormIdFromUrl(this.url) ||
+        getHcFormSlugFromUrl(this.url) ||
+        getHostPathFromUrl(this.url);
 
-      if (this._formIdentifier) {
-        this._src = this._buildFinalUrl(this.url);
+      if (this.#formIdentifier) {
+        this.#src = this.#buildFinalUrl(this.url);
       }
     }
 
@@ -227,7 +236,7 @@ export default class HcForm extends LitElement {
    * @returns the component's DOM
    */
   protected override render() {
-    if (!this._formIdentifier) {
+    if (!this.#formIdentifier) {
       return html`
         <p part="error-msg">
           ${translate("errorMsg")}
@@ -238,8 +247,8 @@ export default class HcForm extends LitElement {
     return html`
       <iframe
         part="iframe"
-        title=${translate("iframeTitle", { vars: { formId: this._formIdentifier } })}
-        src=${this._src}
+        title=${translate("iframeTitle", { vars: { formId: this.#formIdentifier } })}
+        src=${this.#src}
         style=${`height: ${this._height}px;`}
       ></iframe>
     `;
@@ -267,8 +276,6 @@ export default class HcForm extends LitElement {
 
 declare global {
   interface Window {
-    cookies?: {
-      [key: string]: boolean;
-    };
+    cookies?: Record<string, boolean>;
   }
 }
