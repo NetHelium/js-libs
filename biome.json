@@ -1,16 +1,8 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+  "$schema": "https://biomejs.dev/schemas/1.9.3/schema.json",
   "files": {
     "ignoreUnknown": true,
-    "ignore": [
-      "pnpm-lock.yaml",
-      "node_modules",
-      "*.tsbuildinfo",
-      ".turbo",
-      ".coverage",
-      "dist",
-      "app/public/js"
-    ]
+    "ignore": ["pnpm-lock.yaml", "node_modules", ".turbo", ".coverage", "dist", "*.astro"]
   },
   "organizeImports": {
     "enabled": true

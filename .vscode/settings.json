@@ -2,17 +2,14 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "biome.enabled": true,
   "cSpell.enabled": true,
-  "prettify-ts.maxProperties": 30,
-  "prettify-ts.maxCharacters": 10000,
+  "prettify-ts.maxProperties": 10,
+  "prettify-ts.maxCharacters": 5000,
   "prettify-ts.typeIndentation": 2,
   "editor.rulers": [
     {
       "column": 100,
       "color": "#92929266"
     }
-  ],
-  "html.customData": [
-    "./app/node_modules/@shoelace-style/shoelace/dist/vscode.html-custom-data.json"
   ],
   "[json]": {
     "editor.defaultFormatter": "biomejs.biome",
@@ -24,10 +21,6 @@
   },
   "[typescript]": {
     "editor.defaultFormatter": "biomejs.biome",
-    "editor.formatOnSave": true
-  },
-  "[liquid]": {
-    "editor.defaultFormatter": "sissel.shopify-liquid",
     "editor.formatOnSave": true
   }
 }

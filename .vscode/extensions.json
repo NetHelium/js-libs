@@ -1,9 +1,9 @@
 {
   "recommendations": [
+    "astro-build.astro-vscode",
     "biomejs.biome",
     "mylesmurphy.prettify-ts",
     "runem.lit-plugin",
-    "sissel.shopify-liquid",
     "streetsidesoftware.code-spell-checker",
     "streetsidesoftware.code-spell-checker-french",
     "streetsidesoftware.code-spell-checker-french-reforme",
