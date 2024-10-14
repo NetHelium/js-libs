@@ -43,6 +43,8 @@ jobs:
         run: pnpm install
       - name: Disable Turborepo telemetry
         run: pnpm turbo telemetry disable
+      - name: Build packages
+        run: pnpm build
       - name: Check for TypeScript errors
         run: pnpm check:types
       - name: Check for formatting and linting errors
@@ -51,5 +53,3 @@ jobs:
         run: pnpm check:spell
       - name: Run tests
         run: pnpm test
-      - name: Build packages
-        run: pnpm build
