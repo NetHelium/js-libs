@@ -1,5 +1,11 @@
 # @net-helium/hc-forms
 
+## 1.1.0
+
+### Nouvelles fonctionnalités
+
+- [`8b6dab7`](https://github.com/NetHelium/js-libs/commit/8b6dab7012a1b79529751e6ac08747464551a95a) ([@RonanHenry35](https://github.com/RonanHenry35)) - Ajout du support des liens de formulaire avec suivi automatique des contacts via le paramètre **hc_contact_data** de la page hôte.
+
 ## 1.0.1
 
 ### Corrections
