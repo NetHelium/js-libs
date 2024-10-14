@@ -29,20 +29,18 @@ const ctx = await context({
 
     // Icons collection and related utilities
     "./src/icons/*.ts",
-
-    // Other utilities
-    "./src/utils/*.ts",
   ],
   outdir: "dist",
   target: "es2022",
   format: "esm",
   bundle: true,
   splitting: true,
-  chunkNames: "chunks/[name]-[hash]",
+  chunkNames: "chunks/[name].[hash]",
   packages: "external",
 });
 
 if (watch) {
+  console.log(`${pkg.name} - Watching for changes...`);
   await ctx.watch();
 } else {
   await ctx.rebuild();

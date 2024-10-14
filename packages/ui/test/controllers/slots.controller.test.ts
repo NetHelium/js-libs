@@ -3,34 +3,34 @@ import { LitElement, html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { type SlotsControllerHost, attachSlotsController } from "../../src/controllers";
+import { type SlotsControllerHost, attachSlotsController } from "../../src/controllers/index.js";
 
-@customElement("slots-component")
-class SlotsComponent extends LitElement implements SlotsControllerHost {
-  slotsController = attachSlotsController(this, "[default]", "suffix");
+describe("[ui] controllers/slots", () => {
+  @customElement("slots-component")
+  class SlotsComponent extends LitElement implements SlotsControllerHost {
+    slotsController = attachSlotsController(this, "[default]", "suffix");
 
-  protected override render() {
-    return html`
-      <div id="container" class="${classMap({
-        "has-prefix": this.slotsController.hasSlot("prefix"),
-        "has-default": this.slotsController.hasSlot("[default]"),
-        "has-suffix": this.slotsController.hasSlot("suffix"),
-      })}">
-        <slot name="prefix"></slot>
-        <slot></slot>
-        <slot name="suffix"></slot>
-      </div>
-    `;
+    protected override render(): unknown {
+      return html`
+        <div id="container" class="${classMap({
+          "has-prefix": this.slotsController.hasSlot("prefix"),
+          "has-default": this.slotsController.hasSlot("[default]"),
+          "has-suffix": this.slotsController.hasSlot("suffix"),
+        })}">
+          <slot name="prefix"></slot>
+          <slot></slot>
+          <slot name="suffix"></slot>
+        </div>
+      `;
+    }
   }
-}
 
-let slotsComponent: SlotsComponent;
-let slotsController: typeof slotsComponent.slotsController;
+  let slotsComponent: SlotsComponent;
+  let slotsController: typeof slotsComponent.slotsController;
 
-const getContainerClasses = (component: HTMLElement) =>
-  component.shadowRoot!.querySelector("#container")!.classList;
+  const getContainerClasses = (component: HTMLElement) =>
+    component.shadowRoot!.querySelector("#container")!.classList;
 
-describe("[lib] ui/controllers/slots", () => {
   beforeEach(async () => {
     slotsComponent = await fixture(html`
       <slots-component>

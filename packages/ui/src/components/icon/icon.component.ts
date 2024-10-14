@@ -2,7 +2,7 @@ import { type PropertyValues, html, nothing, svg } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { type IconVariant, getIconPaths } from "../../icons/store.js";
 import componentStyles from "../../styles/component.styles.js";
-import { NhElement } from "../index.js";
+import { NhElement } from "../abstracts/index.js";
 import styles from "./icon.styles.js";
 
 /**
@@ -10,13 +10,13 @@ import styles from "./icon.styles.js";
  *
  * @tag nh-icon
  *
- * @property {string | undefined} name - The name of the icon to display
+ * @property {string|undefined} name - The name of the icon to display
  * @property {string} variant - The icon's variant if applicable
  *
  * @event nh-error - Emitted when the requested icon can't be found
  *
- * @cssprop color - The icon's color. It inherits the color of its parent by default
- * @cssprop size - The icon's size. It inherits the size (width and height) of its parent by default
+ * @cssprop color - The icon's color. Inherited from its parent by default
+ * @cssprop size - The icon's size. Inherited from its parent by default (width and height)
  *
  * @csspart svg - The SVG element
  * @csspart path-[index] - Each path of the drawn icon (`path-0`, `path-1`, ...)
@@ -37,7 +37,6 @@ export default class NhIcon extends NhElement {
   /**
    * Variant of the icon to render if applicable. If the icon only has one variant, it will be
    * loaded regardless of the value of this property.
-   *
    * @default "outlined"
    */
   @property({ type: String, reflect: true })
@@ -46,15 +45,15 @@ export default class NhIcon extends NhElement {
   /**
    * Paths to render inside the svg tag.
    */
-  private _paths: string[] = [];
+  #paths: string[] = [];
 
   /**
-   * Find the icon that matches the name when it changes. An `nh-error` event is emitted if no
-   * matching icon was found in the store.
+   * Update the SVG paths to render when the name or the variant changes. An `nh-error` event is
+   * emitted if no matching icon was found in the store.
    * @param changedProperties a map of the properties that have changed since the last render
    */
   protected override willUpdate(changedProperties: PropertyValues<this>) {
-    if (changedProperties.has("name") && this.name) {
+    if ((changedProperties.has("name") || changedProperties.has("variant")) && this.name) {
       const paths = getIconPaths(this.name, this.variant);
 
       if (!paths) {
@@ -65,7 +64,7 @@ export default class NhIcon extends NhElement {
         });
       }
 
-      this._paths = paths ?? [];
+      this.#paths = paths ?? [];
     }
   }
 
@@ -74,8 +73,8 @@ export default class NhIcon extends NhElement {
    * loaded in the store.
    * @returns the icon's DOM
    */
-  protected override render() {
-    if (!this.name || this._paths.length === 0) {
+  protected override render(): unknown {
+    if (!this.name || this.#paths.length === 0) {
       return nothing;
     }
 
@@ -86,7 +85,7 @@ export default class NhIcon extends NhElement {
         fill="currentColor"
         part="svg"
       >
-        ${this._paths.map(
+        ${this.#paths.map(
           (path, idx) => svg`
           <path
             d="${path}"

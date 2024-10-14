@@ -6,7 +6,7 @@ import type {
   EventsWithRequiredDetail,
   EventsWithoutRequiredDetail,
   NhEventInit,
-} from "../events/index.js";
+} from "../../internals/events.js";
 
 /**
  * Base class for UI related web components.

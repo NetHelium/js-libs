@@ -1,23 +1,22 @@
-import type { ReactiveController, ReactiveControllerHost, ReactiveElement } from "lit";
+import type { ReactiveController, ReactiveElement } from "lit";
 
 /**
- * Requirements to be a host component of this controller.
+ * Requirements to be a host component of the slots controller.
  */
-export type SlotsControllerHost = ReactiveControllerHost &
-  ReactiveElement & {
-    /**
-     * Slots controller.
-     */
-    slotsController: SlotsController;
+export type SlotsControllerHost = ReactiveElement & {
+  /**
+   * Slots controller.
+   */
+  slotsController: SlotsController;
 
-    /**
-     * Handler that will be called by the slots controller when a watched slot changed. The slots
-     * controller already takes care of scheduling a new render of the host component.
-     * @param name the name of the changed slot (`[default]` for the default slot)
-     * @param slot the changed slot
-     */
-    slotChanged?: (name: string, slot: HTMLSlotElement) => void;
-  };
+  /**
+   * Handler that will be called by the slots controller when a watched slot changed. The slots
+   * controller already takes care of scheduling a new render of the host component.
+   * @param name the name of the changed slot (`[default]` for the default slot)
+   * @param slot the changed slot
+   */
+  slotChanged?: (name: string, slot: HTMLSlotElement) => void;
+};
 
 /**
  * Reactive controller that will automatically schedule a new render and notify the host component
@@ -28,12 +27,12 @@ export class SlotsController implements ReactiveController {
   /**
    * Host component.
    */
-  private _host: SlotsControllerHost;
+  #host: SlotsControllerHost;
 
   /**
    * List of slot names to watch in the host component.
    */
-  private _slotNames: string[];
+  #slotNames: string[];
 
   /**
    * Initialize the slots reactive controller.
@@ -41,9 +40,9 @@ export class SlotsController implements ReactiveController {
    * @param slotNames the slot names to watch in the host component
    */
   constructor(host: SlotsControllerHost, ...slotNames: string[]) {
-    this._host = host;
-    this._slotNames = slotNames;
-    this._host.addController(this);
+    this.#host = host;
+    this.#slotNames = slotNames;
+    this.#host.addController(this);
   }
 
   /**
@@ -53,7 +52,7 @@ export class SlotsController implements ReactiveController {
    */
   hasSlot = (slotName: string) => {
     if (slotName === "[default]") {
-      return [...this._host.childNodes].some((node) => {
+      return [...this.#host.childNodes].some((node) => {
         if (node.nodeType === node.TEXT_NODE && node.textContent!.trim() !== "") {
           return true;
         }
@@ -70,7 +69,7 @@ export class SlotsController implements ReactiveController {
       });
     }
 
-    return this._host.querySelector(`:scope [slot="${slotName}"]`) !== null;
+    return this.#host.querySelector(`:scope [slot="${slotName}"]`) !== null;
   };
 
   /**
@@ -82,7 +81,7 @@ export class SlotsController implements ReactiveController {
     const texts: string[] = [];
 
     if (slotName === "[default]") {
-      for (const node of this._host.childNodes) {
+      for (const node of this.#host.childNodes) {
         if (
           node.nodeType === node.TEXT_NODE &&
           node.textContent &&
@@ -100,7 +99,7 @@ export class SlotsController implements ReactiveController {
         }
       }
     } else {
-      const slot = this._host.shadowRoot!.querySelector<HTMLSlotElement>(
+      const slot = this.#host.shadowRoot!.querySelector<HTMLSlotElement>(
         `slot[name="${slotName}"]`,
       );
 
@@ -126,7 +125,7 @@ export class SlotsController implements ReactiveController {
     const html: string[] = [];
 
     if (slotName === "[default]") {
-      for (const node of this._host.childNodes) {
+      for (const node of this.#host.childNodes) {
         if (node.nodeType === node.TEXT_NODE && node.textContent) {
           html.push(node.textContent);
         }
@@ -140,7 +139,7 @@ export class SlotsController implements ReactiveController {
         }
       }
     } else {
-      const slot = this._host.shadowRoot!.querySelector<HTMLSlotElement>(
+      const slot = this.#host.shadowRoot!.querySelector<HTMLSlotElement>(
         `slot[name="${slotName}"]`,
       );
 
@@ -158,40 +157,38 @@ export class SlotsController implements ReactiveController {
   /**
    * Handler called when one of the host component's slots changes. If the slot is part of the
    * watched slots, a new render of the host component is scheduled and its `slotChanged` handler
-   * is called if it is defined.
+   * is called if defined.
    * @param e the slot change event
    */
-  private _slotChangeHandler = (e: Event) => {
+  #slotChangeHandler = (e: Event) => {
     const slot = e.target as HTMLSlotElement;
 
     if (
-      (!slot.name && this._slotNames.includes("[default]")) ||
-      (slot.name && this._slotNames.includes(slot.name))
+      (!slot.name && this.#slotNames.includes("[default]")) ||
+      (slot.name && this.#slotNames.includes(slot.name))
     ) {
-      this._host.requestUpdate();
+      this.#host.requestUpdate();
 
-      if (this._host.slotChanged) {
-        this._host.slotChanged(slot.name || "[default]", slot);
+      if (this.#host.slotChanged) {
+        this.#host.slotChanged(slot.name || "[default]", slot);
       }
     }
   };
 
   /**
-   * Handler called when the host component attaches the controller. If a list of slots to watch
-   * was passed, we set a listener on the `slotchange` event.
+   * Listen for slot changes in the host component's DOM if a list of slots to watch was given.
    */
   hostConnected() {
-    if (this._slotNames.length > 0) {
-      this._host.shadowRoot!.addEventListener("slotchange", this._slotChangeHandler);
+    if (this.#slotNames.length > 0) {
+      this.#host.shadowRoot!.addEventListener("slotchange", this.#slotChangeHandler);
     }
   }
 
   /**
-   * Handler called when the host component detaches the controller. We make sure to remove
-   * the `slotchange` event listener if it was set.
+   * Remove the event listener from the host component when it disconnects from the controller.
    */
   hostDisconnected() {
-    this._host.shadowRoot!.removeEventListener("slotchange", this._slotChangeHandler);
+    this.#host.shadowRoot!.removeEventListener("slotchange", this.#slotChangeHandler);
   }
 }
 

@@ -1,19 +1,14 @@
-import { defineConfig } from "vitest/config";
+import { defineConfig, mergeConfig } from "vitest/config";
+import baseConfig from "../../vitest.config";
 
-export default defineConfig({
-  test: {
-    environment: "jsdom",
-    environmentOptions: {
-      jsdom: {
-        resources: "usable",
+export default mergeConfig(
+  baseConfig,
+  defineConfig({
+    test: {
+      coverage: {
+        reportsDirectory: "./test/.coverage/unit",
+        exclude: ["src/index.ts", "src/events/**", "src/internals/**", "src/**/*.styles.ts"],
       },
     },
-    coverage: {
-      enabled: true,
-      provider: "v8",
-      reportsDirectory: "./test/.coverage",
-      include: ["src/**"],
-      exclude: ["src/index.ts", "src/events/**", "src/**/*.styles.ts"],
-    },
-  },
-});
+  }),
+);

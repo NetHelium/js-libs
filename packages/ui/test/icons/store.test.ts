@@ -1,10 +1,9 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import * as icons from "../../src/icons";
-import { getIconPaths } from "../../src/icons/store";
+import * as icons from "../../src/icons/index.js";
 
-const { loadIcon, loadIcons } = icons;
+const { getIconPaths, loadIcon, loadIcons } = icons;
 
-describe("[lib] ui/icons/store", () => {
+describe("[ui] icons/store", () => {
   beforeEach(() => {
     loadIcons(
       {

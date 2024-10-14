@@ -25,7 +25,6 @@ type IconStore = {
 type IconLoadOptions = {
   /**
    * When `true`, the existing icons in the store will be removed.
-   *
    * @default false
    */
   override: boolean;
@@ -36,7 +35,7 @@ const store: IconStore = {
 };
 
 /**
- * Get the paths for an icon loaded in the store.
+ * Get the SVG paths for an icon loaded in the store.
  * @param name the name of the icon
  * @param variant the variant of the icon if applicable
  * @returns the list of svg paths of the icon or undefined if no matching icon was found
@@ -58,7 +57,7 @@ export const getIconPaths = (name: string, variant?: IconVariant) => {
 };
 
 /**
- * Load an extra icon in the store.
+ * Load a single icon in the store.
  * @param name the name of the icon
  * @param paths the list of svg paths
  * @param options the load options

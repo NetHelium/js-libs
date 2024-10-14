@@ -20,29 +20,29 @@
     "postpack": "clean-package restore",
     "check:types": "tsc --emitDeclarationOnly false --noEmit",
     "clean": "rm -rf dist",
-    "dev:types": "tsc-watch --noClear",
-    "dev:source": "./scripts/build.ts --watch",
+    "dev:source": "./script/build.ts --watch",
+    "dev:types": "tsc-watch -p ./tsconfig.build.json",
     "dev": "pnpm clean && concurrently -n \"source,types\" \"pnpm dev:source\" \"pnpm dev:types\"",
     "test": "vitest run",
     "test:ui": "vitest --ui",
-    "build:source": "./scripts/build.ts",
-    "build:types": "tsc",
+    "build:source": "./script/build.ts",
+    "build:types": "tsc -p ./tsconfig.build.json",
     "build": "pnpm clean && pnpm build:source && pnpm build:types"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "default": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     },
     "./components/*": {
-      "default": "./dist/components/*/index.js",
-      "types": "./dist/components/*/index.d.ts"
+      "types": "./dist/components/*/index.d.ts",
+      "default": "./dist/components/*/index.js"
     },
     "./*": {
-      "default": "./dist/*/index.js",
-      "types": "./dist/*/index.d.ts"
+      "types": "./dist/*/index.d.ts",
+      "default": "./dist/*/index.js"
     }
   },
   "files": ["dist"],
@@ -50,6 +50,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@net-helium/lib": "workspace:",
     "lit": "catalog:"
   },
   "devDependencies": {
@@ -72,7 +73,7 @@
   },
   "keywords": ["net hélium", "ui", "interfaces utilisateur", "composants"],
   "license": "MIT",
-  "packageManager": "pnpm@9.10.0",
+  "packageManager": "pnpm@9.12.1",
   "engines": {
     "node": ">=20.0.0",
     "pnpm": ">=9.5.0"
