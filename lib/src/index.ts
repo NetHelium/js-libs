@@ -1,3 +1,3 @@
-export * from "./helium-connect";
-export * from "./i18n";
-export * from "./utils";
+export * from "./helium-connect/index.js";
+export * from "./i18n/index.js";
+export * from "./utils/index.js";

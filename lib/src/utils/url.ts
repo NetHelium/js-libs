@@ -1,3 +1,11 @@
+type UrlWithParamsOptions = {
+  /**
+   * set to `false` to preserve the values of existing params or `true` to override
+   * @default false
+   */
+  override?: boolean;
+};
+
 /**
  * Extract the host and path from a url.
  * @param url the url
@@ -35,11 +43,16 @@ export const getPrefixedParamsFromUrl = (
  * Merge the existing params of the given `url` with the given `params`.
  * @param url the original url
  * @param params the params to add
- * @param override set to `false` to preserve the values of existing params or `true` to override
- * them (default is `true`)
+ * @param options the options
  * @returns the altered url with the new params
  */
-export const addParamsToUrl = (url: string, params: Record<string, string>, override = true) => {
+export const getUrlWithParams = (
+  url: string,
+  params: Record<string, string>,
+  options?: UrlWithParamsOptions,
+) => {
+  const override = options?.override ?? false;
+
   const urlParams: Record<string, string> = [
     ...new URLSearchParams(new URL(url).search).entries(),
   ].reduce((acc, [key, value]) => Object.assign(acc, { [key]: value }), {});

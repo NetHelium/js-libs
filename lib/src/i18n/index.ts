@@ -1,2 +1,1 @@
-export * from "./localized.controller";
-export { loadTranslations, translate } from "./store";
+export * from "./store.js";

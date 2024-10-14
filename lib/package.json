@@ -14,19 +14,16 @@
     ".": "./src/index.ts",
     "./*": "./src/*/index.ts"
   },
-  "dependencies": {
-    "lit": "catalog:"
-  },
   "devDependencies": {
-    "@open-wc/testing": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "@vitest/ui": "catalog:",
     "jsdom": "catalog:",
     "tslib": "catalog:",
+    "typescript": "catalog:",
     "vitest": "catalog:"
   },
   "license": "MIT",
-  "packageManager": "pnpm@9.10.0",
+  "packageManager": "pnpm@9.12.1",
   "engines": {
     "node": ">=20.0.0",
     "pnpm": ">=9.5.0"
