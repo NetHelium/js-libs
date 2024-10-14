@@ -131,12 +131,6 @@ importers:
 
   packages/hc-forms:
     dependencies:
-      '@net-helium/lib':
-        specifier: 'workspace:'
-        version: link:../../lib
-      '@net-helium/ui':
-        specifier: 'workspace:'
-        version: link:../ui
       lit:
         specifier: 'catalog:'
         version: 3.2.1
@@ -144,6 +138,12 @@ importers:
       '@commander-js/extra-typings':
         specifier: 'catalog:'
         version: 12.1.0(commander@12.1.0)
+      '@net-helium/lib':
+        specifier: 'workspace:'
+        version: link:../../lib
+      '@net-helium/ui':
+        specifier: 'workspace:'
+        version: link:../ui
       '@open-wc/testing':
         specifier: 'catalog:'
         version: 4.0.0
