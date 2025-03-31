@@ -1,31 +1,36 @@
-import { beforeAll, describe, expect, it, vi } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "@net-helium/tools/test";
 import { loadTranslations, setLocale, translate } from "../../src/i18n/index.js";
 
-describe.concurrent("[lib] i18n/store", () => {
+describe("[lib] i18n/store (node)", () => {
   const translations = {
     en: {
       first: "Some text without any variables",
-      second: "Another one with some variables like %firstVar% and %secondVar%",
+      second: "Another one with some variables like {{ firstVar }} and {{ secondVar }}",
       nested: {
         subKey: {
-          third: "A third example in a nested key with a variable: %thirdVar%",
+          third: "A third example in a nested key with a variable: {{ thirdVar }}",
         },
       },
     },
     fr: {
       first: "Exemple de texte sans aucune variable",
-      second: "Un autre texte avec quelques variables comme %firstVar% et %secondVar%",
+      second: "Un autre texte avec quelques variables comme {{ firstVar }} et {{ secondVar }}",
       nested: {
         subKey: {
-          third: "Un troisième exemple dans une sous-clé avec une variable : %thirdVar%",
+          third: "Un troisième exemple dans une sous-clé avec une variable : {{ thirdVar }}",
         },
       },
     },
   };
 
+  /**
+   * The navigator global was added to node in v21.0.0 as a partial implementation of the
+   * browser's `window.navigator` API which means we no longer have to be in a browser-like
+   * environment to run tests using the navigator global.
+   */
   const languageGetter = vi.spyOn(navigator, "language", "get");
 
-  const changeBrowserLanguage = (language: string) => {
+  const changeNavigatorLanguage = (language: string) => {
     languageGetter.mockReturnValue(language);
   };
 
@@ -33,19 +38,19 @@ describe.concurrent("[lib] i18n/store", () => {
     loadTranslations(translations);
   });
 
-  it("should set the locale in the store according to the browser language if supported", () => {
-    // Default browser language in JSDOM is english
+  it("should set the locale in the store according to the navigator language if supported", () => {
+    changeNavigatorLanguage("en");
     expect(setLocale()).toEqual("en");
     expect(setLocale({ fallback: "fr" })).toEqual("en");
 
-    // Change the browser language to french
-    changeBrowserLanguage("fr");
+    // Change the navigator language to french
+    changeNavigatorLanguage("fr");
     expect(navigator.language).toEqual("fr");
     expect(setLocale()).toEqual("fr");
     expect(setLocale({ fallback: "en" })).toEqual("fr");
 
-    // Change the browser language to german (not supported)
-    changeBrowserLanguage("de");
+    // Change the navigator language to german (not supported)
+    changeNavigatorLanguage("de");
     expect(navigator.language).toEqual("de");
     expect(setLocale()).toEqual("en");
     expect(setLocale({ fallback: "fr" })).toEqual("fr");
@@ -53,7 +58,7 @@ describe.concurrent("[lib] i18n/store", () => {
 
   it("should handle simple translations", () => {
     expect(translate("first")).toContain("Some text");
-    expect(translate("second")).toContain("like %firstVar% and %secondVar%");
+    expect(translate("second")).toContain("like {{ firstVar }} and {{ secondVar }}");
   });
 
   it("should handle translations with variables", () => {
@@ -80,5 +85,26 @@ describe.concurrent("[lib] i18n/store", () => {
 
   it("should translate in the given locale", () => {
     expect(translate("first", { locale: "fr" })).toContain("Exemple de texte");
+  });
+
+  it("should or should not override existing translations", () => {
+    const newTranslations = {
+      en: {
+        third: "A third translation",
+      },
+      fr: {
+        third: "Une troisième traduction",
+      },
+    };
+
+    // Without override
+    loadTranslations(newTranslations);
+    expect(translate("first")).not.toContain("Translation missing");
+    expect(translate("third")).toContain("third translation");
+
+    // With override
+    loadTranslations(newTranslations, true);
+    expect(translate("first")).toContain("Translation missing");
+    expect(translate("third")).toContain("third translation");
   });
 });

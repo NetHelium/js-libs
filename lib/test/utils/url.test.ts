@@ -1,11 +1,11 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "@net-helium/tools/test";
 import {
   getHostPathFromUrl,
   getPrefixedParamsFromUrl,
   getUrlWithParams,
 } from "../../src/utils/index.js";
 
-describe.concurrent("[lib] url", () => {
+describe.concurrent("[lib] utils/url", () => {
   it("should add the params to the url", () => {
     const url = "https://www.website.com/some-page?f=3&gid=123";
 
@@ -29,6 +29,7 @@ describe.concurrent("[lib] url", () => {
       "www.website.com/some-path/to-some-page",
     );
 
+    expect(getHostPathFromUrl("www.website.com")).toBeUndefined();
     expect(getHostPathFromUrl("https://www.website.com")).toEqual("www.website.com");
     expect(getHostPathFromUrl("https://www.website.com?f=1&d=nh")).toEqual("www.website.com");
     expect(getHostPathFromUrl("https://www.website.com/")).toEqual("www.website.com");

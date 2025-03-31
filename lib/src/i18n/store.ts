@@ -1,106 +1,122 @@
-// Supported locales
+import { merge } from "lodash-es";
+import { isBrowser } from "../utils/environment.js";
+
+/**
+ * The list of supported locales.
+ */
 const locales = ["en", "fr"] as const;
 
 /**
  * A `Locale` has to be one of the supported locales.
  */
-type Locale = (typeof locales)[number];
+export type Locale = (typeof locales)[number];
 
 /**
- * Translation keys have a variable depth.
+ * Translation keys have a unknown depth.
  */
 type TranslationKeys = { [key: string]: TranslationKeys | string };
 
 /**
- * Object containing all the translations for all the supported locales.
+ * Object containing all the loaded translations for each supported locale.
  */
-type TranslationObject = Record<Locale, TranslationKeys>;
+type TranslationDictionary = Record<Locale, TranslationKeys>;
 
 /**
- * Options passed to the `setLocale` function.
+ * Set the currently active locale by following the current language if supported.
+ *
+ * In a browser environment, the `lang` attribute of the root element (the `html` tag) is first
+ * checked. If it's not set or its value is not supported, the browser language is used instead if
+ * supported.
+ *
+ * In a node environment, the language of the global navigator object is used if its current value
+ * is supported.
+ *
+ * If none of the languages are set or supported, the new active locale will be determined by the
+ * `fallback` option and if no fallback is given, `en` will be used as a last resort.
+ *
+ * @param options the options
+ * @returns the new locale to use
  */
-type SetLocaleOptions = {
+export const setLocale = (options?: {
   /**
-   * Fallback locale if the requested one is not supported.
+   * The fallback locale to use instead of the default one if no locale was detected or supported.
    */
   fallback?: Locale;
+}): Locale => {
+  if (isBrowser()) {
+    const htmlLang = document.documentElement.lang as Locale;
+    if (locales.includes(htmlLang)) return htmlLang;
+  }
+
+  const navigatorLanguage = navigator.language.split("-").at(0) as Locale;
+  if (locales.includes(navigatorLanguage)) return navigatorLanguage;
+
+  return options?.fallback || "en";
 };
 
 /**
- * I18n data store.
+ * The I18n store.
  */
-type I18nStore = {
+export const store: {
   /**
    * The currently active locale.
    */
   locale: Locale;
 
   /**
-   * Translations loaded in the store.
+   * Translations currently loaded in the store.
    */
-  dictionary: TranslationObject;
-};
-
-/**
- * Options passed to the translate function.
- */
-type TranslateOptions = {
-  /**
-   * The values of the translation's placeholders (variables).
-   */
-  vars?: Record<string, string>;
-
-  /**
-   * The maximum length of the translation (it will be truncated if necessary).
-   */
-  maxLength?: number;
-
-  /**
-   * Force a specific locale to be used instead of the currently active one.
-   */
-  locale?: Locale;
-};
-
-/**
- * Set the currently active locale by following the browser language if supported. If the browser
- * language is not supported, the new active locale will be determined by the passed options. If
- * no locale can be determined by the options, `en` will be used.
- * @param options the options
- * @returns the new locale to use
- */
-export const setLocale = (options?: SetLocaleOptions): Locale => {
-  const fallback = options?.fallback ?? "en";
-  const browserLanguage = navigator.language.split("-").at(0) as Locale;
-
-  if (locales.includes(browserLanguage)) {
-    return browserLanguage;
-  }
-
-  return fallback;
-};
-
-export const store: I18nStore = {
+  dictionary: TranslationDictionary;
+} = {
   locale: setLocale(),
-  dictionary: locales.reduce((acc, v) => Object.assign(acc, { [v]: {} }), {} as TranslationObject),
+  dictionary: locales.reduce(
+    (acc, v) => Object.assign(acc, { [v]: {} }),
+    {} as TranslationDictionary,
+  ),
 };
 
 /**
- * Load the translations for all supported locales in the i18n store.
- * @param translations the translations to load as a `TranslationObject`
+ * Load the translations for all supported locales in the store.
+ *
+ * @param translations the translations to load as a `TranslationDictionary`
+ * @param override whether the `translations` should replace the ones already loaded
  */
-export const loadTranslations = (translations: TranslationObject) => {
+export const loadTranslations = (translations: TranslationDictionary, override?: boolean) => {
   for (const locale of locales) {
-    store.dictionary[locale] = translations[locale];
+    if (override) {
+      store.dictionary[locale] = translations[locale];
+    } else {
+      store.dictionary[locale] = merge(store.dictionary[locale], translations[locale]);
+    }
   }
 };
 
 /**
  * Translate the given `key` for the currently active locale (or the given `locale` in `options`).
+ *
  * @param key the translation key
- * @param options the optional translate options
+ * @param options the translate options
  * @returns the translation if found or a translation missing message
  */
-export const translate = (key: string, options?: TranslateOptions) => {
+export const translate = (
+  key: string,
+  options?: {
+    /**
+     * The values of the translation's placeholders (variables).
+     */
+    vars?: Record<string, string>;
+
+    /**
+     * The maximum length of the translation (it will be truncated if necessary).
+     */
+    maxLength?: number;
+
+    /**
+     * Force a specific locale to be used instead of the currently active one.
+     */
+    locale?: Locale;
+  },
+) => {
   const identifiers = key.split(".");
   const vars = options?.vars;
   const maxLength = options?.maxLength;
@@ -118,20 +134,15 @@ export const translate = (key: string, options?: TranslateOptions) => {
       }
     }
 
-    if (value === undefined) {
-      break;
-    }
+    if (value === undefined) break;
 
     if (typeof value === "string") {
-      if (identifier !== identifiers.at(-1)) {
-        break;
-      }
-
+      if (identifier !== identifiers.at(-1)) break;
       let result = value as string;
 
       if (vars) {
         for (const [k, v] of Object.entries(vars)) {
-          result = result.replaceAll(`%${k}%`, v);
+          result = result.replaceAll(new RegExp(`\\{{2}\\s*${k}\\s*\\}{2}`, "g"), v);
         }
       }
 

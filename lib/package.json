@@ -4,28 +4,20 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
-    "test": "vitest run",
-    "test:ui": "vitest --ui",
-    "check:types": "tsc"
+    "tscheck": "nhcli tscheck",
+    "test": "nhcli test"
   },
   "main": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
     "./*": "./src/*/index.ts"
   },
-  "devDependencies": {
-    "@vitest/coverage-v8": "catalog:",
-    "@vitest/ui": "catalog:",
-    "jsdom": "catalog:",
-    "tslib": "catalog:",
-    "typescript": "catalog:",
-    "vitest": "catalog:"
+  "dependencies": {
+    "lodash-es": "catalog:"
   },
-  "license": "MIT",
-  "packageManager": "pnpm@9.12.1",
-  "engines": {
-    "node": ">=20.0.0",
-    "pnpm": ">=9.5.0"
-  }
+  "devDependencies": {
+    "@net-helium/tools": "workspace:*",
+    "@types/lodash-es": "catalog:"
+  },
+  "license": "MIT"
 }

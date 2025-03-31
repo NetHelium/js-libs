@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "@net-helium/tools/test";
 import { getHcFormIdFromUrl, getHcFormSlugFromUrl } from "../../src/helium-connect/index.js";
 
 describe.concurrent("[lib] helium-connect/form", () => {

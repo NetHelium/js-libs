@@ -9,10 +9,18 @@ type UrlWithParamsOptions = {
 /**
  * Extract the host and path from a url.
  * @param url the url
- * @returns the host and path
+ * @returns the host and path or `undefined` if the url is not valid
  */
 export const getHostPathFromUrl = (url: string) => {
-  const { host, pathname } = new URL(decodeURIComponent(url));
+  let urlInfo: URL;
+
+  try {
+    urlInfo = new URL(decodeURIComponent(url));
+  } catch {
+    return undefined;
+  }
+
+  const { host, pathname } = urlInfo;
   return `${host}${pathname === "/" ? "" : pathname}`;
 };
 
