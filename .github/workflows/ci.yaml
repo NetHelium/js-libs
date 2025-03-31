@@ -47,13 +47,9 @@ jobs:
         run: pnpm biome ci .
       - name: Check for spelling errors
         run: pnpm spell
-      - name: Build the custom tools
-        run: pnpm --filter @net-helium/tools build
-      - name: Copy the CLI to the root bin directory
-        run: cp ./tools/bin/nhcli ./node_modules/.bin/
-      - name: Check for TypeScript errors
-        run: pnpm tscheck
       - name: Build packages
         run: pnpm build
-      - name: Run tests
+      - name: Check for TypeScript errors
+        run: pnpm tscheck
+      - name: Run unit tests
         run: pnpm test

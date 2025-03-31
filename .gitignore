@@ -10,7 +10,6 @@ logs
 node_modules
 
 # Builds
-bin
 dist
 
 # Turborepo

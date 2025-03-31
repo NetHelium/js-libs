@@ -4,18 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "cli": "./scripts/build-cli.ts",
-    "tscheck": "./bin/nhcli tscheck",
-    "dev": "./bin/nhcli build -w",
-    "build": "pnpm cli && ./bin/nhcli build"
+    "tscheck": "tsc --emitDeclarationOnly false --noEmit",
+    "dev": "./scripts/build.ts -p tsconfig.build.json -w",
+    "build": "./scripts/build.ts -p tsconfig.build.json"
   },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    },
     "./*": {
       "types": "./dist/*/index.d.ts",
       "default": "./dist/*/index.js"
@@ -32,6 +25,7 @@
   "bin": {
     "nhcli": "./bin/nhcli"
   },
+  "files": ["bin", "dist"],
   "dependencies": {
     "@open-wc/testing": "^4.0.0",
     "@playwright/test": "^1.51.1",

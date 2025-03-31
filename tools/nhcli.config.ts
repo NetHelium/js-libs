@@ -2,7 +2,7 @@ import { defineConfig } from "./src/utils";
 
 export default defineConfig({
   build: {
-    globEntryPoints: ["src/!(cli)/**/*.ts"],
+    globEntryPoints: ["src/**/*.ts"],
     outdir: "dist",
     target: "esnext",
     bundle: true,
