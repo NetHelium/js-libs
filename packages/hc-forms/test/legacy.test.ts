@@ -1,8 +1,8 @@
-import { describe, expect, it } from "vitest";
-import "../src";
+import { describe, expect, it } from "@net-helium/tools/test";
+import "../src/legacy";
 
 describe("[hc-forms] legacy", () => {
-  it("should transform the deprecated syntax into the new web component syntax", () => {
+  it("should transform the deprecated syntax into the new one", () => {
     const legacyForm = document.createElement("div");
 
     legacyForm.setAttribute(
