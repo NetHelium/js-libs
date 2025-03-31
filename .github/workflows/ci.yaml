@@ -47,6 +47,8 @@ jobs:
         run: pnpm biome ci .
       - name: Check for spelling errors
         run: pnpm spell
+      - name: Build the custom tools
+        run: pnpm --filter @net-helium/tools build
       - name: Check for TypeScript errors
         run: pnpm tscheck
       - name: Build packages
