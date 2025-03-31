@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [20]
+        node: [22]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -43,13 +43,13 @@ jobs:
         run: pnpm install
       - name: Disable Turborepo telemetry
         run: pnpm turbo telemetry disable
-      - name: Build packages
-        run: pnpm build
-      - name: Check for TypeScript errors
-        run: pnpm check:types
       - name: Check for formatting and linting errors
         run: pnpm biome ci .
       - name: Check for spelling errors
-        run: pnpm check:spell
+        run: pnpm spell
+      - name: Check for TypeScript errors
+        run: pnpm tscheck
+      - name: Build packages
+        run: pnpm build
       - name: Run tests
         run: pnpm test

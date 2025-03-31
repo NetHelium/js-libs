@@ -1,5 +1,5 @@
 {
-  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.tsdk": "./node_modules/typescript/lib",
   "biome.enabled": true,
   "cSpell.enabled": true,
   "prettify-ts.maxProperties": 10,
@@ -13,6 +13,10 @@
   ],
   "[json]": {
     "editor.defaultFormatter": "biomejs.biome",
+    "editor.formatOnSave": true
+  },
+  "[mdx]": {
+    "editor.defaultFormatter": "unifiedjs.vscode-mdx",
     "editor.formatOnSave": true
   },
   "[javascript]": {

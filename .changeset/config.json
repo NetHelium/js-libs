@@ -12,5 +12,5 @@
   "access": "restricted",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["app"]
+  "ignore": ["app", "docs", "lib", "tools"]
 }

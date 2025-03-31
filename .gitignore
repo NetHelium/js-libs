@@ -2,31 +2,41 @@
 .DS_Store
 
 # Logs
-logs/
+logs
 *.log
 .pnpm-debug.log*
 
 # Dependencies
-node_modules/
+node_modules
 
 # Builds
-dist/
+bin
+dist
 
 # Turborepo
 .turbo
 
-# Editor directories and files
+# Editor files
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
-.idea/
+.idea
 
-# Tests coverage
-.coverage/
+# Storybook generated files
+*storybook.log
 
 # Astro generated files
-.astro/
+.astro
 
 # Environment variables
 .env
 .env.production
+
+# Playwright
+test-results
+playwright-report
+blob-report
+playwright/.cache
+
+# Temporary files
+.nh
