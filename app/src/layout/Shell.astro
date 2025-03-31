@@ -1,0 +1,41 @@
+---
+import { ClientRouter } from "astro:transitions"
+import Menu from "./Menu.astro";
+import "../styles/global.css";
+
+type Props = {
+	title?: string;
+};
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="h-full bg-white">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/net-helium.jpg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title || "Home"} - JavaScript Libraries</title>
+		<ClientRouter />
+	</head>
+	<body class="h-full">
+		<div>
+			<div class="fixed inset-y-0 z-50 flex w-72 flex-col">
+				<Menu />
+			</div>
+
+			<main class="pl-72">
+				<div class="p-4">
+					{title && (
+						<h1 class="my-4 text-center font-semibold tracking-tight text-balance text-teal-600 text-3xl">
+							{title}
+						</h1>
+					)}
+					<slot />
+				</div>
+			</main>
+		</div>
+	</body>
+</html>

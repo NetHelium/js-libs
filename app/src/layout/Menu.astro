@@ -1,0 +1,122 @@
+<div
+  transition:persist
+  class="flex grow flex-col gap-y-2 overflow-y-auto border-r border-gray-200 bg-white px-6"
+>
+  <div class="flex h-16 shrink-0 items-center">
+    <img
+      class="h-8 w-auto rounded-2xl"
+      src="/net-helium.jpg"
+      alt="Net Hélium"
+    />
+    <p class="ml-3 text-xl">JavaScript Libraries</p>
+  </div>
+  <nav class="flex flex-1 flex-col">
+    <ul role="list" class="flex flex-1 flex-col gap-y-7">
+      <li>
+        <ul role="list" class="-mx-2 space-y-1">
+          <li>
+            <!-- Current: "bg-gray-50", Default: "hover:bg-gray-50" -->
+            <a href="/" class="block rounded-md bg-gray-50 py-2 pr-2 pl-10 text-sm/6 font-semibold text-gray-700">
+              Home
+            </a>
+          </li>
+          <li>
+            <div>
+              <button
+                type="button"
+                class="flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm/6 font-semibold text-gray-700 hover:bg-gray-50"
+                aria-controls="sub-menu-1"
+                aria-expanded="false"
+              >
+                <svg
+                  class="size-5 shrink-0 text-gray-400"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  data-slot="icon"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+
+                @net-helium/hc-forms
+              </button>
+              <ul class="mt-1 px-2 hidden" id="sub-menu-1">
+                <li>
+                  <a
+                    href="/hc-forms/one-page"
+                    class="block rounded-md py-2 pr-2 pl-9 text-sm/6 text-gray-700 hover:bg-gray-50"
+                  >
+                    One page
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/hc-forms/block-by-block"
+                    class="block rounded-md py-2 pr-2 pl-9 text-sm/6 text-gray-700 hover:bg-gray-50"
+                  >
+                    Block by block  
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/hc-forms/hct"
+                    class="block rounded-md py-2 pr-2 pl-9 text-sm/6 text-gray-700 hover:bg-gray-50"
+                  >
+                    HCT tokens 
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+<script>
+  const expandButtonHandler = (e: PointerEvent) => {
+    if (!e.isPrimary || (e.pointerType === "mouse" && e.button !== 0)) return;
+
+    const button = e.target as HTMLElement;
+    const icon = button.querySelector("svg");
+    const menu = document.querySelector(`ul#${button.getAttribute("aria-controls")}`);
+    const expanded = button.getAttribute("aria-expanded");
+
+    if (expanded === null) return;
+
+    if (expanded === "false") {
+      button.setAttribute("aria-expanded", "true");
+      icon?.classList.replace("text-gray-400", "text-gray-500");
+      icon?.classList.add("rotate-90");
+      menu?.classList.remove("hidden");
+    } else {
+      button.setAttribute("aria-expanded", "false");
+      icon?.classList.replace("text-gray-500", "text-gray-400");
+      icon?.classList.remove("rotate-90");
+      menu?.classList.add("hidden");
+    }
+  };
+
+  const updateActiveLink = () => {
+    for (const link of document.querySelectorAll<HTMLLinkElement>("nav a")) {
+      link.classList.remove("bg-gray-50", "text-teal-700", "hover:bg-gray-50");
+  
+      if (link.href === location.href) {
+        link.classList.add("bg-gray-50", "text-teal-700");
+      } else {
+        link.classList.add("hover:bg-gray-50");
+      }
+    }
+  };
+
+  for (const button of document.querySelectorAll<HTMLElement>("button[aria-expanded]")) {
+    button.addEventListener("pointerdown", expandButtonHandler);
+  }
+
+  document.addEventListener("astro:page-load", updateActiveLink);
+</script>
