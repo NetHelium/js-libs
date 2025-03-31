@@ -1,6 +1,7 @@
 packages:
   - app
   - lib
+  - tools
   - packages/*
 
 catalog:
