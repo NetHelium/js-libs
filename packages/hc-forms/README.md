@@ -81,6 +81,10 @@ Chaque formulaire Hélium Connect vous donne la possibilité d'utiliser une URL 
 Cette librairie vous permet également d'utiliser ce type d'URL pour vos formulaires. Pour cela, il faut un paramètre spécial dans l'URL de la page hôte de votre formulaire : **hc_contact_code**.\
 Cela vous permet de faire une campagne Hélium Connect avec un lien personnalisé pour chaque destinataire vers une page de votre choix en ajoutant **hc_contact_code=\$CODE_CONTACT\$** dans les paramètres de l'URL. Lors de l'envoi de la campagne, Hélium Connect remplacera le code contact par l'identifiant de la fiche contact pour chaque destinataire et en arrivant sur votre page web, cette librairie remplacera le code contact dans l'URL des formulaires générés par la valeur du paramètre **hc_contact_code**.
 
+### Tracking HCT
+
+HCT est notre solution de tracking. Si votre site utilise HCT, cette librairie se chargera d'automatiquement charger la session HCT du site dans les formulaires afin de faire la correspondance entre l'internaute qui navigue sur votre site et celui qui remplit un formulaire.
+
 ### Problème sur le calcul de la hauteur
 
 Si la hauteur n'est pas calculée correctement (une barre de scroll est visible), il est très probable qu'il s'agisse d'un problème de style dans le formulaire qui empêche de calculer la bonne hauteur correctement.\

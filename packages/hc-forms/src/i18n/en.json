@@ -1,4 +1,4 @@
 {
-  "iframeTitle": "Hélium Connect form (%formId%)",
+  "iframeTitle": "Hélium Connect form ({{ formId }})",
   "errorMsg": "This form failed to load properly"
 }

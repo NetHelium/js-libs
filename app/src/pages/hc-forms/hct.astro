@@ -1,0 +1,22 @@
+---
+import Layout from "../../layout/Shell.astro";
+---
+
+<Layout title="HCT tokens">
+  <hc-form
+    url="https://helium-connect.fr/player/5b759aaa441eec5fb400002d/fid/67dbe1056b70f2d193155f43"
+  ></hc-form>
+</Layout>
+
+<script>
+  import "@net-helium/hc-forms";
+  import "../../assets/hct.js";
+
+  window.hct?.create("HCT-983863");
+
+  window.cookies = {
+    necessary: true,
+    performance: true,
+    social: false,
+  };
+</script>

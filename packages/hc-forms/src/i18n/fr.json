@@ -1,4 +1,4 @@
 {
-  "iframeTitle": "Formulaire Hélium Connect (%formId%)",
+  "iframeTitle": "Formulaire Hélium Connect ({{ formId }})",
   "errorMsg": "Le chargement de ce formulaire a échoué"
 }

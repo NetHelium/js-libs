@@ -12,5 +12,5 @@
   "access": "restricted",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["app", "docs", "lib", "tools"]
+  "ignore": ["@net-helium/app", "@net-helium/docs"]
 }

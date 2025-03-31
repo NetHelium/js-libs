@@ -3,15 +3,16 @@ import {
   getHcFormSlugFromUrl,
   hcProcessPlaceholders,
 } from "@net-helium/lib/helium-connect";
-import { translate } from "@net-helium/lib/i18n";
+import { loadTranslations, setLocale, store, translate } from "@net-helium/lib/i18n";
 import {
   getHostPathFromUrl,
   getPrefixedParamsFromUrl,
   getUrlWithParams,
 } from "@net-helium/lib/utils";
-import { localized } from "@net-helium/ui/controllers";
 import { LitElement, type PropertyValues, css, html } from "lit";
 import { customElement, property, query, state } from "lit/decorators.js";
+import en from "./i18n/en.json";
+import fr from "./i18n/fr.json";
 
 /**
  * Data sent by Hélium Connect containing the needed information about the form rendered in the
@@ -19,7 +20,7 @@ import { customElement, property, query, state } from "lit/decorators.js";
  */
 type HcFormEventMessage = {
   /**
-   * The form URL (the full URL as it would appear in the browser's address bar).
+   * The form url (the full url as it would appear in the browser's address bar).
    */
   url?: string;
 
@@ -34,7 +35,7 @@ type HcFormEventMessage = {
   formSlug?: string;
 
   /**
-   * The form URL (the host and pathname part of the URL).
+   * The form url (the host and pathname part of the url).
    */
   formUrl?: string;
 
@@ -43,92 +44,133 @@ type HcFormEventMessage = {
    */
   type:
     | "first_load" // After the initial load of the form
-    | "conditional" // After a conditional display of a block of questions
+    | "conditional" // After the conditional addition or removal of questions
     | "next_block" // After arriving at the next page of questions
-    | "check_page" // After arriving at the summary page of the given responses
+    | "errors" // After validation errors are displayed
+    | "check_page" // After arriving at the summary page
     | "confirmation" // After arriving at the confirmation page
-    | "errors" // After validation errors are detected in the form
-    | "resize"; // After a request was sent because of a window resize
+    | "orientation_change" // After a screen rotation on a mobile device
+    | "resize"; // After a window resize
 
   /**
-   * The calculated height of the form.
+   * The computed height of the form.
    */
   height: number;
 };
+
+/**
+ * HCT data if the host page uses HCT for tracking.
+ */
+type HctData = {
+  /**
+   * The current browser token.
+   */
+  browserToken: string;
+
+  /**
+   * The current session token.
+   */
+  sessionToken: string;
+};
+
+// Load the translations in the i18n store
+loadTranslations({ en, fr });
 
 /**
  * Hélium Connect form component.
  *
  * @tag hc-form
  *
- * @property url - The form's URL
- * @property scrollOffset - Offset for the automatic scroll to the top of the form
- * @property paddingBottom - Extra space added to the calculated height of the form
+ * @property {string} url - The url of the form
+ * @property {number} scrollOffset - Offset for the automatic scroll to the top of the form
+ * @property {number} paddingBottom - Extra space added to the calculated height of the form
  *
  * @csspart iframe - The iframe HTML element displaying the form
- * @csspart error-msg - The error message displayed if the form URL is invalid
+ * @csspart error-msg - The error message displayed if the form url is invalid
  */
 @customElement("hc-form")
-@localized()
 export default class HcForm extends LitElement {
   /**
-   * URL of the form.
+   * url of the form.
+   *
+   * @default undefined
    */
   @property({ type: String, reflect: true })
   url?: string;
 
   /**
-   * Offset for the scroll to the top of the form after a page change inside the form.
+   * Offset for the scroll to the top of the component after a page change inside the form.
    *
    * @default 0
    */
-  @property({ type: Number, reflect: true, attribute: "scroll-offset" })
+  @property({ type: Number, attribute: "scroll-offset" })
   scrollOffset = 0;
 
   /**
-   * Extra space in pixels that will be added to the calculated height of the form.
+   * Extra space in pixels that will be added to the computed height of the form.
    *
    * @default 0
    */
-  @property({ type: Number, reflect: true, attribute: "padding-bottom" })
+  @property({ type: Number, attribute: "padding-bottom" })
   paddingBottom = 0;
 
   /**
-   * Unique form identifier extracted from its URL.
+   * Current HCT data extracted from the host page.
+   */
+  @state()
+  hct?: HctData;
+
+  /**
+   * Current height of the form computed by Hélium Connect.
+   */
+  @state()
+  private height = 0;
+
+  /**
+   * Unique form identifier extracted from its url.
    */
   #formIdentifier?: string;
 
   /**
-   * Final URL of the form that will be loaded. The value is the same as the url property but
-   * enriched with tracking parameters from the host page.
+   * Final url of the form that will be loaded into the generated iframe. The value is the same as
+   * the url property but enriched with parameters extracted from the host page.
    */
   #src = "about:blank";
 
   /**
-   * Current height of the form received from Hélium Connect.
+   * Timeout reference used to debounce the request when asking Hélium Connect for the new height
+   * of the form after a window resize or a screen orientation change.
    */
-  @state()
-  private _height = 0;
+  #resizeTimeout?: ReturnType<typeof setTimeout>;
+
+  /**
+   * Mutation observer to watch changes in the `lang` attribute of the root element in order to
+   * update the active locale in the i18n store.
+   */
+  #observer: MutationObserver;
 
   /**
    * Iframe HTML element displaying the form.
    */
   @query("iframe")
-  private _iframe!: HTMLIFrameElement;
+  private iframe?: HTMLIFrameElement;
 
-  /**
-   * Timeout reference used to debounce the request to Hélium Connect when asking for the new
-   * height of the form after a window resize.
-   */
-  #resizeTimeout?: ReturnType<typeof setTimeout>;
+  constructor() {
+    super();
+
+    this.#observer = new MutationObserver(this.#languageChangedHandler);
+
+    // Try to get the HCT data before the first render if HCT is already loaded in the host page
+    this.#hctUpdatedHandler();
+  }
 
   /**
    * Handler to update the height of the form and manage the scrolling at the top of it when
    * receiving a form event from Hélium Connect.
+   *
    * @param e the message event sent by Hélium Connect
    */
   #hcMessageHandler = (e: MessageEvent<HcFormEventMessage>) => {
-    if (!this._iframe) return;
     const { url, formId, formSlug, formUrl, height, type } = e.data;
     if (!type) return;
 
@@ -138,14 +180,14 @@ export default class HcForm extends LitElement {
         (getHcFormIdFromUrl(url) === this.#formIdentifier ||
           getHcFormSlugFromUrl(url) === this.#formIdentifier ||
           getHostPathFromUrl(url) === this.#formIdentifier)) ||
-        (formId && formId === this.#formIdentifier) ||
-        (formSlug && formSlug === this.#formIdentifier) ||
-        (formUrl && formUrl === this.#formIdentifier))
+        formId === this.#formIdentifier ||
+        formSlug === this.#formIdentifier ||
+        formUrl === this.#formIdentifier)
     ) {
-      this._height = height + this.paddingBottom;
+      this.height = height + this.paddingBottom;
 
-      if (["next_block", "check_page", "confirmation", "errors"].includes(type)) {
-        const iframeY = this._iframe.getBoundingClientRect().top;
+      if (["next_block", "errors", "check_page", "confirmation"].includes(type)) {
+        const iframeY = this.iframe!.getBoundingClientRect().top;
         const offsetY = iframeY + window.scrollY - this.scrollOffset;
         window.scrollTo({ top: offsetY, behavior: "smooth" });
       }
@@ -155,19 +197,21 @@ export default class HcForm extends LitElement {
   /**
    * Send a debounced request to get the updated height of the form from Hélium Connect after
    * each resize of the window.
+   *
    * @param e the resize event
    */
   #resizeHandler = (e: Event) => {
-    if (!this._iframe) return;
+    if (!this.iframe) return;
     if (this.#resizeTimeout) clearTimeout(this.#resizeTimeout);
 
     this.#resizeTimeout = setTimeout(() => {
-      this._iframe.contentWindow?.postMessage({ type: e.type }, "*");
+      this.iframe?.contentWindow?.postMessage({ type: e.type }, "*");
     }, 250);
   };
 
   /**
-   * Enrich the form url with the host page tracking data.
+   * Enrich the form url with data extracted from the host page.
+   *
    * @param originalUrl the original form url
    * @returns the enriched form url
    */
@@ -179,7 +223,7 @@ export default class HcForm extends LitElement {
     params = { ...params, ldom: location.host };
 
     // Add the host page cookie preferences if they exist. The cookie preferences set by the
-    // cookies banner that could be used on our landing pages for example.
+    // cookies banner that could be used on Hélium Connect landing pages for example.
     if (window.cookies) {
       params = {
         ...params,
@@ -189,37 +233,85 @@ export default class HcForm extends LitElement {
       };
     }
 
+    // Add HCT data if any
+    if (this.hct) {
+      params = {
+        ...params,
+        hct_browser: this.hct.browserToken,
+        hct_session: this.hct.sessionToken,
+      };
+    }
+
     return getUrlWithParams(hcProcessPlaceholders(originalUrl, params), params);
   };
 
   /**
-   * Setup event listeners on the window when the component is added to the host page.
+   * Handler called if the language was changed. A new render of the host component is scheduled if
+   * the locale changes.
+   */
+  #languageChangedHandler = () => {
+    const locale = store.locale;
+    store.locale = setLocale({ fallback: store.locale });
+
+    // Avoid doing a useless render if the new locale is the same
+    if (store.locale !== locale) this.requestUpdate();
+  };
+
+  /**
+   * Get the latest HCT tokens from the host page and update them in the form if needed.
+   */
+  #hctUpdatedHandler = () => {
+    const browserToken = window.hct?.browser_token();
+    const sessionToken = window.hct?.session_token();
+
+    if (!browserToken || !sessionToken) return;
+    if (this.hct?.browserToken === browserToken && this.hct?.sessionToken === sessionToken) return;
+
+    this.hct = { browserToken, sessionToken };
+  };
+
+  /**
+   * Setup event listeners on the window and a mutation observer for the `lang` attribute of the
+   * root element when the component is added to the host page.
    */
   override connectedCallback() {
     super.connectedCallback();
 
     addEventListener("message", this.#hcMessageHandler);
     addEventListener("resize", this.#resizeHandler);
+    addEventListener("languagechange", this.#languageChangedHandler);
+    addEventListener("hct.tokensUpdate", this.#hctUpdatedHandler);
+
+    this.#observer.observe(document.documentElement, {
+      subtree: false,
+      childList: false,
+      attributeFilter: ["lang"],
+    });
   }
 
   /**
-   * Remove event listeners on the window to allow for the component to be garbage collected
-   * when removed from the host page.
+   * Remove event listeners on the window and stop the observer to allow for the component to be
+   * garbage collected when removed from the host page.
    */
   override disconnectedCallback() {
     super.disconnectedCallback();
 
     removeEventListener("message", this.#hcMessageHandler);
     removeEventListener("resize", this.#resizeHandler);
+    removeEventListener("languagechange", this.#languageChangedHandler);
+    removeEventListener("hct.tokensUpdate", this.#hctUpdatedHandler);
+
+    this.#observer.disconnect();
   }
 
   /**
-   * Update the form identifier and the final url to load into the iframe when the `url` property
-   * changes. Also update the height if the `paddingBottom` property changes.
+   * Update the form identifier and the final url to load into the iframe when the `url` or the
+   * `hct` property changes. Also update the height if the `paddingBottom` property changes.
+   *
    * @param changedProperties a map of the properties that have changed since the last render
    */
   protected override willUpdate(changedProperties: PropertyValues<this>) {
-    if (changedProperties.has("url") && this.url) {
+    if (this.url && (changedProperties.has("url") || changedProperties.has("hct"))) {
       this.#formIdentifier =
         getHcFormIdFromUrl(this.url) ||
         getHcFormSlugFromUrl(this.url) ||
@@ -230,19 +322,24 @@ export default class HcForm extends LitElement {
       }
     }
 
+    if (!this.url) {
+      this.#formIdentifier = undefined;
+    }
+
     if (changedProperties.has("paddingBottom")) {
-      this._height += this.paddingBottom - changedProperties.get("paddingBottom")!;
+      this.height += this.paddingBottom - changedProperties.get("paddingBottom")!;
     }
   }
 
   /**
-   * Component content.
+   * The content of the component.
+   *
    * @returns the component's DOM
    */
   protected override render() {
     if (!this.#formIdentifier) {
       return html`
-        <p part="error-msg">
+        <p part="error-msg" role="alert">
           ${translate("errorMsg")}
         </p>
       `;
@@ -253,7 +350,7 @@ export default class HcForm extends LitElement {
         part="iframe"
         title=${translate("iframeTitle", { vars: { formId: this.#formIdentifier } })}
         src=${this.#src}
-        style=${`height: ${this._height}px;`}
+        style=${`height: ${this.height}px;`}
       ></iframe>
     `;
   }
@@ -281,5 +378,10 @@ export default class HcForm extends LitElement {
 declare global {
   interface Window {
     cookies?: Record<string, boolean>;
+    hct?: {
+      create: (tag: string, options?: unknown) => void;
+      session_token: () => string;
+      browser_token: () => string;
+    };
   }
 }
