@@ -39,3 +39,6 @@ playwright/.cache
 
 # Temporary files
 .nh
+
+# Other files
+hct.js
