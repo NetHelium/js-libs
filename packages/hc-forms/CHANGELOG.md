@@ -1,5 +1,11 @@
 # @net-helium/hc-forms
 
+## 1.2.0
+
+### Minor Changes
+
+- [`8c74b0b`](https://github.com/NetHelium/js-libs/commit/8c74b0b9b8bd30c8e4e0404480400426a5d03d0d) Thanks [@RonanHenry35](https://github.com/RonanHenry35)! - Support du partage de la session HCT de la page hôte dans l'iframe du formulaire
+
 ## 1.1.1
 
 ### Corrections
