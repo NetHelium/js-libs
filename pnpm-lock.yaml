@@ -93,9 +93,6 @@ importers:
       '@astrojs/starlight':
         specifier: ^0.32.5
         version: 0.32.5(astro@5.5.5(@types/node@22.13.14)(jiti@2.4.2)(lightningcss@1.29.2)(rollup@4.34.2)(tsx@4.19.3)(typescript@5.8.2)(yaml@2.7.0))
-      '@net-helium/hc-forms':
-        specifier: workspace:*
-        version: link:../packages/hc-forms
       astro:
         specifier: 'catalog:'
         version: 5.5.5(@types/node@22.13.14)(jiti@2.4.2)(lightningcss@1.29.2)(rollup@4.34.2)(tsx@4.19.3)(typescript@5.8.2)(yaml@2.7.0)

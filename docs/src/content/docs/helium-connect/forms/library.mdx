@@ -1,0 +1,318 @@
+---
+title: Intégration de formulaires sur vos pages web
+sidebar:
+  label: Intégration de formulaires
+---
+
+import { Aside, Badge, LinkButton, Steps } from "@astrojs/starlight/components";
+
+<Badge text="JavaScript" size="large" />
+<Badge text="TypeScript" size="large" />
+\
+Nous mettons à votre disposition une librairie JavaScript permettant d'intégrer facilement des 
+formulaires <a href="https://helium-connect.fr" target="_blank">Hélium Connect</a> sur vos pages 
+web.
+
+## Pourquoi cette librairie existe ?
+
+Pour intégrer un formulaire, vous êtes amené à utiliser un code HTML similaire à celui-ci :
+
+```html
+<iframe title="Mon formulaire" src="URL_FORMULAIRE"></iframe>
+```
+
+Le problème est qu'il est impossible pour une `<iframe>` d'ajuster sa hauteur automatiquement en 
+fonction du contenu du formulaire.
+Vous pouvez renseigner une hauteur fixe à l'iframe mais la hauteur d'un formulaire peut changer 
+dynamiquement dans les cas suivants :
+
+- Affichage ou disparition de questions en fonction des réponses aux questions précédentes 
+(affichage conditionnel)
+- Passage à la page suivante ou retour à la page précédente de questions s'il s'agit d'un 
+formulaire de type **bloc par bloc** ou **question par question**
+- Affichage des erreurs si le formulaire n'a pas été rempli correctement (question obligatoire non 
+répondue par exemple)
+- Arrivée sur la page récapitulative des réponses données avant validation finale du formulaire si 
+le formulaire est configuré pour afficher cette page intermédiaire
+- Arrivée sur la page de confirmation après la soumission finale du formulaire
+- Redimensionnement de la fenêtre du navigateur ou rotation de l'écran sur une tablette ou un 
+téléphone
+
+Si l'iframe est plus haute que nécessaire, il y aura un espace vide en dessous du formulaire. Si 
+l'iframe n'est pas assez haute, une barre de scroll sera visible.\
+Cette librairie génère une iframe pour chacun de vos formulaires et gère automatiquement sa hauteur 
+en fonction des changements qui ont lieu dans le formulaire.
+
+## Installation
+
+Vous avez le choix entre une installation locale à votre site ou un chargement depuis le CDN 
+<a href="https://www.jsdelivr.com" target="_blank">jsDelivr</a>.
+
+### Depuis le registre npm
+
+<Aside>
+  Bien que cette méthode d'installation vous permet de ne pas être dépendant d'un serveur externe, 
+  vous devenez obligatoirement responsable de l'installation des mises à jour de la librairie pour 
+  profiter des nouvelles fonctionnalités et des corrections de bugs.
+</Aside>
+
+<Steps>
+  1.  Utilisez l'une des commandes suivantes en fonction du package manager que vous utilisez :
+
+      ```bash
+      # npm
+      npm install @net-helium/hc-forms
+
+      # pnpm
+      pnpm add @net-helium/hc-forms
+
+      # yarn
+      yarn add @net-helium/hc-forms
+      ```
+
+  2.  Intégrez une balise `<script>` sur vos pages qui pointe sur le fichier **/dist/hc-forms.js** 
+  du package :
+
+      ```html
+      <script src="/chemin/vers/dist/hc-forms.js" defer></script>
+      ```
+</Steps>
+
+### Depuis un CDN
+
+Intégrez l'une des balises `<script>` ci-dessous sur vos pages :
+
+<Aside>
+  Les urls qui ne pointent pas sur une version spécifique peuvent mettre jusqu'à 7 jours après la 
+  sortie d'une nouvelle version de la librairie avant de la charger (durée de vie du cache sur le 
+  CDN).
+</Aside>
+
+```html
+<!-- Lien vers une version spécifique (exemple pour la version 1.0.0) -->
+<script src="https://cdn.jsdelivr.net/npm/@net-helium/hc-forms@1.0.0/dist/hc-forms.js" defer></script>
+
+<!-- Lien vers la dernière version d'une même version majeure (exemple pour la dernière version 1.x.x) -->
+<script src="https://cdn.jsdelivr.net/npm/@net-helium/hc-forms@1/dist/hc-forms.js" defer></script>
+
+<!-- Lien vers la dernière version -->
+<script src="https://cdn.jsdelivr.net/npm/@net-helium/hc-forms@latest/dist/hc-forms.js" defer></script>
+```
+
+<Aside type="caution">
+  Le lien vers la dernière version n'est pas recommandé car la sortie d'une nouvelle version majeure 
+  de la librairie sera chargée automatiquement et le code utilisé pour la version majeure 
+  précédente ne sera pas forcément compatible avec la nouvelle.
+
+  Il est préférable d'utiliser l'url qui pointe sur la dernière version d'une version majeure pour 
+  obtenir automatiquement les dernières fonctionnalités et corrections de bugs sans risque d'arrêt 
+  de fonctionnement.
+</Aside>
+
+## Usage
+
+### Intégration d'un formulaire <Badge text="Depuis v1.0.0" />
+
+Ajoutez le code HTML suivant pour intégrer un formulaire dans votre page (remplacez 
+**URL_FORMULAIRE**) :
+
+```html
+<hc-form url="URL_FORMULAIRE"></hc-form>
+```
+
+Ce code génère une `<iframe>` contenant le formulaire avec une largeur de 100% par rapport à son 
+conteneur (l'élément `<hc-form>`) et une hauteur calculée en fonction du contenu du 
+formulaire.\
+La hauteur de l'iframe sera modifiée automatiquement si le contenu du formulaire change ou si la 
+fenêtre du navigateur est redimensionnée.
+
+<Aside type="danger" title="Comportement en cas d'URL inattendue">
+  - Si l'URL renseignée n'est pas valide, un message d'erreur apparaitra à la place de l'iframe.
+  - Si l'URL est valide mais ne correspond pas à un formulaire Hélium Connect, une iframe 
+  sera générée avec le contenu de la page cible mais elle ne sera pas visible puisque la hauteur ne 
+  pourra pas être calculée et restera donc à 0 pixels.
+</Aside>
+
+### Gestion du scroll automatique <Badge text="Depuis v1.0.0" />
+
+Un scroll en haut de l'iframe sera déclenché par la librairie à chaque changement de page dans le 
+formulaire (page suivante ou précédente de questions, page récapitulative des réponses et page de 
+confirmation) ainsi qu'à l'affichage d'erreurs.
+
+Par défaut, ce scroll automatique aligne le haut de l'iframe avec le haut du viewport (partie 
+de votre page web visible dans la fenêtre du navigateur). Cependant, il est possible de décaler le 
+scroll avec l'attribut `scroll-offset` :
+
+```html
+<hc-form url="URL_FORMULAIRE" scroll-offset="15"></hc-form>
+```
+
+Le code ci-dessus indique à la librairie de garder un espace de **15 pixels** entre le haut du 
+viewport et le haut de l'iframe lors du scroll.
+
+Cette option est surtout utile si vous avez un élément fixe en haut de votre page web (typiquement 
+un menu fixe qui reste visible à tout moment). Sans décalage du scroll, cet élément passera par 
+dessus le début de l'iframe.
+
+À titre d'exemple, si on imagine que votre menu fixe fait **30 pixels** de haut et que vous voulez 
+un espace de **15 pixels** entre le menu et l'iframe du formulaire après un scroll automatique 
+réalisé par la librairie, la valeur de `scroll-offset` doit être **45**.
+
+<Aside>
+  La valeur par défaut de `scroll-offset` si non renseignée est **0** (pas de décalage du scroll).
+</Aside>
+
+### Hauteur supplémentaire de l'iframe <Badge text="Depuis v1.0.0" />
+
+Vous avez la possibilité d'ajouter un certain nombre de pixels supplémentaire à la hauteur calculée 
+en utilisant l'attribut `padding-bottom` :
+
+```html
+<hc-form url="URL_FORMULAIRE" padding-bottom="15"></hc-form>
+```
+
+Le code ci-dessus indique à la librairie d'ajouter **15 pixels** à toutes les hauteurs calculées.
+
+Cette option peut être utile si la hauteur calculée est erronée (une barre de scroll est visible). 
+Ce genre de problème est généralement causé par un souci dans la mise en page du formulaire qui 
+empêche de calculer sa hauteur correctement.\
+Dans ce cas, cette option est une solution de secours en attendant une correction définitive. Si 
+la mise en page de votre formulaire a été réalisée par nos soins, n'hésitez pas à nous remonter le 
+problème.
+
+<Aside>
+  La valeur par défaut de `padding-bottom` si non renseignée est **0**.
+</Aside>
+
+### Modification dynamique <Badge text="Depuis v1.0.0" />
+
+Il est possible de modifier dynamiquement les valeurs des attributs en JavaScript et elles seront 
+prises en compte instantanément.
+
+`<hc-form>` est une balise HTML comme une autre, il est donc possible de lui attribuer un `id` ou 
+une `class` pour sélectionner le(s) formulaire(s) qui vous intéresse avec un sélecteur CSS :
+
+```js
+// Récupération d'un <hc-form> avec un id `contact`
+const contactForm = document.querySelector("hc-form#contact");
+
+// Chaque attribut est mappé sur une propriété JavaScript correspondante
+contactForm.url = "URL_AUTRE_FORMULAIRE";
+contactForm.scrollOffset = 50;
+contactForm.paddingBottom = 15;
+```
+
+<Aside type="tip">
+  La modification dynamique de l'offset du scroll peut vous être utile par exemple si la hauteur de 
+  votre menu fixe est différente sur mobile par rapport aux grands écrans.
+</Aside>
+
+### Personnalisation du style <Badge text="Depuis v1.0.0" />
+
+Les balises `<hc-form>` peuvent être stylées comme n'importe quelle autre balise HTML :
+
+```css
+/* Bordure bleue sur tous les <hc-form> ayant la classe `blue-border` */
+hc-form.blue-border {
+  border: 2px solid #0099cc;
+}
+```
+
+Si vous voulez modifier le style de l'iframe encapsulée dans un `<hc-form>` ou du message d'erreur 
+en cas d'URL invalide :
+
+```css
+/* Bordure bleue sur l'iframe de tous les <hc-form> ayant une classe `blue` */
+hc-form.blue::part(iframe) {
+  border: 2px solid #0099cc;
+}
+
+/* Alignement à droite du message d'erreur du <hc-form> ayant un id `contact` */
+hc-form#contact::part(error-msg) {
+  text-align: right;
+}
+```
+
+Les variables CSS suivantes sont définies par la librairie :
+
+```css
+--hc-forms-error-font-family: Verdana, Arial, sans-serif;
+--hc-forms-error-font-size: 1rem;
+--hc-forms-error-color: #ff0000;
+```
+
+Vous pouvez modifier les valeurs de ces variables :
+
+```css
+/* Le message d'erreur de tous les <hc-form> aura une `font-size` de 2rem */
+hc-form {
+  --hc-forms-error-font-size: 2rem;
+}
+
+/* Le message d'erreur sera vert pour les <hc-form> ayant une classe `green-error` */
+hc-form.green-error {
+  --hc-forms-error-color: #4bd116;
+}
+```
+
+Les styles par défaut sont les suivants :
+
+```css
+/* Élément <hc-form> */
+:host {
+  display: block;
+}
+
+/* Iframe encapsulée dans <hc-form> */
+iframe {
+  border: none;
+  width: 100%;
+}
+
+/* Message d'erreur encapsulé dans <hc-form> */
+[role="alert"] {
+  text-align: center;
+  font-family: var(--hc-forms-error-font-family, Verdana, Arial, sans-serif);
+  font-size: var(--hc-forms-error-font-size, 1rem);
+  color: var(--hc-forms-error-color, #ff0000);
+}
+```
+
+### Suivi automatique des contacts <Badge text="Depuis v1.1.0" />
+
+Chaque formulaire Hélium Connect est accessible via deux urls différentes (avec ou sans le suivi de 
+contact). La version avec le suivi (celle avec `/c/$CODE_CONTACT$/`) est utilisée pour pré-remplir 
+certaines questions avec les données déjà connues sur un contact (nom, prénom, email, etc...). Pour 
+que cela fonctionne, le `$CODE_CONTACT$` doit être remplacé par l'identifiant d'une fiche contact.
+
+Lorsque ce type de lien est utilisé dans le contenu d'une campagne Hélium Connect, le 
+`$CODE_CONTACT$` est remplacé automatiquement à l'envoi pour chaque destinataire de la campagne.
+
+Si vous souhaitez mettre un lien vers une page de votre site qui intègre le formulaire plutôt que de 
+mettre le lien direct vers le formulaire dans la campagne, vous pouvez utiliser un lien comme 
+`https://mon-site.com/contact?hc_contact_code=$CODE_CONTACT$` dans le contenu de la campagne et 
+utiliser l'url du formulaire avec suivi de contact en valeur de l'attribut `url` du `<hc-form>`.
+
+La librairie remplacera le `$CODE_CONTACT$` dans l'url du formulaire chargé dans l'iframe avec la 
+valeur du paramètre `hc_contact_code` dans l'url de votre page web.
+
+### Suivi automatique des sessions HCT <Badge text="Depuis v1.2.0" />
+
+Si votre site utilise notre solution de tracking **HCT**, la librairie chargera la session HCT du 
+site dans l'iframe du formulaire afin de faire le lien entre l'internaute qui navigue sur le site et 
+celui qui remplit le formulaire.
+
+## Licence
+
+Cette librairie est mise à disposition sous licence 
+<a href="https://github.com/NetHelium/js-libs/blob/main/LICENSE" target="_blank">MIT</a>.
+
+<LinkButton
+  href="https://github.com/NetHelium/js-libs/tree/main/packages/hc-forms"
+  target="_blank"
+  variant="primary"
+  icon="github"
+  iconPlacement="start"
+>
+  Voir le code source
+</LinkButton>
