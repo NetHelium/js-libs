@@ -70,23 +70,24 @@ Vous avez le choix entre une installation locale à votre site ou un chargement 
       yarn add @net-helium/hc-forms
       ```
 
-  2.  Intégrez une balise `<script>` sur vos pages qui pointe sur le fichier **/dist/hc-forms.js** 
+  2.  Intégrez une balise `<script>` sur vos pages qui pointe sur le fichier `/dist/hc-forms.js`
   du package :
 
       ```html
       <script src="/chemin/vers/dist/hc-forms.js" defer></script>
+      ```
+
+      Si vous utilisez un bundler pour générer vos scripts JS (esbuild, rollup, parcel ou autres),
+      vous pouvez également charger la librairie comme ceci :
+
+      ```js
+      import "@net-helium/hc-forms";
       ```
 </Steps>
 
 ### Depuis un CDN
 
 Intégrez l'une des balises `<script>` ci-dessous sur vos pages :
-
-<Aside>
-  Les urls qui ne pointent pas sur une version spécifique peuvent mettre jusqu'à 7 jours après la 
-  sortie d'une nouvelle version de la librairie avant de la charger (durée de vie du cache sur le 
-  CDN).
-</Aside>
 
 ```html
 <!-- Lien vers une version spécifique (exemple pour la version 1.0.0) -->
@@ -101,12 +102,18 @@ Intégrez l'une des balises `<script>` ci-dessous sur vos pages :
 
 <Aside type="caution">
   Le lien vers la dernière version n'est pas recommandé car la sortie d'une nouvelle version majeure 
-  de la librairie sera chargée automatiquement et le code utilisé pour la version majeure 
-  précédente ne sera pas forcément compatible avec la nouvelle.
+  de la librairie sera chargée automatiquement et l'usage de la version majeure précédente ne sera
+  pas forcément compatible avec celui de la nouvelle.
 
   Il est préférable d'utiliser l'url qui pointe sur la dernière version d'une version majeure pour 
   obtenir automatiquement les dernières fonctionnalités et corrections de bugs sans risque d'arrêt 
   de fonctionnement.
+</Aside>
+
+<Aside>
+  Les urls qui ne pointent pas sur une version spécifique peuvent mettre jusqu'à 7 jours après la
+  sortie d'une nouvelle version de la librairie avant de la charger (durée de vie du cache sur le
+  CDN).
 </Aside>
 
 ## Usage
