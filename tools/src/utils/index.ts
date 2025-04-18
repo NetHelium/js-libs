@@ -12,12 +12,7 @@ export * from "./fs";
 export * from "./io";
 
 /**
- * Make an optional property of T required.
- */
-export type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
-
-/**
- * Make all properties of T optional recursively.
+ * Make all properties of `T` optional recursively.
  */
 export type DeepPartial<T> = {
   [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];
