@@ -8,6 +8,11 @@ describe("[lib] utils/cookie (jsdom)", () => {
   const cookieValue = "test-value";
   let cookieString: string;
 
+  it("should disable httpOnly by force when using client side JavaScript", () => {
+    cookieString = serializeCookie(cookieName, cookieValue, { httpOnly: true });
+    expect(cookieString).not.toContain("HttpOnly");
+  });
+
   it("should serialize data as a cookie string", () => {
     cookieString = serializeCookie(cookieName, cookieValue, { encoding: "base64" });
     expect(cookieString).toContain(`${cookieName}=dGVzdC12YWx1ZQ==`);

@@ -41,7 +41,8 @@ type CookieOptions = {
 
   /**
    * Choose wether the cookie is allowed to be accessed by JavaScript in the browser. If set to
-   * `true`, the cookie won't be available to the client-side JavaScript.
+   * `true`, the cookie won't be available to the client-side JavaScript. This option will be forced
+   * to `false` when trying to set the cookie from the browser (using the `document.cookie` API).
    *
    * @default false
    */
@@ -68,7 +69,7 @@ type CookieOptions = {
    * `DELETE` are methods that are not considered safe for example).
    *
    * `none` means the cookie will be sent with both same-site and cross-site requests. The `secure`
-   * options will be forced in this case because the `HTTPS` protocol is mandatory when using this
+   * option will be forced in this case because the `HTTPS` protocol is mandatory when using this
    * value.
    *
    * @default "lax"
@@ -106,7 +107,7 @@ const cookieDomainRegex =
 const cookiePathRegex = /^[\u0020-\u003A\u003D-\u007E]*$/;
 
 /**
- * Serialize data into a cookie string ready to be used with the `document.cookie` web API or the
+ * Serialize data into a cookie string ready to be used with the `document.cookie` API or the
  * `Set-Cookie` header.
  *
  * @param name the cookie name
@@ -125,6 +126,10 @@ export const serializeCookie = (name: string, value: unknown, options?: Partial<
 
   if (options) {
     cookieOptions = { ...cookieOptions, ...options };
+  }
+
+  if (cookieOptions.httpOnly && isBrowser()) {
+    cookieOptions.httpOnly = false;
   }
 
   if (cookieOptions.sameSite === "none") {
