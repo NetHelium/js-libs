@@ -1,7 +1,7 @@
 import { describe, expect, it } from "@net-helium/tools/test";
 import {
   getHostPathFromUrl,
-  getPrefixedParamsFromUrl,
+  getMatchingParamsFromUrl,
   getUrlWithParams,
 } from "../../src/utils/index.js";
 
@@ -36,13 +36,13 @@ describe.concurrent("[lib] utils/url", () => {
     expect(getHostPathFromUrl("https://www.website.com/?f=1&d=nh")).toEqual("www.website.com");
   });
 
-  it("should get the prefixed params from the url", () => {
+  it("should get the params matching the regexes", () => {
     const url =
       "https://www.website.com/some-page?hc_track=1&f=4&utm_source=google&utm_campaign=newsletter";
 
-    expect(getPrefixedParamsFromUrl(url, "gid_")).toEqual({});
+    expect(getMatchingParamsFromUrl(url, /^gid_/)).toEqual({});
 
-    expect(getPrefixedParamsFromUrl(url, "hc_", "utm_")).toEqual({
+    expect(getMatchingParamsFromUrl(url, /^hc_/, /^utm_/)).toEqual({
       hc_track: "1",
       utm_source: "google",
       utm_campaign: "newsletter",

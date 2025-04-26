@@ -4,12 +4,12 @@ export * from "./environment.js";
 export * from "./url.js";
 
 /**
- * Make all properties of `T` optional except for the ones specified by `K`.
+ * Make all properties of `T` optional except the ones specified by `K`.
  */
 export type PartialExcept<T, K extends keyof T> = Partial<T> & Pick<T, K>;
 
 /**
- * Make all properties of `T` required except for the ones specified by `K`.
+ * Make all properties of `T` required except the ones specified by `K`.
  */
 export type RequiredExcept<T, K extends keyof T> = Required<T> & Pick<T, K>;
 

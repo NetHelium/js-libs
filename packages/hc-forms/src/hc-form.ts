@@ -6,7 +6,7 @@ import {
 import { loadTranslations, setLocale, store, translate } from "@net-helium/lib/i18n";
 import {
   getHostPathFromUrl,
-  getPrefixedParamsFromUrl,
+  getMatchingParamsFromUrl,
   getUrlWithParams,
 } from "@net-helium/lib/utils";
 import { LitElement, type PropertyValues, css, html } from "lit";
@@ -217,7 +217,7 @@ export default class HcForm extends LitElement {
    */
   #buildFinalUrl = (originalUrl: string) => {
     // Extract tracking params from the hosting page url
-    let params = getPrefixedParamsFromUrl(location.href, "utm_", "hc_");
+    let params = getMatchingParamsFromUrl(location.href, /^utm_/, /^hc_/);
 
     // Add the host page domain
     params = { ...params, ldom: location.host };
@@ -362,7 +362,7 @@ export default class HcForm extends LitElement {
     :host {
       display: block;
     }
-    p {
+    [role="alert"] {
       text-align: center;
       font-family: var(--hc-forms-error-font-family, Verdana, Arial, sans-serif);
       font-size: var(--hc-forms-error-font-size, 1rem);

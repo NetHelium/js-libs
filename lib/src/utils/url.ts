@@ -1,13 +1,6 @@
-type UrlWithParamsOptions = {
-  /**
-   * set to `false` to preserve the values of existing params or `true` to override
-   * @default false
-   */
-  override?: boolean;
-};
-
 /**
  * Extract the host and path from a url.
+ *
  * @param url the url
  * @returns the host and path or `undefined` if the url is not valid
  */
@@ -25,30 +18,29 @@ export const getHostPathFromUrl = (url: string) => {
 };
 
 /**
- * Extract all the params matching the given `prefixes` from a url.
+ * Extract all the params matching the given `regexes` from a url.
+ *
  * @param url the url
- * @param prefixes the prefixes to look for
- * @returns the params matching the `prefixes`
+ * @param regexes the pattern(s) to match
+ * @returns the params matching the `regexes`
  */
-export const getPrefixedParamsFromUrl = (
+export const getMatchingParamsFromUrl = (
   url: string,
-  ...prefixes: string[]
+  ...regexes: RegExp[]
 ): Record<string, string> => {
-  const urlParams = [...new URLSearchParams(new URL(url).search).entries()];
+  const urlParams = [...new URL(url).searchParams];
   let extractedParams: [string, string][] = [];
 
-  for (const prefix of prefixes) {
-    extractedParams = [
-      ...extractedParams,
-      ...urlParams.filter((entry) => entry[0].substring(0, prefix.length) === prefix),
-    ];
+  for (const regex of regexes) {
+    extractedParams = [...extractedParams, ...urlParams.filter((entry) => regex.test(entry[0]))];
   }
 
-  return extractedParams.reduce((acc, [key, value]) => Object.assign(acc, { [key]: value }), {});
+  return Object.fromEntries(extractedParams);
 };
 
 /**
  * Merge the existing params of the given `url` with the given `params`.
+ *
  * @param url the original url
  * @param params the params to add
  * @param options the options
@@ -57,14 +49,16 @@ export const getPrefixedParamsFromUrl = (
 export const getUrlWithParams = (
   url: string,
   params: Record<string, string>,
-  options?: UrlWithParamsOptions,
+  options?: {
+    /**
+     * set to `false` to preserve the values of existing params or `true` to override
+     * @default false
+     */
+    override?: boolean;
+  },
 ) => {
   const override = options?.override ?? false;
-
-  const urlParams: Record<string, string> = [
-    ...new URLSearchParams(new URL(url).search).entries(),
-  ].reduce((acc, [key, value]) => Object.assign(acc, { [key]: value }), {});
-
+  const urlParams = Object.fromEntries(new URL(url).searchParams);
   const newParams = override ? { ...urlParams, ...params } : { ...params, ...urlParams };
 
   const queryString = Object.keys(newParams)
