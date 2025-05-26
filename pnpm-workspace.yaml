@@ -7,7 +7,7 @@ packages:
 
 catalog:
   "@types/lodash-es": ^4.17.12
-  astro: ^5.5.5
+  astro: ^5.8.0
   concurrently: ^9.1.2
   lit: ^3.2.1
   lodash-es: ^4.17.21

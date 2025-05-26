@@ -2,6 +2,7 @@
 title: Intégration de formulaires sur vos pages web
 sidebar:
   label: Intégration de formulaires
+next: false
 ---
 
 import { Aside, Badge, LinkButton, Steps } from "@astrojs/starlight/components";
@@ -10,7 +11,7 @@ import { Aside, Badge, LinkButton, Steps } from "@astrojs/starlight/components";
 <Badge text="TypeScript" size="large" />
 \
 Nous mettons à votre disposition une librairie JavaScript permettant d'intégrer facilement des 
-formulaires <a href="https://helium-connect.fr" target="_blank">Hélium Connect</a> sur vos pages 
+formulaires <a href="https://helium-connect.fr" target="_blank">Helium Connect</a> sur vos pages
 web.
 
 ## Pourquoi cette librairie existe ?
@@ -127,42 +128,42 @@ Ajoutez le code HTML suivant pour intégrer un formulaire dans votre page (rempl
 <hc-form url="URL_FORMULAIRE"></hc-form>
 ```
 
-Ce code génère une `<iframe>` contenant le formulaire avec une largeur de 100% par rapport à son 
+Ce code génère une `<iframe>` contenant le formulaire avec une largeur de 100% par rapport à son
 conteneur (l'élément `<hc-form>`) et une hauteur calculée en fonction du contenu du 
 formulaire.\
-La hauteur de l'iframe sera modifiée automatiquement si le contenu du formulaire change ou si la 
+La hauteur de l'iframe sera modifiée automatiquement si le contenu du formulaire change ou si la
 fenêtre du navigateur est redimensionnée.
 
 <Aside type="danger" title="Comportement en cas d'URL inattendue">
   - Si l'URL renseignée n'est pas valide, un message d'erreur apparaitra à la place de l'iframe.
-  - Si l'URL est valide mais ne correspond pas à un formulaire Hélium Connect, une iframe 
-  sera générée avec le contenu de la page cible mais elle ne sera pas visible puisque la hauteur ne 
+  - Si l'URL est valide mais ne correspond pas à un formulaire Helium Connect, une iframe sera
+  générée avec le contenu de la page cible mais elle ne sera pas visible puisque la hauteur ne
   pourra pas être calculée et restera donc à 0 pixels.
 </Aside>
 
 ### Gestion du scroll automatique <Badge text="Depuis v1.0.0" />
 
-Un scroll en haut de l'iframe sera déclenché par la librairie à chaque changement de page dans le 
-formulaire (page suivante ou précédente de questions, page récapitulative des réponses et page de 
+Un scroll en haut de l'iframe sera déclenché par la librairie à chaque changement de page dans le
+formulaire (page suivante ou précédente de questions, page récapitulative des réponses et page de
 confirmation) ainsi qu'à l'affichage d'erreurs.
 
 Par défaut, ce scroll automatique aligne le haut de l'iframe avec le haut du viewport (partie 
-de votre page web visible dans la fenêtre du navigateur). Cependant, il est possible de décaler le 
+de votre page web visible dans la fenêtre du navigateur). Cependant, il est possible de décaler le
 scroll avec l'attribut `scroll-offset` :
 
 ```html
 <hc-form url="URL_FORMULAIRE" scroll-offset="15"></hc-form>
 ```
 
-Le code ci-dessus indique à la librairie de garder un espace de **15 pixels** entre le haut du 
+Le code ci-dessus indique à la librairie de garder un espace de **15 pixels** entre le haut du
 viewport et le haut de l'iframe lors du scroll.
 
-Cette option est surtout utile si vous avez un élément fixe en haut de votre page web (typiquement 
-un menu fixe qui reste visible à tout moment). Sans décalage du scroll, cet élément passera par 
+Cette option est surtout utile si vous avez un élément fixe en haut de votre page web (typiquement
+un menu fixe qui reste visible à tout moment). Sans décalage du scroll, cet élément passera par
 dessus le début de l'iframe.
 
-À titre d'exemple, si on imagine que votre menu fixe fait **30 pixels** de haut et que vous voulez 
-un espace de **15 pixels** entre le menu et l'iframe du formulaire après un scroll automatique 
+À titre d'exemple, si on imagine que votre menu fixe fait **30 pixels** de haut et que vous voulez
+un espace de **15 pixels** entre le menu et l'iframe du formulaire après un scroll automatique
 réalisé par la librairie, la valeur de `scroll-offset` doit être **45**.
 
 <Aside>
@@ -240,59 +241,14 @@ hc-form#contact::part(error-msg) {
 }
 ```
 
-Les variables CSS suivantes sont définies par la librairie :
-
-```css
---hc-forms-error-font-family: Verdana, Arial, sans-serif;
---hc-forms-error-font-size: 1rem;
---hc-forms-error-color: #ff0000;
-```
-
-Vous pouvez modifier les valeurs de ces variables :
-
-```css
-/* Le message d'erreur de tous les <hc-form> aura une `font-size` de 2rem */
-hc-form {
-  --hc-forms-error-font-size: 2rem;
-}
-
-/* Le message d'erreur sera vert pour les <hc-form> ayant une classe `green-error` */
-hc-form.green-error {
-  --hc-forms-error-color: #4bd116;
-}
-```
-
-Les styles par défaut sont les suivants :
-
-```css
-/* Élément <hc-form> */
-:host {
-  display: block;
-}
-
-/* Iframe encapsulée dans <hc-form> */
-iframe {
-  border: none;
-  width: 100%;
-}
-
-/* Message d'erreur encapsulé dans <hc-form> */
-[role="alert"] {
-  text-align: center;
-  font-family: var(--hc-forms-error-font-family, Verdana, Arial, sans-serif);
-  font-size: var(--hc-forms-error-font-size, 1rem);
-  color: var(--hc-forms-error-color, #ff0000);
-}
-```
-
 ### Suivi automatique des contacts <Badge text="Depuis v1.1.0" />
 
-Chaque formulaire Hélium Connect est accessible via deux urls différentes (avec ou sans le suivi de 
+Chaque formulaire Helium Connect est accessible via deux urls différentes (avec ou sans le suivi de
 contact). La version avec le suivi (celle avec `/c/$CODE_CONTACT$/`) est utilisée pour pré-remplir 
 certaines questions avec les données déjà connues sur un contact (nom, prénom, email, etc...). Pour 
 que cela fonctionne, le `$CODE_CONTACT$` doit être remplacé par l'identifiant d'une fiche contact.
 
-Lorsque ce type de lien est utilisé dans le contenu d'une campagne Hélium Connect, le 
+Lorsque ce type de lien est utilisé dans le contenu d'une campagne Helium Connect, le
 `$CODE_CONTACT$` est remplacé automatiquement à l'envoi pour chaque destinataire de la campagne.
 
 Si vous souhaitez mettre un lien vers une page de votre site qui intègre le formulaire plutôt que de 

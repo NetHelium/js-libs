@@ -1,0 +1,29 @@
+{
+  "name": "@net-helium/hct-server",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Tracking HCT côté serveur",
+  "homepage": "https://github.com/NetHelium/js-libs/tree/main/packages/hct-server",
+  "author": {
+    "name": "Net Hélium",
+    "url": "https://net-helium.fr"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NetHelium/js-libs.git",
+    "directory": "packages/hct-server"
+  },
+  "scripts": {},
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@net-helium/lib": "workspace:*",
+    "@net-helium/tools": "workspace:*"
+  },
+  "keywords": ["hct", "tracking", "net hélium"],
+  "license": "MIT"
+}

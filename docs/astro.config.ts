@@ -18,21 +18,38 @@ export default defineConfig({
         },
       },
       defaultLocale: "root",
-      social: {
-        linkedin: "https://fr.linkedin.com/company/net-helium-marketing-relationnel-crm",
-        github: "https://github.com/NetHelium",
-      },
+      social: [
+        {
+          icon: "linkedin",
+          label: "LinkedIn",
+          href: "https://fr.linkedin.com/company/net-helium-marketing-relationnel-crm",
+        },
+        {
+          icon: "github",
+          label: "GitHub",
+          href: "https://github.com/NetHelium",
+        },
+      ],
       customCss: ["./src/styles/custom.css"],
       sidebar: [
         {
-          label: "Hélium Connect",
+          label: "Helium Connect",
           autogenerate: {
             directory: "helium-connect/forms",
+          },
+        },
+        {
+          label: "Tracking HCT",
+          autogenerate: {
+            directory: "hct-tracking",
           },
         },
       ],
     }),
   ],
+  prefetch: {
+    prefetchAll: true,
+  },
   server: {
     port: 4323,
   },
