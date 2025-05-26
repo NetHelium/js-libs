@@ -17,7 +17,8 @@
   },
   "devDependencies": {
     "@net-helium/tools": "workspace:*",
-    "@types/lodash-es": "catalog:"
+    "@types/lodash-es": "catalog:",
+    "@types/node": "catalog:"
   },
   "license": "MIT"
 }

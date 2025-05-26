@@ -46,6 +46,7 @@
   },
   "devDependencies": {
     "@types/lodash-es": "catalog:",
+    "@types/node": "catalog:",
     "tsx": "catalog:"
   },
   "license": "MIT"
