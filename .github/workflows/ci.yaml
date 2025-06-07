@@ -51,5 +51,5 @@ jobs:
         run: pnpm build
       - name: Check for TypeScript errors
         run: pnpm tscheck
-      - name: Run unit tests
-        run: pnpm test
+      - name: Run regular tests with coverage
+        run: pnpm test -- --regular --coverage

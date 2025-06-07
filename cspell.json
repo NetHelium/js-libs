@@ -20,11 +20,12 @@
     "nhcli",
     "outdir",
     "postpack",
+    "segoe",
     "seti",
     "tailwindcss",
     "tscheck",
     "tsconfigs",
     "turborepo",
-    "verdana"
+    "vitest"
   ]
 }

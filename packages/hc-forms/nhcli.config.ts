@@ -1,8 +1,10 @@
-import { defineConfig } from "@net-helium/tools/utils";
+import { defineConfig } from "@net-helium/tools";
 
 export default defineConfig({
   test: {
-    config: "jsdom",
+    regular: {
+      environment: "jsdom",
+    },
   },
   build: {
     entryPoints: ["src/index.ts"],

@@ -18,7 +18,7 @@ export default async () => {
      */
     {
       name: "package",
-      command: "pnpm build -w",
+      command: "pnpm build --watch",
     },
 
     /**

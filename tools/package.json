@@ -5,21 +5,33 @@
   "type": "module",
   "scripts": {
     "tscheck": "tsc --emitDeclarationOnly false --noEmit",
-    "dev": "./scripts/build.ts -p tsconfig.build.json -w",
-    "build": "./scripts/build.ts -p tsconfig.build.json"
+    "dev": "./scripts/build.ts -t tsconfig.build.json -w",
+    "build": "./scripts/build.ts -t tsconfig.build.json"
   },
   "exports": {
-    "./*": {
-      "types": "./dist/*/index.d.ts",
-      "default": "./dist/*/index.js"
+    ".": {
+      "types": "./dist/index.js",
+      "default": "./dist/index.js"
     },
-    "./e2e/*": {
-      "types": "./dist/e2e/*/index.d.ts",
-      "default": "./dist/e2e/*/index.js"
+    "./test": {
+      "types": "./dist/test/index.d.ts",
+      "default": "./dist/test/index.js"
     },
-    "./test/dom": {
-      "types": "./dist/test/dom.d.ts",
-      "default": "./dist/test/dom.js"
+    "./test/browser": {
+      "types": "./dist/test/browser/index.d.ts",
+      "default": "./dist/test/browser/index.js"
+    },
+    "./test/browser/playwright": {
+      "types": "./dist/test/browser/playwright.d.ts",
+      "default": "./dist/dummy.js"
+    },
+    "./test/jsdom": {
+      "types": "./dist/test/jsdom.d.ts",
+      "default": "./dist/test/jsdom.js"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "default": "./dist/utils/index.js"
     }
   },
   "bin": {
@@ -28,10 +40,10 @@
   "files": ["bin", "dist"],
   "dependencies": {
     "@open-wc/testing": "^4.0.0",
-    "@playwright/test": "^1.52.0",
     "@testing-library/dom": "^10.4.0",
-    "@vitest/coverage-v8": "^3.1.4",
-    "@vitest/ui": "^3.1.4",
+    "@vitest/browser": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "@vitest/ui": "catalog:",
     "arg": "^5.0.2",
     "chalk": "^5.4.1",
     "clean-package": "^2.2.0",
@@ -41,8 +53,11 @@
     "globby": "^14.1.0",
     "jsdom": "^26.1.0",
     "lodash-es": "catalog:",
+    "playwright": "^1.52.0",
+    "playwright-core": "^1.52.0",
     "tsc-watch": "^7.1.1",
-    "vitest": "^3.1.4"
+    "vitest": "catalog:",
+    "vitest-browser-lit": "^0.1.0"
   },
   "devDependencies": {
     "@types/lodash-es": "catalog:",

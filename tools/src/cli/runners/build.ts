@@ -7,20 +7,25 @@ import { printBanner, printError, printNewLine } from "../messages";
 
 export type BuildRunnerOptions = BuildOptions & {
   /**
-   * Entry points as globs if applicable. This option is similar to the `entryPoints` option except
-   * this one supports glob patterns.
+   * Entry points as globs if applicable. This option is similar to the `entryPoints` option
+   * provided by esbuild except this one adds support for glob patterns.
+   *
+   * @default []
    */
   globEntryPoints: string[];
 
   /**
-   * The TypeScript configuration to use for the build. If omitted, the configuration of the
-   * `tsconfig.json` file in the current working directory will be used.
+   * The TypeScript configuration to use for the build. The path is relative to the project's root
+   * directory.
+   *
+   * @default "./tsconfig.json"
    */
   tsconfig: string;
 
   /**
-   * Wether the build should be done in watch mode or not (useful while in development). If omitted,
-   * this mode won't be active.
+   * Wether the build should be done in watch mode or not (useful while in development).
+   *
+   * @default false
    */
   watch: boolean;
 };

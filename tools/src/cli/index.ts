@@ -2,13 +2,15 @@ import type { ChildProcess } from "node:child_process";
 import path from "node:path";
 import arg from "arg";
 import { build } from "esbuild";
-import { type NhCliOptions, cmd, defineConfig, pathExists } from "../utils";
+import { type NhCliOptions, defineConfig } from "../";
+import { cmd, pathExists } from "../utils";
 import {
+  type TestRunnerOptions,
+  browsers as availableBrowsers,
+  environments as availableEnvironments,
   buildRunner,
   devRunner,
-  e2eRunner,
   packRunner,
-  storybookRunner,
   testRunner,
   tsCheckRunner,
 } from "./runners";
@@ -41,25 +43,71 @@ if (await pathExists(configFile)) {
 }
 
 /**
- * Command-line options of the CLI.
+ * Command-line options of the CLI. These options will have the priority over the project's
+ * configuration file.
  */
 const args = arg({
-  // Flags
-  "--cmd": String,
-  "--config": String,
+  /**
+   * Enable browser tests.
+   */
+  "--browser": Boolean,
+
+  /**
+   * List of browser engines to use when running browser tests. The engines should be separated by
+   * a comma.
+   *
+   * @example --browsers=chromium,firefox,webkit
+   */
+  "--browsers": String,
+
+  /**
+   * Enable tests coverage. Details of the coverage will be accessible in the web interface when
+   * used with the `--ui` option.
+   */
   "--coverage": Boolean,
-  "--debug": Boolean,
-  "--port": Number,
+
+  /**
+   * Default environment for regular tests. Choose between `node` or `jsdom`.
+   *
+   * @example --env=jsdom
+   */
+  "--env": String,
+
+  /**
+   * Run the browser tests in headless mode (without the browser's ui) which is useful for CI.
+   */
+  "--headless": Boolean,
+
+  /**
+   * Enable regular tests.
+   */
+  "--regular": Boolean,
+
+  /**
+   * Use the restore mode in the packing process.
+   */
   "--restore": Boolean,
-  "--rm": String,
+
+  /**
+   * The TypeScript configuration to use while transpiling during tests execution.
+   */
   "--tsconfig": String,
+
+  /**
+   * Enable the UI mode to visualize the test results in a web interface.
+   */
   "--ui": Boolean,
+
+  /**
+   * Run the tests in watch mode which is useful while in development.
+   */
   "--watch": Boolean,
 
   // Aliases
-  "-c": "--config",
-  "-p": "--port",
-  "-r": "--restore",
+  "-b": "--browser",
+  "-c": "--coverage",
+  "-e": "--env",
+  "-r": "--regular",
   "-t": "--tsconfig",
   "-w": "--watch",
 });
@@ -85,38 +133,39 @@ if (args._.includes("dev")) {
 }
 
 /**
- * Storybook runner.
- */
-if (args._.includes("storybook")) {
-  await storybookRunner({
-    cmd: args["--cmd"] || "dev",
-    port: args["--port"] || 6006,
-  });
-}
-
-/**
- * Unit tests runner.
+ * Tests runner for `node`, `jsdom` and `browser` test files.
  */
 if (args._.includes("test")) {
+  const isValidEnv = (
+    environment: string,
+  ): environment is TestRunnerOptions["regular"]["environment"] =>
+    availableEnvironments.includes(environment as TestRunnerOptions["regular"]["environment"]);
+
+  const isValidBrowserList = (
+    browsers: string[],
+  ): browsers is TestRunnerOptions["browser"]["browsers"] =>
+    browsers.every((browser) =>
+      availableBrowsers.includes(browser as TestRunnerOptions["browser"]["browsers"][number]),
+    );
+
+  const environment = args["--env"] || cliOptions.test.regular.environment;
+  const browsers = args["--browsers"]?.split(",") || cliOptions.test.browser.browsers;
+
   await testRunner({
-    ...cliOptions.test,
-    config: args["--config"] || cliOptions.test.config,
-    ui: args["--ui"] || cliOptions.test.ui,
-    watch: args["--watch"] || cliOptions.test.watch,
-    codeCoverage: args["--coverage"] || cliOptions.test.codeCoverage,
+    tsconfig: args["--tsconfig"] || cliOptions.test.tsconfig,
+    watch: args["--watch"] ?? cliOptions.test.watch,
+    ui: args["--ui"] ?? cliOptions.test.ui,
+    coverage: args["--coverage"] ?? cliOptions.test.coverage,
+    regular: {
+      enabled: args["--regular"] || cliOptions.test.regular.enabled,
+      environment: isValidEnv(environment) ? environment : "node",
+    },
+    browser: {
+      enabled: args["--browser"] || cliOptions.test.browser.enabled,
+      browsers: isValidBrowserList(browsers) ? browsers : ["chromium"],
+      headless: args["--headless"] || cliOptions.test.browser.headless,
+    },
   });
-}
-
-/**
- * E2E tests runner.
- */
-if (args._.includes("e2e")) {
-  const e2eProcess = await e2eRunner({
-    config: args["--config"] || cliOptions.e2e.config,
-    ui: args["--ui"] || cliOptions.e2e.ui,
-  });
-
-  if (e2eProcess) childProcess = e2eProcess;
 }
 
 /**
@@ -126,7 +175,7 @@ if (args._.includes("build")) {
   const buildProcess = await buildRunner({
     ...cliOptions.build,
     tsconfig: args["--tsconfig"] || cliOptions.build.tsconfig,
-    watch: args["--watch"] || cliOptions.build.watch,
+    watch: args["--watch"] ?? cliOptions.build.watch,
   });
 
   if (buildProcess) childProcess = buildProcess;
@@ -137,14 +186,13 @@ if (args._.includes("build")) {
  */
 if (args._.includes("pack")) {
   await packRunner({
-    cleanPackageJson:
-      args["--rm"]?.split(",").map((v) => v.trim()) || cliOptions.pack.cleanPackageJson,
+    cleanPackageJson: cliOptions.pack.cleanPackageJson,
     restore: !!args["--restore"],
   });
 }
 
 /**
- * Wait for the runner process to be done if its not running in the main process.
+ * Wait for the runner process to be done if it's not running in the main process.
  */
 if (childProcess) {
   await new Promise((resolve) => {
@@ -155,6 +203,11 @@ if (childProcess) {
 /**
  * Exit the CLI process with the appropriate exit code to make CI fail on any error.
  */
-if (!args["--watch"] && !args["--ui"]) {
+if (
+  args["--watch"] === undefined &&
+  !cliOptions.test.watch &&
+  args["--ui"] === undefined &&
+  !cliOptions.test.ui
+) {
   process.exit(childProcess?.exitCode ?? process.exitCode ?? 0);
 }

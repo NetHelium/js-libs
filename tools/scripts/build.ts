@@ -18,11 +18,20 @@ const args = arg({
 
   // Aliases
   "-w": "--watch",
-  "-p": "--tsconfig",
+  "-t": "--tsconfig",
 });
 
 const outdir = "dist";
 streamCmd("rm", ["-rf", `./${outdir}`]);
+
+/**
+ * Copy manually written type definition files into `outdir`.
+ */
+const copyDts = async () => {
+  for (const dtsFile of await globby("./src/**/*.d.ts")) {
+    streamCmd("cp", [dtsFile, `./${outdir}/${dtsFile.slice(6)}`]);
+  }
+};
 
 const buildOptions: BuildOptions = {
   /**
@@ -57,32 +66,32 @@ const buildOptions: BuildOptions = {
    */
   entryPoints: [
     /**
+     * Front exports.
+     */
+    "src/index.ts",
+
+    /**
      * The CLI.
      */
     "src/cli/index.ts",
 
     /**
-     * Unit test utilities
+     * Test utilities.
      */
     "src/test/index.ts",
-    "src/test/dom.ts",
-    "src/test/vitest-setup.ts",
-
-    /**
-     * E2E test utilities
-     */
-    "src/e2e/index.ts",
-    "src/e2e/fixtures/index.ts",
-
-    /**
-     * Unit and E2E test configurations
-     */
-    ...(await globby("src/(e2e|test)/configs/*.ts")),
+    "src/test/jsdom.ts",
+    "src/test/browser/index.ts",
+    "src/test/regular-setup.ts",
 
     /**
      * Other utilities.
      */
     "src/utils/index.ts",
+
+    /**
+     * Dummy module for "type-only" exports.
+     */
+    "src/dummy.ts",
   ],
 
   /**
@@ -110,6 +119,8 @@ if (args["--watch"]) {
 
   // Build the JavaScript bundles in watch mode
   (await context(buildOptions)).watch();
+
+  // Todo: find a way to copy manually written type definitions in watch mode
 } else {
   const tsc = await getRootBinPath("tsc");
 
@@ -128,4 +139,7 @@ if (args["--watch"]) {
 
   // Build the JavaScript bundles
   await build(buildOptions);
+
+  // Copy manually written type definitions
+  await copyDts();
 }

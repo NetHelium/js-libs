@@ -3,8 +3,10 @@ import { printBanner, printError, printNewLine } from "../messages";
 
 export type TSCheckRunnerOptions = {
   /**
-   * The TypeScript configuration to use for the check. If omitted, the configuration of the
-   * `tsconfig.json` file in the current working directory will be used.
+   * The TypeScript configuration to use for the check. The path is relative to the project's root
+   * directory.
+   *
+   * @default "./tsconfig.json"
    */
   tsconfig: string;
 };

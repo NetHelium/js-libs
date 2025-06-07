@@ -15,11 +15,10 @@
   },
   "scripts": {
     "prepack": "nhcli pack",
-    "postpack": "nhcli pack -r",
+    "postpack": "nhcli pack --restore",
     "tscheck": "nhcli tscheck",
     "dev": "nhcli dev",
     "test": "nhcli test",
-    "e2e": "nhcli e2e",
     "build": "nhcli build"
   },
   "main": "./dist/hc-forms.js",

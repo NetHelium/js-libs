@@ -3,8 +3,9 @@ import path from "node:path";
 
 /**
  * Generator function yielding the full path of each directory until the root directory is reached.
- * @param initialPath the initial path (relative or absolute) to start the lookup. If omitted,
- * the lookup starts from the current working directory
+ *
+ * @param initialPath the initial path (relative or absolute) to start the lookup. If omitted, the
+ * lookup starts from the current working directory
  */
 export function* lookupDir(initialPath?: string): Generator<string> {
   if (!initialPath) initialPath = process.cwd();
@@ -19,6 +20,7 @@ export function* lookupDir(initialPath?: string): Generator<string> {
 
 /**
  * Check if a path exists in the file system (file or directory).
+ *
  * @param pathToCheck the path to check (relative or absolute)
  * @returns `true` if the path exists and `false` otherwise
  */
