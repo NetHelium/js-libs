@@ -211,9 +211,6 @@ importers:
       playwright:
         specifier: ^1.52.0
         version: 1.52.0
-      playwright-core:
-        specifier: ^1.52.0
-        version: 1.52.0
       tsc-watch:
         specifier: ^7.1.1
         version: 7.1.1(typescript@5.8.3)
