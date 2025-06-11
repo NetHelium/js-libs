@@ -53,7 +53,7 @@
     "globby": "^14.1.0",
     "jsdom": "^26.1.0",
     "lodash-es": "catalog:",
-    "playwright": "^1.52.0",
+    "playwright": "catalog:",
     "tsc-watch": "^7.1.1",
     "vitest": "catalog:",
     "vitest-browser-lit": "^0.1.0"

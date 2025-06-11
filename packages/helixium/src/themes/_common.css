@@ -1,0 +1,46 @@
+:root {
+  /* Font family tokens */
+  --hx-font-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+  /* Font size tokens */
+  --hx-font-size-2xs: 0.625rem; /* 10px */
+  --hx-font-size-xs: 0.75rem; /* 12px */
+  --hx-font-size-sm: 0.875rem; /* 14px */
+  --hx-font-size-md: 1rem; /* 16px */
+  --hx-font-size-lg: 1.25rem; /* 20px */
+  --hx-font-size-xl: 1.5rem; /* 24px */
+  --hx-font-size-2xl: 1.75rem; /* 28px */
+  --hx-font-size-3xl: 2.25rem; /* 36px */
+  --hx-font-size-4xl: 3rem; /* 48px */
+  --hx-font-size-5xl: 4.5rem; /* 72px */
+
+  /* Spacing tokens */
+  --hx-spacing-3xs: 0.0125rem; /* 2px */
+  --hx-spacing-2xs: 0.25rem; /* 4px */
+  --hx-spacing-xs: 0.5rem; /* 8px */
+  --hx-spacing-sm: 0.75rem; /* 12px */
+  --hx-spacing-md: 1rem; /* 16px */
+  --hx-spacing-lg: 1.25rem; /* 20px */
+  --hx-spacing-xl: 1.5rem; /* 24px */
+  --hx-spacing-2xl: 1.75rem; /* 28px */
+  --hx-spacing-3xl: 2.25rem; /* 36px */
+  --hx-spacing-4xl: 3rem; /* 48px */
+  --hx-spacing-5xl: 4.5rem; /* 72px */
+
+  /* Elevation tokens */
+  --hx-elevation-lower: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  --hx-elevation-low: 0 3px 6px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12);
+  --hx-elevation-medium: 0 10px 20px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
+  --hx-elevation-high: 0 15px 25px rgba(0, 0, 0, 0.15), 0 5px 10px rgba(0, 0, 0, 0.05);
+  --hx-elevation-higher: 0 20px 40px rgba(0, 0, 0, 0.2);
+
+  /* Transition tokens */
+  --hx-transition-slowest: 1000ms;
+  --hx-transition-slower: 750ms;
+  --hx-transition-slow: 500ms;
+  --hx-transition-medium: 250ms;
+  --hx-transition-fast: 150ms;
+  --hx-transition-faster: 100ms;
+  --hx-transition-fastest: 50ms;
+}

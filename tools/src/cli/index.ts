@@ -5,12 +5,15 @@ import { build } from "esbuild";
 import { type NhCliOptions, defineConfig } from "../";
 import { cmd, pathExists } from "../utils";
 import {
+  type StorybookRunnerOptions,
   type TestRunnerOptions,
   browsers as availableBrowsers,
+  commands as availableCommands,
   environments as availableEnvironments,
   buildRunner,
   devRunner,
   packRunner,
+  storybookRunner,
   testRunner,
   tsCheckRunner,
 } from "./runners";
@@ -61,6 +64,11 @@ const args = arg({
   "--browsers": String,
 
   /**
+   * Command to pass to the runner if applicable.
+   */
+  "--cmd": String,
+
+  /**
    * Enable tests coverage. Details of the coverage will be accessible in the web interface when
    * used with the `--ui` option.
    */
@@ -77,6 +85,11 @@ const args = arg({
    * Run the browser tests in headless mode (without the browser's ui) which is useful for CI.
    */
   "--headless": Boolean,
+
+  /**
+   * Port to use if applicable to the targeted runner.
+   */
+  "--port": Number,
 
   /**
    * Enable regular tests.
@@ -107,6 +120,7 @@ const args = arg({
   "-b": "--browser",
   "-c": "--coverage",
   "-e": "--env",
+  "-p": "--port",
   "-r": "--regular",
   "-t": "--tsconfig",
   "-w": "--watch",
@@ -130,6 +144,21 @@ if (args._.includes("tscheck")) {
  */
 if (args._.includes("dev")) {
   await devRunner();
+}
+
+/**
+ * Storybook runner.
+ */
+if (args._.includes("storybook")) {
+  const isValidCommand = (command: string): command is StorybookRunnerOptions["command"] =>
+    availableCommands.includes(command as StorybookRunnerOptions["command"]);
+
+  const command = args["--cmd"] || cliOptions.storybook.command;
+
+  await storybookRunner({
+    command: isValidCommand(command) ? command : "dev",
+    port: args["--port"] || cliOptions.storybook.port,
+  });
 }
 
 /**

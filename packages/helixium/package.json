@@ -1,0 +1,41 @@
+{
+  "name": "@net-helium/helixium",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "description": "Collection de composants web",
+  "homepage": "https://github.com/NetHelium/js-libs/tree/main/packages/helixium",
+  "author": {
+    "name": "Net Hélium",
+    "url": "https://net-helium.fr"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NetHelium/js-libs.git",
+    "directory": "packages/helixium"
+  },
+  "scripts": {
+    "dev": "nhcli storybook"
+  },
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "lit": "catalog:"
+  },
+  "devDependencies": {
+    "@net-helium/lib": "workspace:*",
+    "@net-helium/tools": "workspace:*",
+    "@storybook/addon-a11y": "^9.0.8",
+    "@storybook/addon-themes": "^9.0.8",
+    "@storybook/web-components-vite": "^9.0.8",
+    "@types/node": "catalog:",
+    "playwright": "catalog:",
+    "react": "^19.1.0",
+    "storybook": "^9.0.8",
+    "vitest": "catalog:"
+  },
+  "keywords": ["helixium", "composants", "ui", "web", "net hélium"],
+  "license": "MIT"
+}

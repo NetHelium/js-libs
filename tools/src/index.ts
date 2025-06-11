@@ -2,6 +2,7 @@ import { merge } from "lodash-es";
 import type {
   BuildRunnerOptions,
   PackRunnerOptions,
+  StorybookRunnerOptions,
   TSCheckRunnerOptions,
   TestRunnerOptions,
 } from "./cli/runners";
@@ -22,6 +23,11 @@ export type NhCliOptions = {
   test: TestRunnerOptions;
 
   /**
+   * Configuration for Storybook.
+   */
+  storybook: StorybookRunnerOptions;
+
+  /**
    * Configuration for builds.
    */
   build: BuildRunnerOptions;
@@ -38,6 +44,10 @@ export type NhCliOptions = {
 const defaultCliConfig: NhCliOptions = {
   check: {
     tsconfig: "./tsconfig.json",
+  },
+  storybook: {
+    command: "dev",
+    port: 6006,
   },
   test: {
     tsconfig: "./tsconfig.json",
