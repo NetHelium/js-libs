@@ -68,30 +68,30 @@ const buildOptions: BuildOptions = {
     /**
      * Front exports.
      */
-    "src/index.ts",
+    "./src/index.ts",
 
     /**
      * The CLI.
      */
-    "src/cli/index.ts",
+    "./src/cli/index.ts",
 
     /**
      * Test utilities.
      */
-    "src/test/index.ts",
-    "src/test/jsdom.ts",
-    "src/test/browser/index.ts",
-    "src/test/regular-setup.ts",
+    "./src/test/index.ts",
+    "./src/test/jsdom.ts",
+    "./src/test/browser/index.ts",
+    "./src/test/regular-setup.ts",
 
     /**
      * Other utilities.
      */
-    "src/utils/index.ts",
+    "./src/utils/index.ts",
 
     /**
      * Dummy module for "type-only" exports.
      */
-    "src/dummy.ts",
+    "./src/dummy.ts",
   ],
 
   /**

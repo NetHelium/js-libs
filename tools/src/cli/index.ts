@@ -221,22 +221,15 @@ if (args._.includes("pack")) {
 }
 
 /**
- * Wait for the runner process to be done if it's not running in the main process.
+ * Wait for the runner process to be done if it's not running in the main process and set the exit
+ * code to the result of the runner in order to make CI fail if there was an error.
  */
 if (childProcess) {
   await new Promise((resolve) => {
     childProcess.on("close", resolve);
   });
-}
 
-/**
- * Exit the CLI process with the appropriate exit code to make CI fail on any error.
- */
-if (
-  args["--watch"] === undefined &&
-  !cliOptions.test.watch &&
-  args["--ui"] === undefined &&
-  !cliOptions.test.ui
-) {
-  process.exit(childProcess?.exitCode ?? process.exitCode ?? 0);
+  if (childProcess.exitCode) {
+    process.exitCode = childProcess.exitCode;
+  }
 }

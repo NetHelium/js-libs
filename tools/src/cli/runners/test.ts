@@ -5,7 +5,7 @@ import { getToolsProject } from "../../utils";
 import { printBanner, printError } from "../messages";
 
 /**
- * Supported environments when running regular tests.
+ * Available environments when running regular tests.
  */
 export const environments = ["node", "jsdom"] as const;
 
@@ -41,6 +41,10 @@ export type TestRunnerOptions = {
   /**
    * Wether the runner should collect and report the test coverage. When used with the `ui` mode,
    * the coverage details are available in the web ui.
+   *
+   * The coverage can't be collected when running browser tests with engines other than `chromium`.
+   * This option will therefore be disabled by force when running browser tests with `firefox` or
+   * `webkit`.
    *
    * @default false
    */
@@ -222,7 +226,10 @@ export default async (options: TestRunnerOptions) => {
     vitestOptions.watch = true;
   }
 
-  if (coverage) {
+  const coverageEnabled =
+    coverage && (!browserTestsEnabled || (browsers.length === 1 && browsers[0] === "chromium"));
+
+  if (coverageEnabled) {
     bannerMessage = `${bannerMessage} with code coverage`;
 
     vitestOptions.coverage = {
@@ -236,13 +243,13 @@ export default async (options: TestRunnerOptions) => {
 
   await printBanner(bannerMessage);
 
-  if (browserTestsEnabled || coverage) {
+  if (browserTestsEnabled || coverageEnabled) {
     process.chdir(toolsProjectPath);
   }
 
   await startVitest("test", [], vitestOptions);
 
-  if (browserTestsEnabled || coverage) {
+  if (browserTestsEnabled || coverageEnabled) {
     process.chdir(projectWorkingDir);
   }
 };
