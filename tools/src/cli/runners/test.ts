@@ -1,6 +1,6 @@
 import path from "node:path";
 import chalk from "chalk";
-import { type UserConfig, type UserWorkspaceConfig, startVitest } from "vitest/node";
+import { type UserConfig, startVitest } from "vitest/node";
 import { getToolsProject } from "../../utils";
 import { printBanner, printError } from "../messages";
 
@@ -124,10 +124,6 @@ export type TestRunnerOptions = {
   };
 };
 
-type NhUserConfig = Omit<UserConfig, "workspace"> & {
-  workspace: UserWorkspaceConfig[];
-};
-
 export default async (options: TestRunnerOptions) => {
   let bannerMessage = "";
   const toolsProjectPath = (await getToolsProject())!.path;
@@ -141,11 +137,11 @@ export default async (options: TestRunnerOptions) => {
   const { enabled: regularTestsEnabled, environment } = regular;
   const { enabled: browserTestsEnabled, browsers, headless } = browser;
 
-  const vitestOptions: NhUserConfig = {
+  const vitestOptions: UserConfig = {
     typecheck: {
       tsconfig: path.resolve(projectWorkingDir, tsconfig),
     },
-    workspace: [],
+    projects: [],
   };
 
   if (regularTestsEnabled && browserTestsEnabled) {
@@ -185,7 +181,7 @@ export default async (options: TestRunnerOptions) => {
       },
     };
 
-    vitestOptions.workspace.push({
+    vitestOptions.projects!.push({
       test: {
         name: "regular",
         dir: projectWorkingDir,
@@ -199,7 +195,7 @@ export default async (options: TestRunnerOptions) => {
   }
 
   if (browserTestsEnabled) {
-    vitestOptions.workspace.push({
+    vitestOptions.projects!.push({
       test: {
         name: "browser",
         dir: projectWorkingDir,
