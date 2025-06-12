@@ -1,0 +1,32 @@
+{
+  "wrap_guides": [100],
+  "tab_size": 2,
+  "languages": {
+    "TypeScript": {
+      "language_servers": ["biome", "vtsls"],
+      "prettier": {
+        "allowed": false
+      },
+      "formatter": [
+        {
+          "language_server": {
+            "name": "biome"
+          }
+        }
+      ]
+    },
+    "JavaScript": {
+      "language_servers": ["biome", "vtsls"],
+      "prettier": {
+        "allowed": false
+      },
+      "formatter": [
+        {
+          "language_server": {
+            "name": "biome"
+          }
+        }
+      ]
+    }
+  }
+}
