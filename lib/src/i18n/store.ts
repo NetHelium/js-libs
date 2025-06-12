@@ -137,7 +137,7 @@ export const translate = (
     if (value === undefined) break;
 
     if (typeof value === "string") {
-      if (identifier !== identifiers.at(-1)) break;
+      if (idx + 1 < identifiers.length) break;
       let result = value as string;
 
       if (vars) {
