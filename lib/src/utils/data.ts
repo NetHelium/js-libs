@@ -2,7 +2,7 @@
  * Determine wether or not `value` is an object.
  *
  * @param value the input value to test
- * @returns `true` id the value is an object and `false` otherwise
+ * @returns `true` if the value is an object and `false` otherwise
  */
 export const isObject = (value: unknown): value is Record<string, unknown> =>
   Object.prototype.toString.call(value) === "[object Object]";
