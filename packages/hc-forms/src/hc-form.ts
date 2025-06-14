@@ -363,10 +363,11 @@ export default class HcForm extends LitElement {
       display: block;
     }
     [role="alert"] {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+        sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
       text-align: center;
-      font-family: var(--hc-forms-error-font-family, Verdana, Arial, sans-serif);
-      font-size: var(--hc-forms-error-font-size, 1rem);
-      color: var(--hc-forms-error-color, #ff0000);
+      font-size: 1rem;
+      color: #ff0000;
     }
     iframe {
       border: none;
