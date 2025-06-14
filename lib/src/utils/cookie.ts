@@ -7,9 +7,9 @@ import type { WithRequired } from "./index.js";
  */
 type CookieOptions = {
   /**
-   * The host to which the cookie will be sent. If omitted, it defaults to the host portion of the
-   * current document location and the cookie is not available on subdomains. If a domain is
-   * specified, all of its subdomains are included.
+   * The host to which the cookie will be sent. If omitted, the cookie will be available on the
+   * domain that sets it but not on its subdomains. If a domain is specified, all of its subdomains
+   * are included.
    *
    * @default undefined
    */

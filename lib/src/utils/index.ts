@@ -1,4 +1,5 @@
 export * from "./cookie.js";
+export * from "./data.js";
 export * from "./date.js";
 export * from "./environment.js";
 export * from "./url.js";

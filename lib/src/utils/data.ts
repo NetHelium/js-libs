@@ -1,3 +1,5 @@
+export { merge } from "lodash-es";
+
 /**
  * Determine wether or not `value` is an object.
  *
