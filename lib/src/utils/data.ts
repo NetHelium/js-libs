@@ -1,6 +1,40 @@
 export { merge } from "lodash-es";
 
 /**
+ * Generate a random id composed of letters (a to f), numbers (0 to 9) and optionally dashes.
+ *
+ * @param options the options to change the generation behavior
+ * @returns the generated id
+ */
+export const randomId = (options?: {
+  /**
+   * The length desired. If omitted, it will be the length of a `uuid v4` (36 characters with dashes
+   * or 32 characters without).
+   *
+   * @default undefined
+   */
+  length?: number;
+
+  /**
+   * Wether the generated id should have dashes.
+   *
+   * @default false
+   */
+  dashes?: boolean;
+}) => {
+  const length = options?.length;
+  const dashes = options?.dashes ?? false;
+  let id = "";
+
+  do {
+    id += `${id === "" ? "" : "-"}${crypto.randomUUID()}`;
+    if (!dashes) id = id.replaceAll("-", "");
+  } while (length && length > id.length);
+
+  return length ? id.slice(0, length) : id;
+};
+
+/**
  * Determine wether or not `value` is an object.
  *
  * @param value the input value to test

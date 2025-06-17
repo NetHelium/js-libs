@@ -1,7 +1,20 @@
 import { describe, expect, it } from "@net-helium/tools/test";
-import { flat, isObject, search } from "../../src/utils/data.js";
+import { flat, isObject, randomId, search } from "../../src/utils/data.js";
 
 describe.concurrent("[lib] utils/data", () => {
+  it("should generate a random id", () => {
+    expect(randomId()).toMatch(/^[a-f\d]{32}$/);
+    expect(randomId({ length: 45 })).toMatch(/^[a-f\d]{45}$/);
+
+    expect(randomId({ dashes: true })).toMatch(
+      /^[a-f\d]{8}-[a-f\d]{4}-4[a-f\d]{3}-[89ab][a-f\d]{3}-[a-f\d]{12}$/,
+    );
+
+    expect(randomId({ length: 45, dashes: true })).toMatch(
+      /^[a-f\d]{8}-[a-f\d]{4}-4[a-f\d]{3}-[89ab][a-f\d]{3}-[a-f\d]{12}-[a-f\d]{8}$/,
+    );
+  });
+
   it("should detect if a value is an object", () => {
     expect(isObject(null)).toBe(false);
     expect(isObject(undefined)).toBe(false);
