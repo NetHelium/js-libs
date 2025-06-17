@@ -212,13 +212,7 @@ export const serializeCookie = (name: string, value: unknown, options?: Partial<
 export const parseCookie = (cookieString: string, decoding?: CookieOptions["encoding"]) => {
   const parts = cookieString.split(";").map((part) => part.trim());
 
-  const cookieData: CookieOptions & { name?: string; value?: unknown } = {
-    path: "/",
-    httpOnly: false,
-    secure: false,
-    sameSite: "lax",
-    encoding: decoding ?? false,
-  };
+  const cookieData: Partial<CookieOptions> & { name?: string; value?: unknown } = {};
 
   for (const part of parts) {
     let key: string;
@@ -261,13 +255,19 @@ export const parseCookie = (cookieString: string, decoding?: CookieOptions["enco
 
         switch (decoding) {
           case "base64":
+            cookieData.encoding = "base64";
+
             decodedValue = isBrowser()
               ? atob(decodedValue)
               : Buffer.from(decodedValue, "base64").toString();
 
             break;
           case "uriComponent":
+            cookieData.encoding = "uriComponent";
             decodedValue = decodeURIComponent(decodedValue);
+            break;
+          default:
+            cookieData.encoding = false;
         }
 
         cookieData.value = decodedValue.startsWith("json:")

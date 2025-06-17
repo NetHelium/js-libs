@@ -30,10 +30,8 @@ describe("[lib] utils/cookie (jsdom)", () => {
       name: cookieName,
       value: cookieValue,
       encoding: "base64",
-      httpOnly: false,
       path: "/",
       sameSite: "lax",
-      secure: false,
     });
   });
 });

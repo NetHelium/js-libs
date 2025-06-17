@@ -69,13 +69,11 @@ describe("[lib] utils/cookie (node)", () => {
     expect(cookieData.maxAge).toBeUndefined();
 
     expect(cookieData).toEqual({
-      encoding: false,
-      httpOnly: false,
       name: cookieName,
       value: simpleValue,
+      encoding: false,
       path: "/",
       sameSite: "lax",
-      secure: false,
     });
 
     cookieString = serializeCookie(cookieName, objectValue, {
@@ -88,13 +86,13 @@ describe("[lib] utils/cookie (node)", () => {
 
     cookieData = parseCookie(cookieString, "uriComponent");
     expect(cookieData.maxAge).toBeUndefined();
+    expect(cookieData.httpOnly).toBeUndefined();
 
     expect(cookieData).toEqual({
       domain: "website.com",
       path: "/prefix",
       sameSite: "none",
       secure: true,
-      httpOnly: false,
       expires: date,
       encoding: "uriComponent",
       name: cookieName,
@@ -112,16 +110,16 @@ describe("[lib] utils/cookie (node)", () => {
     cookieData = parseCookie(cookieString, "base64");
     expect(cookieData.domain).toBeUndefined();
     expect(cookieData.expires).toBeUndefined();
+    expect(cookieData.secure).toBeUndefined();
 
     expect(cookieData).toEqual({
+      path: "/",
       httpOnly: true,
       encoding: "base64",
       maxAge,
       name: cookieName,
       value: objectValue,
       sameSite: "strict",
-      secure: false,
-      path: "/",
     });
   });
 });
