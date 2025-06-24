@@ -1,5 +1,5 @@
 import { describe, expect, it } from "@net-helium/tools/test";
-import { parseCookie, serializeCookie } from "../../src/utils/cookie.js";
+import { parseCookie, serializeCookie, serializeCookieData } from "../../src/utils/cookie.js";
 
 describe("[lib] utils/cookie (node)", () => {
   let cookieString: string;
@@ -13,7 +13,18 @@ describe("[lib] utils/cookie (node)", () => {
     role: "admin",
   };
 
-  it("should serialize the data as a cookie string", () => {
+  it("should serialize the data as a cookie string without cookie options", () => {
+    cookieString = serializeCookieData(simpleValue);
+    expect(cookieString).toEqual("test-value");
+
+    cookieString = serializeCookieData(simpleValue, { encoding: "base64" });
+    expect(cookieString).toEqual("dGVzdC12YWx1ZQ==");
+
+    cookieString = serializeCookieData(objectValue, { name: cookieName });
+    expect(cookieString).toContain(`${cookieName}=json:`);
+  });
+
+  it("should serialize the data as a cookie string with cookie options", () => {
     cookieString = serializeCookie(cookieName, simpleValue);
     expect(cookieString).toContain(`${cookieName}=${simpleValue}`);
     expect(cookieString).toContain("Path=/");

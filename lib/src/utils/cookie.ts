@@ -5,7 +5,7 @@ import type { WithRequired } from "./index.js";
 /**
  * Available options that can be set for a cookie.
  */
-type CookieOptions = {
+export type CookieOptions = {
   /**
    * The host to which the cookie will be sent. If omitted, the cookie will be available on the
    * domain that sets it but not on its subdomains. If a domain is specified, all of its subdomains
@@ -107,6 +107,56 @@ const cookieDomainRegex =
 const cookiePathRegex = /^[\u0020-\u003A\u003D-\u007E]*$/;
 
 /**
+ * Serialize a cookie value either with or without its name depending on if the corresponding option
+ * is set.
+ *
+ * @param value the cookie value
+ * @param options the options to influence the behavior of the serialization
+ * @returns the serialized cookie data
+ */
+export const serializeCookieData = <T = unknown>(
+  value: T,
+  options?: {
+    /**
+     * The cookie name. If omitted, only the cookie value will be returned.
+     *
+     * @default undefined
+     */
+    name?: string;
+
+    /**
+     * Encoding system to use for the cookie value. If set to `false`, the value won't be encoded.
+     *
+     * @default false
+     */
+    encoding?: CookieOptions["encoding"];
+  },
+) => {
+  const cookieName = options?.name;
+  const encoding = options?.encoding ?? false;
+
+  if (cookieName && !cookieNameRegex.test(cookieName)) {
+    throw new TypeError(`Cookie name is invalid: ${cookieName}`);
+  }
+
+  let cookieValue = typeof value === "object" ? `json:${JSON.stringify(value)}` : String(value);
+
+  switch (encoding) {
+    case "base64":
+      cookieValue = isBrowser() ? btoa(cookieValue) : Buffer.from(cookieValue).toString("base64");
+      break;
+    case "uriComponent":
+      cookieValue = encodeURIComponent(cookieValue);
+  }
+
+  if (!cookieValueRegex.test(cookieValue)) {
+    throw new Error(`Cookie value is invalid: ${value}`);
+  }
+
+  return cookieName ? `${cookieName}=${cookieValue}` : cookieValue;
+};
+
+/**
  * Serialize data into a cookie string ready to be used with the `document.cookie` API or the
  * `Set-Cookie` header.
  *
@@ -115,7 +165,11 @@ const cookiePathRegex = /^[\u0020-\u003A\u003D-\u007E]*$/;
  * @param options the cookie options
  * @returns the cookie string
  */
-export const serializeCookie = (name: string, value: unknown, options?: Partial<CookieOptions>) => {
+export const serializeCookie = <T = unknown>(
+  name: string,
+  value: T,
+  options?: Partial<CookieOptions>,
+) => {
   let cookieOptions: CookieOptions = {
     path: "/",
     httpOnly: false,
@@ -136,43 +190,25 @@ export const serializeCookie = (name: string, value: unknown, options?: Partial<
     cookieOptions.secure = true;
   }
 
-  if (!cookieNameRegex.test(name)) {
-    throw new TypeError(`Cookie name is invalid: ${name}`);
-  }
-
-  let cookieValue = typeof value === "object" ? `json:${JSON.stringify(value)}` : String(value);
-
-  switch (cookieOptions.encoding) {
-    case "base64":
-      cookieValue = isBrowser() ? btoa(cookieValue) : Buffer.from(cookieValue).toString("base64");
-      break;
-    case "uriComponent":
-      cookieValue = encodeURIComponent(cookieValue);
-  }
-
-  if (!cookieValueRegex.test(cookieValue)) {
-    throw new TypeError(`Cookie value is invalid: ${value}`);
-  }
-
-  const cookieData = [`${name}=${cookieValue}`];
+  const cookieData = [serializeCookieData(value, { name, encoding: cookieOptions.encoding })];
 
   if (cookieOptions.domain) {
     if (!cookieDomainRegex.test(cookieOptions.domain)) {
-      throw new TypeError(`domain option is invalid: ${cookieOptions.domain}`);
+      throw new Error(`domain option is invalid: ${cookieOptions.domain}`);
     }
 
     cookieData.push(`Domain=${cookieOptions.domain}`);
   }
 
   if (!cookiePathRegex.test(cookieOptions.path)) {
-    throw new TypeError(`path option is invalid: ${cookieOptions.path}`);
+    throw new Error(`path option is invalid: ${cookieOptions.path}`);
   }
 
   cookieData.push(`Path=${cookieOptions.path}`);
 
   if (cookieOptions.maxAge) {
     if (!Number.isInteger(cookieOptions.maxAge)) {
-      throw new TypeError(`maxAge option is invalid: ${cookieOptions.maxAge}`);
+      throw new Error(`maxAge option is invalid: ${cookieOptions.maxAge}`);
     }
 
     cookieData.push(`Max-Age=${cookieOptions.maxAge}`);
@@ -180,7 +216,7 @@ export const serializeCookie = (name: string, value: unknown, options?: Partial<
 
   if (cookieOptions.expires && !cookieOptions.maxAge) {
     if (!isDate(cookieOptions.expires) || !Number.isFinite(cookieOptions.expires.valueOf())) {
-      throw new TypeError(`expires option is invalid: ${cookieOptions.expires}`);
+      throw new Error(`expires option is invalid: ${cookieOptions.expires}`);
     }
 
     cookieData.push(`Expires=${cookieOptions.expires.toUTCString()}`);
