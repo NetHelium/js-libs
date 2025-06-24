@@ -8,20 +8,18 @@ prev: false
 
 import { Image } from "astro:assets";
 import { Aside, Badge, Steps } from "@astrojs/starlight/components";
+import tagTypeImage from "../../../assets/hct/gtm-tag-select.png";
 import addFieldImage1 from "../../../assets/hct/gtm-model-add-field-1.png";
 import addFieldImage2 from "../../../assets/hct/gtm-model-add-field-2.png";
 import addFieldImage3 from "../../../assets/hct/gtm-model-add-field-3.png";
-import tagTypeImage from "../../../assets/hct/gtm-tag-select.png";
 import eventVariableImage from "../../../assets/hct/gtm-custom-event-variable.png";
-import loadedTriggerImage from "../../../assets/hct/gtm-trigger-loaded.png"
+import customTriggerImage from "../../../assets/hct/gtm-custom-trigger.png";
 
 <Badge text="Google Tag Manager" size="large" />
 <Badge text="JavaScript" size="large" />
 \
 Ce guide est applicable si vous souhaitez installer HCT avec un conteneur Google Tag Manager (GTM) 
 de type web (client-side).
-
-## Installation
 
 <Aside title="Prérequis">
   Avant de commencer, vous devez être en possession des éléments suivants :
@@ -33,7 +31,7 @@ de type web (client-side).
   Ces éléments vous sont fournis par Net Hélium.
 </Aside>
 
-### Import du modèle de balise HCT
+## Import du modèle de balise HCT
 
 Un modèle de balise est un template à partir duquel une balise GTM peut être créée.\
 Commencez par importer le modèle de balise HCT en suivant les étapes suivantes :
@@ -52,95 +50,16 @@ Commencez par importer le modèle de balise HCT en suivant les étapes suivantes
       Sélectionnez le template fourni (fichier .tpl) et validez.
 </Steps>
 
-### Configuration du modèle de balise HCT
-
-Vous devez configurer la récupération du consentement pour autoriser ou interdire à HCT de recevoir 
-les informations personnelles de l'utilisateur. La méthode employée dépend du fonctionnement de 
-votre bandeau des cookies.
-
-Certains de nos clients ont par exemple une variable GTM contenant les consentements. Cette variable
-est mise à jour à chaque modification des préférences dans le bandeau. Si c'est votre cas, vous 
-pouvez ajouter un nouveau champ dans le modèle de balise comme ceci :
-
-<Steps>
-  1.  Cliquez sur **`Ajouter un champ`** dans l'onglet **`Champs`** :
-
-      <Image src={addFieldImage1} alt="Ajout de champ" width={300} />
-
-  2.  Choisissez le type **`Saisis de texte`** :
-
-      <Image src={addFieldImage2} alt="Choix du type" width={400} />
-
-  3.  Donnez un identifiant et un nom à ce champ :
-
-      <Image src={addFieldImage3} alt="Nommage du champ" width={200} />
-
-      Votre variable GTM pourra être attribuée comme valeur de ce champ lors de la mise en place de 
-      la balise dans la suite de ce guide.
-</Steps>
-
-Si vous n'avez pas vos consentements à disposition comme l'exemple ci-dessus et ne désirez pas 
-mettre en place un fonctionnement similaire (ou vous avez des contraintes techniques qui vous en 
-empêchent), les préférences d'un bandeau des cookies sont généralement sauvegardées dans un cookie 
-donc une autre solution est de lire le contenu de ce cookie et d'en extraire le consentement HCT.
-Cette méthode de récupération se fait directement dans la fonction **`checkConsent`** du code du 
-modèle.
-
-Vous devez implémenter la fonction **`checkConsent`** de l'onglet **`Code`** du modèle. Cette 
-méthode doit retourner **`true`** ou **`false`** en fonction de si HCT est autorisé à récupérer les 
-infos personnelles de l'utilisateur.
-
-Si vous avez ajouté un champ pour la récupération du consentement, vous pouvez utiliser un code 
-similaire à celui-ci (exemple avec un champ ayant la clé **`consents`**) :
-
-```js
-/**
- * Exemple si `consents` est un objet contenant un booléen pour chaque consentement.
- * À adapter si votre structure est différente.
- */
-const checkConsent = () => data.consents.hct;
-```
-
-Si au contraire vous souhaitez récupérer le consentement depuis un cookie, un code similaire à 
-celui-ci peut être utilisé :
-
-```js
-/**
- * La fonction `getCookieValues` mise à disposition par Google peut vous être utile ici.
- */
-const checkConsent = () => {
-  const consents = getCookieValues("NOM_DU_COOKIE");
-
-  // Reste à implémenter pour extraire le consentement HCT à partir de `consents`...
-};
-```
-
-<Aside type="caution">
-  N'oubliez pas de sélectionner l'option **`Valeur spécifique`** dans la rubrique **`Permet de lire 
-  les valeurs des cookies`** de l'onglet **`Autorisations`** et de renseigner le nom du ou des 
-  cookies qui ont besoins d'être lu par le code. 
-</Aside>
-
-La balise GTM qui sera créée à partir de ce modèle devra être déclenchée à chaque changement sur les 
-consentements afin de modifier le mode de récupération des données par HCT (avec infos personnelles 
-si autorisé ou anonyme si non autorisé).
-
-La fonction **`triggerEvent`** du modèle sera appelée à chaque déclenchement de la balise. Elle 
-prend en paramètre le nom de l'événement responsable du déclenchement. Si le nom de votre événement 
-GTM pour une modification des consentements est différent de **`consent`** (nom préconfiguré dans 
-le modèle), modifiez-le.
-
-<Aside type="caution">
-  Si vous utilisez un sous-domaine personnalisé pour HCT, il faut penser à le configurer comme modèle 
-  de correspondance d'URL autorisé dans la rubrique **`Injecter des scripts`** de l'onglet 
+<Aside>
+  Si vous utilisez un sous-domaine personnalisé pour HCT, il faut penser à le configurer comme 
+  modèle de correspondance d'URL autorisé dans la rubrique **`Injecter des scripts`** de l'onglet 
   **`Autorisations`**.
 </Aside>
 
-Enregistrez le modèle avec le bouton prévu à cet effet en haut à droite de la page.
+## Création de la balise HCT
 
-### Création de la balise HCT
-
-Suivez les étapes suivantes pour la création de la balise à partir du modèle :
+Une fois le modèle importé, vous pouvez maintenant créer et configurer la balise à partir de ce 
+modèle :
 
 <Steps>
   1.  Sélectionnez **`Balises`** dans le menu de gauche de votre conteneur GTM et cliquez sur le 
@@ -154,119 +73,218 @@ Suivez les étapes suivantes pour la création de la balise à partir du modèle
       rubrique **`Personnalisée`** :
 
       <Image src={tagTypeImage} alt="Choix du type de balise" width={200} />
+  
+  4.  Renseignez votre code de tracking
 
-</Steps>
+  5.  Remplacez le token par celui qui vous a été fourni. Si vous n'en avez pas reçu, laissez celui 
+      par défaut.
 
-### Configuration de la balise HCT
+  6.  Par défaut, une session HCT dure 30 minutes maximum. Vous pouvez modifier cette valeur si vous
+      le souhaitez.
 
-Configurez maintenant les champs de la balise.
+  7.  Par défaut, un événement `page_view` sera automatiquement envoyé sur HCT pour chaque page de 
+      votre site. Vous pouvez désactiver ce comportement.
+  
+  8.  Lors de l'envoi d'un événement, les données de tracking sont envoyées sur HCT. Vous pouvez 
+      activer une remontée automatique de ces données dans la session HCT même si aucun événement
+      n'est déclenché.
 
-<Steps>
-  1.  Votre code de tracking
-
-  2.  Remplacez le token préconfiguré si un autre vous a été fourni par Net Hélium
-
-  3.  Le champ **Événement** correspond au nom de l'événement qui sera passé à la fonction 
-      **`triggerEvent`** du code.\
-      Nous vous recommandons d'utiliser la variable GTM intégrée **`Événement personnalisé`** en 
-      cliquant sur l'icône à la droite du champ :
-
-        <Image src={eventVariableImage} alt="Variable d'événement personnalisé" width={500} />
-
-        Cette variable contiendra le nom de l'événement correspondant au déclencheur ayant activé 
-        la balise.
-
-  4.  Par défaut, un événement **`page_view`** sera envoyé automatiquement sur HCT à chaque 
-      navigation de page. Vous avez la possibilité de désactiver cet envoi automatique.
-
-  5.  Vous avez la possibilité d'activer la remontée automatique des données de tracking présentes 
-      dans l'URL de vos pages (paramètres **utm** par exemple). Ces données sont envoyées à chaque 
-      envoi d'événement sur HCT mais dans le cas où certaines pages ne déclenchent aucun envoi 
-      (**`page_view`** automatique désactivé et aucun envoi explicite d'un autre événement HCT), 
-      cette option permet de garantir l'envoi des données de tracking.
-
-  6.  Il est possible si souhaité d'envoyer un événement **`form_submit`** automatiquement sur HCT
-      lors de la soumission d'un formulaire. Toutes les données renseignées dans le formulaire 
-      seront envoyées sauf s'il s'agit d'un formulaire contenant un champ de type mot de passe 
-      (formulaire de login ou de création de compte par exemple).
+  9.  Vous avez la possibilité d'activer la remontée automatique des données de formulaires. Un 
+      événement `form_submit` sera ainsi envoyé sur HCT avec les données associées à la soumission
+      d'un formulaire.
 
         <Aside type="caution">
-          Cette option ne fonctionne que si la soumission du formulaire est **native** (pas 
-          en **AJAX** ou autres mécanismes personnalisés) et que le formulaire est directement dans 
-          le **DOM** de la page (pas dans une `<iframe>`).
+          Cette option ne fonctionne que si les conditions suivantes sont réunies :
+          - La soumission du formulaire est réalisée nativement (pas en **AJAX** ou autres 
+            mécanismes personnalisés)
+          - Le formulaire se trouve directement dans le **DOM** de la page (pas dans une `<iframe>`)
+          - Seuls les champs ayant un attribut `name` seront envoyés.
         </Aside>
-
-  7.  Par défaut, la durée d'une session HCT est de 30 minutes mais vous pouvez modifier cette 
-      valeur si vous le souhaitez.
-
-  8.  Si vous avez paramétrer un champ supplémentaire pour vos consentements lors de la 
-      configuration du modèle, sélectionnez la variable GTM contenant ces informations.
 </Steps>
 
-### Ajout des déclencheurs
+La balise HCT devrait être déclenchée si la récupération de données anonymes à des fins de 
+statistiques est autorisée par l'utilisateur. Nous recommandons fortement l'utilisation du
+<a
+  href="https://support.google.com/tagmanager/answer/10718549?hl=fr" 
+  target="_blank"
+>mode consentement de GTM</a>
+avec l'intégration d'une plate-forme de gestion du consentement (CMP). Un grand nombre de
+<a
+  href="https://cmppartnerprogram.withgoogle.com/intl/fr/" 
+  target="_blank"
+>CMP partenaires de Google</a>
+existent pour facilement gérer le déclenchement de vos balises en fonction des préférences cookies 
+de vos utilisateurs.
 
-Nous recommandons de déclencher la balise sur l'événement GTM **`Fenêtre chargée`**. Cet événement 
-est automatiquement déclenché par GTM lorsque tous les éléments de la page ont été chargés. Pour ce 
-faire, cliquez sur le bloc **`Déclenchement`** puis suivez les étapes suivantes :
-
-<Steps>
-  1.  Cliquez sur le bouton **`+`** en haut à droite du volet **`Choisir un déclencheur`**.
-
-  2.  Donnez un nom au déclencheur (**Fenêtre chargée** par exemple).
-
-  3.  Cliquez sur le bloc **`Configuration du déclencheur`**.
-
-  4.  Sélectionnez le type **`Fenêtre chargée`** dans la rubrique **`Page vue`** :
-
-      <Image src={loadedTriggerImage} alt="Événement GTM fenêtre chargée" width={200} />
-
-      Le nom de l'événement associé à ce déclencheur est **`gtm.load`**.
-</Steps>
-
-Comme évoqué précédemment, il faut aussi ajouter un déclencheur lors de la modification des 
-consentements afin d'exécuter le **`hct.activate()`** ou **`hct.deactivate()`** dans le code du tag.
-
-Enfin, vous pouvez ajouter d'autres déclencheurs en fonction de vos besoins.
+Reportez-vous à la documentation de votre CMP pour la mise en place d'un déclencheur adéquat.
 
 ## Fonctions HCT
 
-Une fois HCT chargé sur votre site par la balise GTM, une nouvelle propriété JavaScript **`hct`** 
-est disponible sur l'objet global **`window`**. À partir de cette propriété, vous avez accès aux 
-fonctions suivantes :
+Une fois déclenchée, la balise GTM injectera un script qui ajoutera une nouvelle propriété **`hct`** 
+dans l'objet **`window`** de votre page. À partir de cette propriété, vous avez accès aux fonctions 
+suivantes :
 
 ### hct.activate()
 
 L'appel de cette fonction permet d'indiquer à HCT que l'utilisateur a donné son consentement pour 
-récupérer ses informations personnelles. Cette fonction est déjà appelée automatiquement par la 
-balise GTM configurée ci-dessus à partir du moment où le nom de l'événement qui déclenche la balise 
-est celui configuré pour exécuter la branche de la modification du consentement dans le switch de la
-fonction **`triggerEvent`**.
+que les données personnelles envoyées sur le serveur HCT permettant de l'identifier soient stockées 
+et associées à ses sessions HCT. Les données concernées sont celles qui se trouvent dans la requête 
+de la page du site qui envoi les données (adresse IP, données de tracking dans l'url, etc...).
 
-Cette fonction peut prendre en paramètre le timestamp du consentement qui est une valeur similaire 
-à ce qui est renvoyé par **`Date.now()`**.
+Cette fonction peut optionnellement prendre en paramètre le timestamp du consentement qui est une 
+valeur similaire à ce qui est renvoyé par **`Date.now()`**.
 
 ### hct.deactivate()
 
-L'appel de cette fonction indique à HCT que l'utilisateur ne donne pas ou plus son consentement donc
-la récupération des données se fera désormais de manière anonyme. Cette fonction est déjà appelée
-automatiquement par la balise GTM configurée ci-dessus à partir du moment où le nom de l'événement 
-qui déclenche la balise est celui configuré pour exécuter la branche de la modification du 
-consentement dans le switch de la fonction **`triggerEvent`**.
+L'appel de cette fonction permet d'annuler le consentement sur la récupération des données 
+permettant d'identifier l'utilisateur. HCT repassera en mode de récupération anonyme comme avant
+l'appel de la fonction `activate()`.
+
+### hct.associate()
+
+Cette fonction permet d'associer un utilisateur à la session HCT en cours. Si votre site permet à 
+vos utilisateurs de se connecter (espace client par exemple), vous pouvez utiliser cette fonction 
+pour faire remonter les informations de l'utilisateur sur HCT une fois qu'il est connecté sur son 
+compte.
+
+<Aside type="caution">
+  Vous devez vous assurer que l'utilisateur a donné son consentement pour autoriser l'utilisation 
+  de ses données personnelles avant d'appeler cette fonction (même consentement que pour l'appel de 
+  la fonction `activate()`). En effet, l'association aura lieu même si HCT est en mode anonyme.
+</Aside>
+
+Cette fonction prend en paramètre dans l'ordre :
+
+- Le type d'association (chaîne de caractères). Actuellement, seul le type **login** est disponible.
+- Les données de l'utilisateur (objet) avec les informations suivantes (toutes les données sont 
+facultatives donc renseignez ce que vous pouvez) :
+  - Un ou plusieurs identifiants (`id`, `id_2`, `id_3`, `id_4`, `id_5`)
+  - Un prénom (`first_name`)
+  - Un nom (`last_name`)
+  - Un email (`email`)
+  - Un téléphone (`phone`)
+
+Exemple :
+
+```js
+hct.associate("login", {
+  id: "123456",
+  first_name: "Jean",
+  last_name: "Dupont",
+  email: "user@gmail.com",
+});
+```
 
 ### hct.send_event()
 
-Cette fonction permet d'envoyer un événement sur HCT ainsi que les données associées à cet 
-événement. Cette fonction prend en paramètres dans l'ordre :
+Cette fonction permet d'envoyer un événement personnalisé sur HCT ainsi que les données associées à 
+cet événement.
+
+Cette fonction prend en paramètres dans l'ordre :
 
 - Le nom de l'événement HCT (chaîne de caractères)
 - Les données associées à cet événement (objet)
 
-Vous avez la possibilité d'appeler cette fonction soit directement dans un script sur vos pages ou 
-en choisissant de centraliser les appels HCT dans le code du modèle de la balise GTM en ajoutant des
-nouvelles branches dans le switch de la fonction **`triggerEvent`** (une branche par événement GTM 
-qui déclenche la balise). Pour cela, Google met à disposition la fonction
-<a
-  href="https://developers.google.com/tag-platform/tag-manager/templates/api#callinwindow" 
-  target="_blank"
->callInWindow</a>
-permettant d'appeler une fonction dans le contexte de l'objet global **`window`**.
+Exemple :
+
+```js
+hct.send_event("add_to_cart", {
+  product_id: "654321",
+  price: 79.99,
+});
+```
+
+## Centralisation des appels HCT sur GTM
+
+Bien que les fonctions HCT puissent être appelées directement dans des scripts sur votre site, il 
+est possible de centraliser ces appels dans la balise GTM en modifiant le modèle de la balise.
+
+Pour cela, vous pouvez ajouter un nouveau champ qui contiendra le nom de l'événement responsable du 
+déclenchement de la balise :
+
+<Steps>
+  1.  Cliquez sur **`Ajouter un champ`** dans l'onglet **`Champs`** :
+
+      <Image src={addFieldImage1} alt="Ajout de champ" width={300} />
+
+  2.  Choisissez le type **`Saisis de texte`** :
+
+      <Image src={addFieldImage2} alt="Choix du type" width={400} />
+
+  3.  Donnez un identifiant et un nom à ce champ (notre identifiant dans cet exemple est 
+      `hctEvent`) :
+
+      <Image src={addFieldImage3} alt="Nommage du champ" width={200} />
+</Steps>
+
+Revenez dans la configuration de la balise et renseignez la valeur de ce nouveau champ en utilisant 
+la variable GTM intégrée **`Événement personnalisé`** (cliquez sur l'icône à la droite du champ pour
+sélectionner cette variable :
+
+<Image src={eventVariableImage} alt="Variable d'événement personnalisé" width={500} />
+
+Cette variable contiendra le nom de l'événement correspondant au déclencheur ayant activé la balise.
+Il vous reste à créer des déclencheurs personnalisés comme ceci :
+
+<Image src={customTriggerImage} alt="Déclencheur personnalisé" width={600} />
+
+La plupart des CMP vous permettent d'avoir accès à vos consentements via une variable GTM, 
+reportez-vous à la documentation de votre CMP pour voir comment mettre en place des déclencheurs 
+personnalisés utilisant les consentements.
+
+Vous pouvez maintenant revenir dans la configuration du modèle et modifier le code de la balise pour
+utiliser ces déclencheurs et ainsi exécuter le code spécifique HCT correspondant.
+
+Exemple de modification du code à compléter selon vos besoins (onglet **Code** dans le modèle) :
+
+```js
+// Import du module permettant de récupérer le timestamp actuel
+const getTimestampMillis = require("getTimestampMillis");
+
+/**
+ * Ajout d'une nouvelle fonction permettant d'exécuter les fonctions HCT en fonction de déclencheurs
+ * personnalisés conditionnés sur vos consentements et/ou autres paramètres.
+ */
+const handleEvent = (event) => {
+  switch (event) {
+    /**
+     * `marketing_consent_enabled` est un exemple de nom d'événement personnalisé qui se déclenche
+     * lorsque l'utilisateur donne son consentement anonyme + infos personnelles (typiquement 
+     * `statistiques` et `marketing`).
+     */
+    case "marketing_consent_enabled":
+      // Appel de hct.activate() depuis la `window` avec le timestamp actuel passé en paramètre
+      callInWindow("hct.activate", getTimestampMillis());
+      break;
+    /**
+     * `marketing_consent_enabled` est un exemple de nom d'événement personnalisé qui se déclenche
+     * lorsque l'utilisateur retire son consentement sur les infos personnelles (`marketing`) mais 
+     * garde le consentement sur les données anonymes.
+     */
+    case "marketing_consent_disabled":
+      // Appel de hct.deactivate() depuis la `window`
+      callInWindow("hct.deactivate");
+      break;
+    
+    /**
+     * Autres `case` à ajouter pour les appels des fonctions `hct.associate` et `hct.send_event`
+     * en fonction des actions possibles sur votre site. Pour la récupération des données à 
+     * renseigner en paramètre de ces fonctions, vous pouvez par exemple les stocker dans un cookie 
+     * ou dans le local storage.
+     * 
+     * Google met à disposition des modules permettant d'accéder à ces informations dans le code de 
+     * la balise GTM (regardez les fonctions `getCookieValues` et `localStorage`).
+     */
+  }
+};
+
+const handleHCTScriptLoad = () => {
+  // ...code existant qui initialise HCT si ce n'est pas encore fait
+
+  /**
+   * Ajoutez cette ligne avant `data.gtmOnSuccess();` pour exécuter la nouvelle fonction (remplacez 
+   * `hctEvent` par l'identifiant que vous avez donné au champ contenant le nom de l'événement).
+   */
+  handleEvent(data.hctEvent);
+};
+```
